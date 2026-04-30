@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Industries — SecureMind</title>
+  <meta name="description" content="SecureMind protects AI agents across Banking, Healthcare, Legal, and Technology industries. Industry-specific compliance and security solutions.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .industry-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+    .industry-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem 2rem;
+      transition: all 0.3s var(--ease);
+      position: relative;
+      overflow: hidden;
+    }
+    .industry-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      opacity: 0;
+      transition: opacity 0.3s var(--ease);
+    }
+    .industry-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-xl);
+    }
+    .industry-card:hover::before { opacity: 1; }
+    .industry-card.banking::before { background: linear-gradient(90deg, #6366f1, #38bdf8); }
+    .industry-card.healthcare::before { background: linear-gradient(90deg, #22c55e, #38bdf8); }
+    .industry-card.legal::before { background: linear-gradient(90deg, #a78bfa, #6366f1); }
+    .industry-card.technology::before { background: linear-gradient(90deg, #f97316, #fbbf24); }
+
+    .industry-icon {
+      width: 56px; height: 56px;
+      border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem; margin-bottom: 1.25rem;
+    }
+    .industry-card h3 {
+      font-size: 1.25rem; font-weight: 800;
+      margin-bottom: 0.5rem; letter-spacing: -0.015em;
+    }
+    .industry-card .industry-compliance {
+      display: inline-block; font-size: 0.68rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      padding: 0.2rem 0.6rem; border-radius: var(--radius-full);
+      margin-bottom: 1rem;
+    }
+    .industry-card p {
+      font-size: 0.88rem; color: var(--text-secondary);
+      line-height: 1.65; margin-bottom: 1.5rem;
+    }
+    .industry-tags {
+      display: flex; flex-wrap: wrap; gap: 0.4rem;
+      margin-bottom: 1.5rem;
+    }
+    .industry-tags span {
+      font-size: 0.72rem; font-weight: 600;
+      padding: 0.2rem 0.6rem; border-radius: var(--radius-full);
+      background: var(--accent-bg); color: var(--accent);
+      font-family: var(--font-mono);
+    }
+    @media (max-width: 768px) {
+      .industry-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-brand">
+        <span class="icon">🧠</span> <span class="highlight">Secure</span>Mind
+      </a>
+      <button class="nav-toggle" aria-label="Menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="features.html">Features</a>
+        <a href="docs.html">Docs</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="blog.html">Blog</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="https://github.com/secure-mind-live" class="nav-cta">GitHub →</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="container">
+      <span class="section-eyebrow"><span class="dot"></span> Industries</span>
+      <h1>AI Agent Security for <span class="accent">Every Industry</span></h1>
+      <p>SecureMind delivers compliance-ready AI agent protection tailored to the security, privacy, and regulatory requirements of your industry.</p>
+    </div>
+  </div>
+
+  <!-- Industry Cards -->
+  <section>
+    <div class="container">
+      <div class="industry-grid">
+
+        <!-- Banking -->
+        <a href="industries/banking.html" class="industry-card banking" style="text-decoration: none; color: inherit;">
+          <div class="industry-icon" style="background: rgba(99,102,241,0.15);">🏦</div>
+          <h3>Banking & Financial Services</h3>
+          <div class="industry-tags">
+            <span>PCI-DSS</span>
+            <span>SOX</span>
+            <span>GLBA</span>
+          </div>
+          <p>Protect credentials, trading algorithms, and customer financial data from AI agent exfiltration. Immutable audit trails for every regulatory examination.</p>
+          <span class="btn btn-outline btn-sm">Explore Banking Solutions →</span>
+        </a>
+
+        <!-- Healthcare -->
+        <a href="industries/healthcare.html" class="industry-card healthcare" style="text-decoration: none; color: inherit;">
+          <div class="industry-icon" style="background: rgba(34,197,94,0.15);">🏥</div>
+          <h3>Healthcare & Life Sciences</h3>
+          <div class="industry-tags">
+            <span>HIPAA</span>
+            <span>HITECH</span>
+            <span>FDA 21 CFR</span>
+          </div>
+          <p>Safeguard PHI and PII across EHR systems, clinical trial platforms, and AI-assisted diagnostics. Built for HIPAA compliance from day one.</p>
+          <span class="btn btn-outline btn-sm">Explore Healthcare Solutions →</span>
+        </a>
+
+        <!-- Legal -->
+        <a href="industries/legal.html" class="industry-card legal" style="text-decoration: none; color: inherit;">
+          <div class="industry-icon" style="background: rgba(167,139,250,0.15);">&#9878;</div>
+          <h3>Legal & Professional Services</h3>
+          <div class="industry-tags">
+            <span>ABA Ethics</span>
+            <span>SOX</span>
+            <span>DLP</span>
+          </div>
+          <p>Protect attorney-client privilege and confidential case data. Prevent AI agents from leaking privileged documents during contract analysis.</p>
+          <span class="btn btn-outline btn-sm">Explore Legal Solutions →</span>
+        </a>
+
+        <!-- Technology -->
+        <a href="industries/technology.html" class="industry-card technology" style="text-decoration: none; color: inherit;">
+          <div class="industry-icon" style="background: rgba(255,107,0,0.15);">&#128187;</div>
+          <h3>Technology & SaaS</h3>
+          <div class="industry-tags">
+            <span>SOC 2</span>
+            <span>ISO 27001</span>
+            <span>GDPR</span>
+          </div>
+          <p>Secure source code, API keys, and customer data in multi-tenant environments. Protect CI/CD pipelines from AI-assisted supply chain attacks.</p>
+          <span class="btn btn-outline btn-sm">Explore Technology Solutions →</span>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="container" style="position: relative; z-index: 1;">
+      <h2 class="section-title" style="margin-bottom: 1rem;">Don't See Your Industry? <span class="accent">Talk to Us.</span></h2>
+      <p class="section-sub" style="margin: 0 auto 2rem; text-align: center;">
+        SecureMind is model-agnostic and policy-configurable. We can tailor deployments for any compliance framework or regulatory requirement.
+      </p>
+      <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
+        <a href="contact.html" class="btn btn-primary btn-lg">Contact Us →</a>
+        <a href="index.html#products" class="btn btn-outline btn-lg">Explore Products →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand"><span class="icon">🧠</span> SecureMind</div>
+          <p class="footer-desc">The AI agent security platform — four specialized products to protect, detect, monitor, and respond to AI agent threats across every LLM and coding assistant.</p>
+        </div>
+        <div>
+          <h4>Products</h4>
+          <a href="index.html#products" class="footer-link">SecureMind</a>
+          <a href="index.html#products" class="footer-link">Breach-Intel</a>
+          <a href="index.html#products" class="footer-link">Sentinel</a>
+          <a href="index.html#products" class="footer-link">Rapidsecureclaw</a>
+          <a href="index.html#products" class="footer-link">SecurityPlugin</a>
+        </div>
+        <div>
+          <h4>Resources</h4>
+          <a href="features.html" class="footer-link">Features</a>
+          <a href="docs.html" class="footer-link">Documentation</a>
+          <a href="pricing.html" class="footer-link">Pricing</a>
+          <a href="blog.html" class="footer-link">Blog</a>
+        </div>
+        <div>
+          <h4>Company</h4>
+          <a href="about.html" class="footer-link">About</a>
+          <a href="contact.html" class="footer-link">Contact</a>
+          <a href="https://github.com/secure-mind-live" target="_blank" class="footer-link">GitHub</a>
+          <a href="#" class="footer-link">Privacy Policy</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span class="footer-copy">&copy; 2026 SecureMind. All rights reserved.</span>
+        <div class="footer-socials">
+          <a href="https://github.com/secure-mind-live" target="_blank">GitHub</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
