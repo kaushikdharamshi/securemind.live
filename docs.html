@@ -64,7 +64,7 @@
             <span class="prompt">$</span> <span class="cmd">git clone</span> <span class="flag">https://github.com/secure-mind-live/agnostic-security-releases.git</span><br>
             <span class="prompt">$</span> <span class="cmd">cd</span> SecureMind<br>
             <span class="prompt">$</span> <span class="cmd">pip install</span> <span class="flag">-e .</span><br>
-            <span class="prompt">$</span> <span class="cmd">sm-init</span><br>
+            <span class="prompt">$</span> <span class="cmd">./install.sh</span><br>
             <span class="success">✓</span> <span class="output">Detected: Claude Code, VS Code, Cursor</span><br>
             <span class="success">✓</span> <span class="output">Configured protections for all tools</span>
           </div></div>
@@ -91,7 +91,7 @@
       <div class="table-wrap"><table>
         <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
         <tbody>
-          <tr><td><code>GET</code></td><td><code>/routing/models</code></td><td>List all 14 models with capabilities, costs, speed, coding/reasoning scores</td></tr>
+          <tr><td><code>GET</code></td><td><code>/routing/models</code></td><td>List all models with capabilities, costs, speed, coding/reasoning scores</td></tr>
           <tr><td><code>GET</code></td><td><code>/routing/stats</code></td><td>Per-provider request counts, latency (avg/p95), cost, failure rates</td></tr>
           <tr><td><code>GET</code></td><td><code>/routing/config</code></td><td>Current routing strategy (auto/cheapest/fastest/best_quality/local_only)</td></tr>
           <tr><td><code>POST</code></td><td><code>/routing/config?strategy=X</code></td><td>Change routing strategy</td></tr>
@@ -162,7 +162,7 @@
       <div class="section-header"><h2 class="section-title">500+ <span class="accent">Tests</span></h2></div>
       <div class="terminal"><div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span></div>
       <div class="terminal-body">
-        <span class="output"># v1.8.0 modules (243 tests)</span><br>
+        <span class="output"># v4.0.0 modules (500+ tests)</span><br>
         <span class="prompt">$</span> python3 scripts/test_privacy_mode.py <span class="success"># 28 PASS</span><br>
         <span class="prompt">$</span> python3 scripts/test_knowledge_graph.py <span class="success"># 33 PASS</span><br>
         <span class="prompt">$</span> python3 scripts/test_vuln_scanner.py <span class="success"># 45 PASS</span><br>
@@ -197,7 +197,7 @@
   <footer class="footer">
     <div class="container">
       <div class="footer-grid">
-        <div><div class="footer-brand"><span class="icon">🧠</span> SecureMind</div><p class="footer-desc">Enterprise DLP for AI coding agents — 14 components, intelligent routing, and 6 distribution channels.</p></div>
+        <div><div class="footer-brand"><span class="icon">🧠</span> SecureMind</div><p class="footer-desc">Enterprise DLP for AI coding agents — 5 products, intelligent routing, and defense-in-depth architecture.</p></div>
         <div><h4>Products</h4><a href="features.html" class="footer-link">Features</a><a href="pricing.html" class="footer-link">Pricing</a><a href="docs.html" class="footer-link">Docs</a><a href="https://github.com/secure-mind-live/agnostic-security-releases" target="_blank" class="footer-link">GitHub</a></div>
         <div><h4>Company</h4><a href="about.html" class="footer-link">About</a><a href="blog.html" class="footer-link">Blog</a><a href="contact.html" class="footer-link">Contact</a></div>
         <div><h4>Legal</h4><a href="#" class="footer-link">Privacy Policy</a><a href="#" class="footer-link">Terms of Service</a><a href="#" class="footer-link">Security</a></div>
