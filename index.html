@@ -21,16 +21,32 @@
   <meta name="twitter:title" content="SecureMind — The AI Agent Security Platform">
   <meta name="twitter:description" content="Four products. One platform. Complete AI agent security for every team.">
   <meta name="twitter:image" content="https://securemind.live/og-image.png">
+  <meta name="twitter:image:alt" content="SecureMind — The AI Agent Security Platform">
+  <meta name="theme-color" content="#0f172a">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@graph": [
       {
+        "@type": "WebSite",
+        "name": "SecureMind",
+        "url": "https://securemind.live",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://securemind.live/docs.html?q={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      },
+      {
         "@type": "Organization",
         "name": "SecureMind",
         "url": "https://securemind.live",
-        "logo": "https://securemind.live/og-image.png",
-        "sameAs": ["https://github.com/secure-mind-live"]
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://securemind.live/og-image.png"
+        },
+        "sameAs": ["https://github.com/secure-mind-live"],
+        "description": "The AI agent security platform — DLP, breach intelligence, monitoring, and rapid response for every LLM and coding assistant."
       },
       {
         "@type": "SoftwareApplication",
@@ -41,6 +57,18 @@
         "url": "https://securemind.live",
         "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
         "sameAs": ["https://github.com/secure-mind-live"]
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://securemind.live/#webpage",
+        "url": "https://securemind.live/",
+        "name": "SecureMind — The AI Agent Security Platform",
+        "description": "10 open-source repositories to protect, detect, monitor, and respond to AI agent threats.",
+        "isPartOf": { "@id": "https://securemind.live/#website" },
+        "breadcrumb": {
+          "@type": "BreadcrumbList",
+          "itemListElement": [{ "@type": "ListItem", "position": 1, "name": "Home", "item": "https://securemind.live/" }]
+        }
       }
     ]
   }
