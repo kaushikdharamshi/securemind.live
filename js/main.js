@@ -47,6 +47,21 @@ document.querySelectorAll('.nav-links a').forEach(a => {
   }
 });
 
+// Visitor counter
+const WORKER_URL = 'YOUR_WORKER_URL'; // replace after deploying workers/counter.js
+const visitorEl = document.getElementById('visitor-count');
+if (visitorEl && WORKER_URL !== 'YOUR_WORKER_URL') {
+  fetch(WORKER_URL)
+    .then(r => r.json())
+    .then(({ count }) => {
+      visitorEl.textContent = count.toLocaleString();
+      visitorEl.closest('.visitor-badge').style.display = 'inline-flex';
+    })
+    .catch(() => {
+      visitorEl.closest('.visitor-badge').style.display = 'none';
+    });
+}
+
 // Animated counter
 function animateCounters() {
   document.querySelectorAll('.stat-value[data-target]').forEach(el => {
