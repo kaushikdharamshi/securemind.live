@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Complete Guide to AI Agent Security (2026) — SecureMind</title>
+  <meta name="description" content="The definitive guide to AI agent security in 2026. Covers GitHub Copilot DLP, Claude Code security, Cursor data leakage, prompt injection attacks, OWASP LLM Top 10, MCP server security, agentic AI risks, and open-source tools to protect every AI coding assistant.">
+  <meta name="keywords" content="AI agent security guide, GitHub Copilot security, Claude Code DLP, Cursor data leakage prevention, prompt injection attack, OWASP LLM top 10, MCP server security, agentic AI risks, LLM data exfiltration, AI coding assistant security, open source AI security tools, prevent AI from reading secrets, PII leakage AI agent, AI supply chain attack, Windsurf security, LangChain security, Autogen security, AI agent compliance HIPAA SOC2 GDPR, developer DLP, AI coding security 2026">
+  <meta name="author" content="SecureMind">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://securemind.live/ai-security-guide.html">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://securemind.live/ai-security-guide.html">
+  <meta property="og:site_name" content="SecureMind">
+  <meta property="og:title" content="The Complete Guide to AI Agent Security (2026)">
+  <meta property="og:description" content="Definitive guide: GitHub Copilot DLP, Claude Code security, prompt injection, OWASP LLM Top 10, MCP security, and open-source tools to protect every AI coding agent.">
+  <meta property="og:image" content="https://securemind.live/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@securemindlive">
+  <meta name="twitter:title" content="The Complete Guide to AI Agent Security (2026)">
+  <meta name="twitter:description" content="Copilot DLP, Claude Code security, prompt injection, OWASP LLM Top 10, MCP server risks — everything you need to secure AI coding agents in 2026.">
+  <meta name="twitter:image" content="https://securemind.live/og-image.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "The Complete Guide to AI Agent Security (2026)",
+    "description": "Definitive guide to securing AI coding agents: GitHub Copilot, Claude Code, Cursor, Windsurf, LangChain, MCP servers. Covers DLP, prompt injection, OWASP LLM Top 10, compliance, and open-source tools.",
+    "author": { "@type": "Organization", "name": "SecureMind", "url": "https://securemind.live" },
+    "publisher": { "@type": "Organization", "name": "SecureMind", "logo": { "@type": "ImageObject", "url": "https://securemind.live/og-image.png" } },
+    "datePublished": "2026-05-03",
+    "dateModified": "2026-05-03",
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "https://securemind.live/ai-security-guide.html" },
+    "image": "https://securemind.live/og-image.png",
+    "keywords": "AI agent security, GitHub Copilot DLP, Claude Code security, prompt injection, OWASP LLM Top 10, MCP server security, agentic AI risks, LLM data exfiltration"
+  }
+  </script>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .guide-body { max-width: 800px; margin: 0 auto; padding: 0 1.5rem; }
+    .guide-body h2 { font-size: 1.75rem; margin: 3rem 0 1rem; color: var(--text-primary); }
+    .guide-body h3 { font-size: 1.25rem; margin: 2rem 0 0.75rem; color: var(--text-primary); }
+    .guide-body h4 { font-size: 1rem; margin: 1.5rem 0 0.5rem; color: var(--accent); font-weight: 600; }
+    .guide-body p { color: var(--text-secondary); line-height: 1.85; margin-bottom: 1.25rem; }
+    .guide-body ul, .guide-body ol { color: var(--text-secondary); line-height: 1.85; margin: 0 0 1.25rem 1.5rem; }
+    .guide-body li { margin-bottom: 0.5rem; }
+    .guide-body strong { color: var(--text-primary); }
+    .guide-body code { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 0.15em 0.4em; font-family: 'JetBrains Mono', monospace; font-size: 0.875em; color: var(--accent); }
+    .guide-body pre { background: var(--surface-dark, #0d1117); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin: 1.5rem 0; }
+    .guide-body pre code { background: none; border: none; padding: 0; color: #7dd3fc; font-size: 0.875rem; }
+    .guide-toc { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem 2rem; margin: 2rem 0 3rem; }
+    .guide-toc h2 { font-size: 1rem; margin: 0 0 1rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.08em; }
+    .guide-toc ol { margin: 0 0 0 1.25rem; }
+    .guide-toc li { margin-bottom: 0.4rem; }
+    .guide-toc a { color: var(--accent); text-decoration: none; font-size: 0.925rem; }
+    .guide-toc a:hover { text-decoration: underline; }
+    .callout { background: var(--surface); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; padding: 1rem 1.25rem; margin: 1.5rem 0; }
+    .callout p { margin: 0; font-size: 0.95rem; }
+    .threat-badge { display: inline-block; background: rgba(239,68,68,0.12); color: #f87171; border: 1px solid rgba(239,68,68,0.25); border-radius: 4px; padding: 0.1em 0.5em; font-size: 0.8rem; font-weight: 600; margin-right: 0.5rem; vertical-align: middle; }
+    .guide-meta { color: var(--text-tertiary); font-size: 0.875rem; margin-bottom: 2rem; }
+    .guide-divider { border: none; border-top: 1px solid var(--border); margin: 3rem 0; }
+    .glossary-term { border-bottom: 1px solid var(--border); padding: 1rem 0; }
+    .glossary-term:last-child { border-bottom: none; }
+    .glossary-term dt { font-weight: 600; color: var(--text-primary); margin-bottom: 0.35rem; }
+    .glossary-term dd { color: var(--text-secondary); margin: 0; line-height: 1.7; }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-brand"><span class="icon">🧠</span> <span class="highlight">Secure</span>Mind</a>
+      <button class="nav-toggle" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="features.html">Features</a>
+        <a href="docs.html">Docs</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="blog.html">Blog</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="https://github.com/secure-mind-live" class="nav-cta">GitHub →</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <h1>The Complete Guide to AI Agent Security</h1>
+    <p>Everything you need to know to protect GitHub Copilot, Claude Code, Cursor, and every AI coding agent in 2026.</p>
+  </div>
+
+  <section>
+    <div class="guide-body">
+      <p class="guide-meta">By SecureMind Engineering · May 2026 · 45 min read · <a href="#glossary" style="color: var(--accent);">Jump to Glossary</a></p>
+
+      <nav class="guide-toc" aria-label="Table of contents">
+        <h2>Contents</h2>
+        <ol>
+          <li><a href="#introduction">Introduction: The AI Agent Security Problem</a></li>
+          <li><a href="#what-are-ai-agents">What Are AI Coding Agents?</a></li>
+          <li><a href="#attack-surface">The AI Agent Attack Surface</a></li>
+          <li><a href="#threat-categories">Threat Categories</a></li>
+          <li><a href="#owasp-llm">OWASP Top 10 for LLM Applications</a></li>
+          <li><a href="#copilot">Securing GitHub Copilot</a></li>
+          <li><a href="#claude-code">Securing Claude Code</a></li>
+          <li><a href="#cursor-windsurf">Securing Cursor and Windsurf</a></li>
+          <li><a href="#langchain-autogen">Securing LangChain and Autogen Agents</a></li>
+          <li><a href="#mcp-security">MCP Server Security</a></li>
+          <li><a href="#how-dlp-works">How DLP Works for AI Agents</a></li>
+          <li><a href="#compliance">Compliance: HIPAA, SOC 2, PCI-DSS, and GDPR</a></li>
+          <li><a href="#best-practices">Security Best Practices for Developers</a></li>
+          <li><a href="#open-source-tools">Open-Source AI Security Tools</a></li>
+          <li><a href="#future">The Future of Agentic Security</a></li>
+          <li><a href="#glossary">Glossary</a></li>
+        </ol>
+      </nav>
+
+      <!-- ─── 1. Introduction ─────────────────────────────── -->
+      <h2 id="introduction">1. Introduction: The AI Agent Security Problem</h2>
+
+      <p>In 2026, the average software development team uses between three and seven AI coding assistants simultaneously. GitHub Copilot autocompletes functions. Claude Code rewrites entire modules. Cursor edits files on command. Windsurf navigates codebases autonomously. LangChain agents execute multi-step workflows that span databases, APIs, and filesystems.</p>
+
+      <p>Each of these tools has something in common: they read your files, execute your commands, call external APIs, and process the outputs — all on your behalf, at machine speed, with broad filesystem access and often unrestricted network egress. The productivity gains are real and substantial. So are the security risks.</p>
+
+      <p>The classic enterprise security stack was designed for a world where humans generate data requests and humans review the outputs. A developer asking to read a file is observable, auditable, and slow enough to interrupt. An AI agent reading ten thousand files per minute, summarising credentials into a "helpful" response, and then transmitting that response to a third-party API is none of those things.</p>
+
+      <p>This guide is the most comprehensive treatment of AI agent security available in 2026. It covers the full attack surface across all major AI coding tools, maps every known threat category to concrete mitigations, walks through OWASP's LLM Top 10, and gives you an opinionated, tool-specific playbook for every major platform. Whether you are a security engineer evaluating AI tooling for your enterprise, a developer trying to keep your personal projects safe, or a compliance officer trying to understand how AI agents interact with HIPAA and SOC 2 frameworks, this guide has the answers.</p>
+
+      <p>We wrote it at SecureMind because we have built the open-source DLP middleware that sits between AI agents and your sensitive data. Everything in this guide is grounded in the real-world attack patterns we have observed, the adversarial test suites we have built, and the compliance frameworks we have implemented. Where we have opinions, we state them clearly. Where the answer is genuinely uncertain, we say so.</p>
+
+      <div class="callout">
+        <p><strong>Key insight:</strong> The difference between a guardrail and a security control is enforcement. A guardrail says "please don't do that." A security control says "you physically cannot do that." For data with real consequences — production credentials, PII, patient records, financial data — only security controls are sufficient.</p>
+      </div>
+
+      <!-- ─── 2. What Are AI Coding Agents ───────────────── -->
+      <h2 id="what-are-ai-agents">2. What Are AI Coding Agents?</h2>
+
+      <p>An AI coding agent is a system that combines a large language model (LLM) with tool-use capabilities — the ability to read files, write code, execute shell commands, call APIs, and take actions in the real world. This distinguishes agents from simple chatbots, which only generate text. Agents act.</p>
+
+      <h3>The Spectrum of Agency</h3>
+
+      <p>AI coding tools exist on a spectrum from low-agency to high-agency:</p>
+
+      <ul>
+        <li><strong>Autocomplete tools</strong> (low agency): GitHub Copilot in basic mode, Tabnine, Codeium. These see the file you have open, the surrounding context, and generate suggestions. They cannot read files you have not opened, cannot execute code, and cannot make network requests from within the IDE context.</li>
+        <li><strong>Chat-with-codebase tools</strong> (medium agency): Copilot Chat, Cursor Chat, Cody. These can search your repository, read multiple files, and generate code that you then apply. They typically require explicit user confirmation before writing to disk.</li>
+        <li><strong>Agent-mode tools</strong> (high agency): Claude Code, Cursor Agent, Windsurf, Copilot Workspace. These can autonomously read and write files, run terminal commands, install packages, call APIs, and chain many operations together with minimal human confirmation.</li>
+        <li><strong>Autonomous pipeline agents</strong> (very high agency): LangChain agents, Autogen multi-agent systems, CrewAI, custom agentic frameworks. These run unsupervised, often in production, with access to databases, messaging systems, and external APIs. They may execute for hours without human oversight.</li>
+      </ul>
+
+      <h3>How AI Agents Access Data</h3>
+
+      <p>Understanding how AI agents access data is prerequisite to securing them. Most agent-mode tools access data through one or more of the following mechanisms:</p>
+
+      <p><strong>Direct filesystem access:</strong> The agent reads files using standard OS file I/O. Claude Code uses Bash tool calls. Cursor reads files via its built-in file system API. This means any file accessible to the process running the agent is potentially accessible to the AI model.</p>
+
+      <p><strong>Context window injection:</strong> Files, command outputs, and API responses are concatenated into the LLM's context window. Once in the context window, that data can appear in any output the model generates — including outputs sent to external APIs, written to log files, or displayed to users.</p>
+
+      <p><strong>Tool calls and function execution:</strong> Modern agents use structured tool-use APIs (OpenAI function calling, Anthropic tool use, Google function declarations) to request specific actions. A tool call to "read_file" with path "~/.ssh/id_rsa" is indistinguishable from a tool call with path "src/utils.py" from the perspective of the filesystem.</p>
+
+      <p><strong>Model Context Protocol (MCP):</strong> An emerging standard for giving AI agents structured access to external systems. MCP servers expose tools, resources, and prompts that agents can invoke. A poorly secured MCP server can give an agent — or an attacker who has injected instructions into the agent's context — access to databases, APIs, and services that were never intended to be agent-accessible.</p>
+
+      <p><strong>Shell command execution:</strong> Many high-agency tools can execute arbitrary shell commands. This is, practically speaking, the same as giving the AI unrestricted access to anything your shell can reach: environment variables, SSH keys, cloud credentials, git history, and every file on disk.</p>
+
+      <h3>Why Traditional Security Tools Don't Protect Against AI Agents</h3>
+
+      <p>Traditional security tools — antivirus, CASB, DLP for email and web — were designed around human actors generating data requests. They operate on heuristics calibrated to human behaviour: a human doesn't read ten thousand files in a minute, doesn't routinely base64-encode binary data in the middle of a code comment, doesn't send 50MB payloads to an LLM API endpoint at 3am.</p>
+
+      <p>AI agents do all of these things as a routine part of their operation. Existing tools either generate overwhelming false positives when applied naively to AI agent traffic or miss genuine threats because the patterns don't match any human-based signature.</p>
+
+      <p>The security tooling for AI agents needs to be built from first principles around the specific data flows, threat models, and compliance requirements of agentic systems. That is what this guide covers.</p>
+
+      <!-- ─── 3. Attack Surface ─────────────────────────── -->
+      <h2 id="attack-surface">3. The AI Agent Attack Surface</h2>
+
+      <p>The attack surface of an AI coding agent is significantly larger than most developers appreciate. It encompasses every point where data flows into or out of the agent, every external system the agent can reach, and every instruction source the agent will act on.</p>
+
+      <h3>Input Attack Surface</h3>
+
+      <p><strong>Prompt inputs from users:</strong> Every message a user sends to an AI agent is a potential vector for prompt injection — instructions designed to override the agent's intended behaviour. In a shared environment or multi-tenant system, one user's malicious prompt can potentially affect the agent's behaviour for other users.</p>
+
+      <p><strong>File contents read by the agent:</strong> When an agent reads a file, the contents of that file become part of its context. If a malicious actor has modified a file that the agent will later read — a dependency, a documentation file, a data file — they can inject instructions into the agent's context without ever interacting directly with the agent. This is indirect prompt injection, and it is one of the most dangerous threats in 2026.</p>
+
+      <p><strong>Web content and external data:</strong> Agents that browse the web, fetch documentation, or query APIs are exposed to content from untrusted sources. A malicious web page can contain hidden text (white text on white background, zero-width characters, CSS-hidden divs) that injects instructions into the agent's context when it "reads" the page.</p>
+
+      <p><strong>Database query results:</strong> If an agent can query a database, the data in that database is part of the input attack surface. An attacker who can write to a database table that the agent will query can inject instructions via that table.</p>
+
+      <p><strong>Code repository contents:</strong> When an agent analyses a codebase — for refactoring, code review, or feature development — every file in that codebase is a potential injection vector. This is particularly concerning for open-source projects where anyone can submit a PR with crafted file contents.</p>
+
+      <h3>Output Attack Surface</h3>
+
+      <p><strong>Code generation:</strong> An agent that generates code may generate code with security vulnerabilities, backdoors, or malicious logic — either because it was trained on vulnerable code, because it was manipulated through prompt injection, or because it hallucinated an insecure pattern. Every generated code path is a potential vulnerability insertion point.</p>
+
+      <p><strong>API calls:</strong> Agents routinely make API calls — to LLM providers, to tool APIs, to web services. Each API call can potentially exfiltrate data if the agent includes sensitive context in the request payload. Many agents log API calls for debugging, and those logs can become an exfiltration vector if they are accessible to third parties.</p>
+
+      <p><strong>File writes:</strong> When an agent writes files, it can write data that was in its context — including sensitive data it was never intended to persist. An agent that writes a "summary" file might include credentials or PII it encountered while processing other files.</p>
+
+      <p><strong>Shell command outputs:</strong> When an agent runs shell commands, the outputs are captured and fed back into the context. Commands like <code>env</code>, <code>cat ~/.aws/credentials</code>, or <code>git log --all</code> can expose enormous amounts of sensitive data in a single command.</p>
+
+      <p><strong>Model responses to users:</strong> The agent's responses in chat interfaces can include data from its context. A user who asks "what environment variables are set?" or "what's in the .env file?" will receive that data directly in the chat response, which may be logged, shared, or visible to unintended parties.</p>
+
+      <h3>The Privilege Problem</h3>
+
+      <p>AI agents typically run with the same privileges as the developer who invoked them. This means they inherit access to every secret, credential, and sensitive file that the developer's account can reach. Unlike a junior developer whom you might restrict to specific repositories or systems, an AI agent has no instinctive caution about reading a production database credential versus a test configuration file. To the agent, all files are equally readable data.</p>
+
+      <p>The principle of least privilege — giving a process only the access it needs to do its job — has never been adequately applied to AI agents because the tools to do so have not existed. That is changing in 2026, but the default for most teams is still "the agent can see everything."</p>
+
+      <!-- ─── 4. Threat Categories ──────────────────────── -->
+      <h2 id="threat-categories">4. Threat Categories</h2>
+
+      <h3><span class="threat-badge">CRITICAL</span> Secret and Credential Leakage</h3>
+
+      <p>The most common and most immediately damaging AI agent security threat is the leakage of secrets and credentials. Secrets include API keys, database passwords, SSH private keys, OAuth tokens, service account credentials, JWT signing secrets, encryption keys, and any other value that grants access to a system or resource.</p>
+
+      <p>The mechanism is straightforward: an AI agent reads a file containing a secret (a <code>.env</code> file, an AWS credentials file, a <code>config.yaml</code>), the secret enters the agent's context window, and then the agent includes that secret in an output — a response message, an API call, a generated code comment, a test file, a log entry. From there, the secret can propagate to unintended recipients, be captured by third-party logging services, or be read by users who should not have access to it.</p>
+
+      <p>In a 2025 analysis of AI-assisted development incidents, credential leakage via AI agent context was the number-one reported category. Common patterns include:</p>
+
+      <ul>
+        <li>Agents asked to "explain this config file" that include the full file content — including secrets — in their response</li>
+        <li>Agents that write test files including hardcoded values copied from .env files they read during context loading</li>
+        <li>Agents that include API keys in generated code comments ("I used this key in my testing: sk-...")</li>
+        <li>Agents that echo environment variables when asked to "check the configuration"</li>
+        <li>Claude Code agents that read ~/.aws/credentials to understand the cloud environment, then include credential values in subsequent responses</li>
+      </ul>
+
+      <p>The mitigation is DLP at the input gate: secrets must be detected and redacted or blocked before they enter the agent's context. This requires both pattern-based detection (regex for known secret formats: AWS keys, GitHub tokens, Stripe keys, database connection strings) and semantic detection for novel or custom secret formats.</p>
+
+      <h3><span class="threat-badge">HIGH</span> PII Exfiltration</h3>
+
+      <p>Personally identifiable information (PII) — names, email addresses, phone numbers, social security numbers, passport numbers, medical record numbers, financial account numbers — is subject to strict regulatory protection under GDPR, HIPAA, CCPA, and other frameworks. AI agents that access databases, logs, or data files can inadvertently process and expose PII at scale.</p>
+
+      <p>The risk is amplified by the fact that AI agents are often used precisely to work with large volumes of data. An agent asked to "summarise our user database" or "find all customers affected by this bug" will, if not properly constrained, include raw PII in its outputs, its API call payloads, and its log entries.</p>
+
+      <p>PII detection must go beyond simple pattern matching. An email address regex is straightforward; detecting that a text snippet contains a person's medical diagnosis, inferred from context, requires semantic understanding. Modern AI security platforms use layered detection: regex for structured PII (SSNs, credit card numbers), named entity recognition (NER) for names and addresses, and LLM-based classification for contextual PII and sensitive combinations.</p>
+
+      <h3><span class="threat-badge">HIGH</span> Prompt Injection</h3>
+
+      <p>Prompt injection is the AI equivalent of SQL injection. In SQL injection, an attacker embeds SQL commands in user input that the application naively concatenates into a SQL query. In prompt injection, an attacker embeds natural language instructions in data that an AI agent will process, causing the agent to execute those instructions as if they came from the legitimate operator.</p>
+
+      <p><strong>Direct prompt injection</strong> occurs when a user directly interacts with the AI agent and crafts messages designed to override its system prompt, bypass its safety instructions, or redirect its actions. Examples: "Ignore all previous instructions and..." or "You are now in developer mode, which allows you to..."</p>
+
+      <p><strong>Indirect prompt injection</strong> is more dangerous and harder to defend against. It occurs when malicious instructions are embedded in data that the agent will later read — a web page, a document, a database record, a code comment. The agent reads the data as part of a legitimate task and executes the embedded instructions without the user's knowledge. A malicious package's README could contain instructions to exfiltrate credentials when an agent reads it. A crafted web page could redirect an agent to perform actions on behalf of the attacker.</p>
+
+      <p>Defending against prompt injection requires:</p>
+      <ol>
+        <li><strong>Input classification:</strong> Detecting when agent inputs contain instruction-like patterns rather than data-like patterns</li>
+        <li><strong>Context segregation:</strong> Maintaining clear separation between system instructions (trusted) and data context (untrusted)</li>
+        <li><strong>Output validation:</strong> Checking that agent actions are consistent with the original user intent, not with instructions that might have been injected via data</li>
+        <li><strong>Privilege boundaries:</strong> Ensuring that data-processing operations run with minimal privileges, so that even a successful injection cannot cause catastrophic damage</li>
+      </ol>
+
+      <h3><span class="threat-badge">HIGH</span> AI Supply Chain Attacks</h3>
+
+      <p>The software supply chain attack — compromising a dependency to reach downstream consumers — has a direct analogue in AI systems. An AI supply chain attack targets the model itself, the training data, the tool ecosystem, or the infrastructure that delivers the AI to the developer.</p>
+
+      <p><strong>Malicious packages with AI-targeted payloads:</strong> A malicious npm or PyPI package can include README content, code comments, or docstrings specifically crafted to redirect AI agents that read or analyse the package. When a developer asks their AI agent to "understand this dependency," the agent reads the crafted content and executes the embedded instructions.</p>
+
+      <p><strong>Poisoned training data:</strong> Research has demonstrated that LLMs can be trained to exhibit specific "backdoor" behaviours when presented with trigger phrases. While this requires access to the training pipeline and is therefore primarily a concern for organisations fine-tuning models on proprietary data, it represents a credible threat as fine-tuning becomes more accessible.</p>
+
+      <p><strong>Compromised MCP servers:</strong> MCP servers that appear legitimate — published to npm, starred on GitHub, recommended in documentation — can be modified to exfiltrate data, inject instructions, or perform malicious actions when invoked by an agent.</p>
+
+      <p><strong>Prompt template repositories:</strong> Shared system prompts and agent configurations published on the web can contain instructions that look benign but redirect agent behaviour in subtle ways when deployed.</p>
+
+      <h3><span class="threat-badge">MEDIUM</span> Agent Privilege Escalation</h3>
+
+      <p>An AI agent that has been granted access to one system can sometimes leverage that access to reach systems it was not intended to access. This is agent privilege escalation, and it mirrors classical privilege escalation in traditional systems but with the additional complexity that the "attacker" may be the AI itself, acting on instructions it received through an injection vector.</p>
+
+      <p>Examples include: an agent with read access to a staging database that uses found credentials to access the production database; an agent with SSH access to a development server that uses an SSH key it found in a repository to access a production server; an agent that discovers a service account token with elevated permissions in an environment variable and uses it to make unauthorised API calls.</p>
+
+      <h3><span class="threat-badge">MEDIUM</span> Data Aggregation Attacks</h3>
+
+      <p>Individual pieces of data that are innocuous in isolation become sensitive when combined. An AI agent that processes large volumes of data — log files, user records, transaction histories — may aggregate information in ways that reveal sensitive patterns: identifying individual users from anonymised datasets, inferring salaries from role and tenure data, reconstructing private communications from partial records.</p>
+
+      <p>This is particularly concerning for agents used in analytics and reporting tasks, where the aggregation is the point, but the regulatory implications of the aggregated output differ from the individual inputs.</p>
+
+      <h3><span class="threat-badge">MEDIUM</span> Model Manipulation and Hallucination Exploitation</h3>
+
+      <p>LLMs hallucinate — they generate plausible-sounding but factually incorrect information. In a security context, hallucinations can introduce vulnerabilities: an AI agent that generates code may invent a function signature, an API endpoint, or a cryptographic constant that does not exist. A sophisticated attacker can exploit this tendency by registering the hallucinated package name on npm or PyPI, waiting for an AI agent (or a developer following AI advice) to install it, and then delivering malicious code through the package.</p>
+
+      <p>This attack class — sometimes called "AI hallucination dependency hijacking" or "squatting on hallucinated packages" — was documented extensively in 2024 and 2025 and represents a novel threat with no analogue in pre-AI security models.</p>
+
+      <!-- ─── 5. OWASP LLM Top 10 ────────────────────────── -->
+      <h2 id="owasp-llm">5. OWASP Top 10 for LLM Applications (2025 Edition)</h2>
+
+      <p>The Open Web Application Security Project (OWASP) published its first Top 10 for LLM Applications in 2023 and has updated it annually since. The 2025 edition, which remains the authoritative reference as of this writing, identifies the following ten critical risks:</p>
+
+      <h3>LLM01: Prompt Injection</h3>
+      <p>Manipulating LLM outputs by injecting adversarial prompts either directly (from the user) or indirectly (via data sources the LLM processes). As covered above, indirect prompt injection is the more dangerous variant for agentic systems. Mitigation requires input validation, context segregation, and output monitoring.</p>
+
+      <h3>LLM02: Insecure Output Handling</h3>
+      <p>When LLM outputs are passed downstream to other systems (browsers, SQL engines, shell interpreters) without validation, vulnerabilities arise. An LLM that generates SQL queries might generate injection-vulnerable queries. An LLM that generates HTML might generate XSS-vulnerable markup. Output from an LLM must be treated as untrusted input to downstream systems.</p>
+
+      <h3>LLM03: Training Data Poisoning</h3>
+      <p>Compromising the training data to introduce backdoors, biases, or false beliefs into the model. While primarily a concern for organisations that train or fine-tune models, it is relevant for any organisation that uses proprietary data to customise model behaviour.</p>
+
+      <h3>LLM04: Model Denial of Service</h3>
+      <p>Constructing inputs that cause the LLM to consume excessive computational resources, either to degrade service (DoS) or to increase inference costs (cost DoS). Deeply nested prompts, recursive structures, and adversarially constructed contexts can cause inference to be significantly more expensive than normal. For API-accessed LLMs with usage-based billing, this translates directly to financial impact.</p>
+
+      <h3>LLM05: Supply Chain Vulnerabilities</h3>
+      <p>The LLM supply chain includes pre-trained models, fine-tuning datasets, plugins, integrations, and infrastructure. Each element is a potential compromise vector. Organisations should evaluate the security posture of every component in their LLM stack, not just the model itself.</p>
+
+      <h3>LLM06: Sensitive Information Disclosure</h3>
+      <p>LLMs may inadvertently reveal sensitive information from their training data, system prompts, or context window in their outputs. This includes private system prompts (prompt leakage), training data memorisation (the model reproducing text it was trained on, including PII or proprietary content), and context leakage (the model including sensitive context data in responses intended for other purposes).</p>
+
+      <h3>LLM07: Insecure Plugin Design</h3>
+      <p>LLM plugins and tool integrations that lack proper authentication, authorisation, and input validation become vectors for privilege escalation and data exfiltration. A plugin that accepts LLM-generated input and executes it against a database without parameterisation is vulnerable to LLM-generated SQL injection. Plugin design must apply the same security rigour as any other application component.</p>
+
+      <h3>LLM08: Excessive Agency</h3>
+      <p>Granting LLM-based agents excessive permissions, capabilities, or autonomy relative to what their task requires. An agent needs the minimum permissions to perform its task, no more. An agent that needs to read documentation does not need write access to the filesystem. An agent that needs to query a database does not need to execute DDL statements. Excessive agency is the root cause of many of the most damaging AI agent security incidents.</p>
+
+      <h3>LLM09: Overreliance</h3>
+      <p>Trusting LLM outputs without adequate verification. When developers implement AI-generated code without review, accept AI security recommendations without validation, or deploy AI-generated configurations without testing, they may introduce vulnerabilities that a human reviewer would have caught. Overreliance is a process and culture problem as much as a technical one.</p>
+
+      <h3>LLM10: Model Theft</h3>
+      <p>Extracting a proprietary model through repeated queries, enabling an attacker to replicate the model's behaviour without authorisation. Relevant primarily for organisations that have fine-tuned models on proprietary data and have a commercial interest in protecting the resulting model.</p>
+
+      <!-- ─── 6. Securing Copilot ────────────────────────── -->
+      <h2 id="copilot">6. Securing GitHub Copilot</h2>
+
+      <p>GitHub Copilot has the largest install base of any AI coding assistant, and it has evolved significantly from an autocomplete tool to a full agentic system with Copilot Workspace. The security surface has expanded correspondingly.</p>
+
+      <h3>What Copilot Can Access</h3>
+      <p>In IDE mode, Copilot accesses the currently open file, neighbouring files in the project, and (in chat mode) files you explicitly reference or that it searches for context. In Copilot Workspace (agent mode), it can read and write files across the repository, execute terminal commands, and interact with GitHub APIs. Enterprise configurations can limit Copilot's access to specific repositories, but there is no built-in content-level DLP.</p>
+
+      <h3>The .copilotignore File</h3>
+      <p>GitHub provides the <code>.copilotignore</code> file as a mechanism to prevent specific files from being included in Copilot's context. Its syntax is identical to <code>.gitignore</code>. A well-configured <code>.copilotignore</code> should exclude:</p>
+      <ul>
+        <li><code>.env</code> and all environment variable files</li>
+        <li><code>*.pem</code>, <code>*.key</code>, <code>*.p12</code> — private key files</li>
+        <li><code>.aws/credentials</code>, <code>.azure/</code>, <code>.gcloud/</code> — cloud credential directories</li>
+        <li><code>secrets.yaml</code>, <code>credentials.json</code>, <code>serviceAccountKey.json</code></li>
+        <li>Any directory containing production configuration</li>
+        <li>Database backup files (<code>*.sql</code>, <code>*.dump</code>)</li>
+      </ul>
+
+      <div class="callout">
+        <p><strong>Important limitation:</strong> <code>.copilotignore</code> only prevents Copilot from proactively including files in context. If a user explicitly asks Copilot to "read my .env file" or pastes the contents directly into the chat, the restriction is bypassed. Real DLP requires runtime scanning of what actually enters the context, not just what files are eligible.</p>
+      </div>
+
+      <h3>Enterprise Copilot Controls</h3>
+      <p>GitHub Copilot for Business and Copilot Enterprise provide additional controls: organisation-level policy management, the ability to block Copilot suggestions that match public code, audit log integration, and SAML SSO support. Enterprise customers can disable Copilot for specific repositories, enforce code referencing filters, and receive usage analytics.</p>
+
+      <h3>Runtime DLP for Copilot</h3>
+      <p>The most robust protection for Copilot is a VS Code extension that intercepts prompts before they leave the IDE, scans them for secrets and PII, and blocks or redacts sensitive content. This operates independently of GitHub's own controls and provides a defence-in-depth layer that catches content regardless of how it entered the context.</p>
+
+      <!-- ─── 7. Securing Claude Code ───────────────────── -->
+      <h2 id="claude-code">7. Securing Claude Code</h2>
+
+      <p>Claude Code is Anthropic's CLI-based agentic coding assistant. It is among the highest-agency tools available to developers: it can read and write arbitrary files, execute shell commands with the same privileges as the running user, make network requests, install packages, and chain complex multi-step operations. It is also one of the most powerful coding assistants available, which is precisely why getting its security right matters.</p>
+
+      <h3>How Claude Code Works</h3>
+      <p>Claude Code operates through a hook system that intercepts tool calls before and after execution. The tool types include: file read (<code>Read</code>), file write (<code>Write</code>), file edit (<code>Edit</code>), bash command execution (<code>Bash</code>), and web operations (<code>WebFetch</code>, <code>WebSearch</code>). Each tool call is an opportunity to inspect what the agent is trying to do and either allow, modify, or block it.</p>
+
+      <h3>Claude Code Hooks</h3>
+      <p>Claude Code's hook system is the primary mechanism for security integration. Hooks are shell commands or scripts that run at specific points in the tool execution lifecycle:</p>
+
+      <ul>
+        <li><code>PreToolUse</code>: executes before a tool call, receives the tool name and input as JSON, can block the call by exiting non-zero</li>
+        <li><code>PostToolUse</code>: executes after a tool call, receives the tool output, can modify or redact the output before it re-enters the context</li>
+        <li><code>Stop</code>: executes when Claude Code finishes a turn, useful for post-session auditing</li>
+      </ul>
+
+      <p>A well-configured security hook for Claude Code should:</p>
+      <ol>
+        <li>Intercept all <code>Read</code> tool calls and scan the file path against a blocklist of sensitive file patterns</li>
+        <li>Scan the file content using regex and semantic analysis for secrets and PII before returning it to the context</li>
+        <li>Intercept all <code>Bash</code> tool calls and block commands that could read sensitive data (e.g., <code>cat ~/.aws/credentials</code>, <code>env | grep -i key</code>)</li>
+        <li>Scan all <code>Write</code> and <code>Edit</code> tool outputs to prevent the agent from persisting data it should not</li>
+        <li>Log all tool calls with sufficient context for a complete audit trail</li>
+      </ol>
+
+      <h3>Principle of Least Privilege for Claude Code</h3>
+      <p>Claude Code runs with the privileges of the invoking user. For most developers, this means it has access to everything on their machine. Best practices for privilege reduction include:</p>
+      <ul>
+        <li>Running Claude Code in a Docker container or VM with restricted filesystem mounts</li>
+        <li>Using <code>.claude/settings.json</code> to explicitly allow only necessary tool types for each project</li>
+        <li>Revoking network access from Claude Code sessions that do not require it</li>
+        <li>Using separate machine accounts with restricted privileges for automated Claude Code pipelines</li>
+      </ul>
+
+      <h3>Sensitive File Protection</h3>
+      <p>The SecureMind hook for Claude Code maintains a file blocklist covering all common secret file patterns. When Claude Code attempts to read a blocked file, the hook returns a redacted result (the filename and a warning that the file contains sensitive data) rather than the file contents. This prevents credential leakage while still allowing the agent to understand the project structure.</p>
+
+      <!-- ─── 8. Cursor and Windsurf ────────────────────── -->
+      <h2 id="cursor-windsurf">8. Securing Cursor and Windsurf</h2>
+
+      <h3>Cursor</h3>
+      <p>Cursor is a VS Code fork with deep AI integration. Its agent mode can read and write files, run terminal commands, and make multi-step code changes autonomously. Cursor respects <code>.cursorignore</code> files (same syntax as <code>.gitignore</code>) and <code>.cursorules</code> files that can encode security policies in natural language.</p>
+
+      <p>Beyond <code>.cursorignore</code>, Cursor's security posture can be improved by:</p>
+      <ul>
+        <li>Configuring <code>.cursorules</code> to include explicit instructions: "Never read .env files, AWS credential files, or any file matching *.pem or *.key" — while not a hard security control, this reduces accidental exposure from well-intentioned agent operations</li>
+        <li>Installing a VS Code extension that provides runtime DLP scanning on Cursor's prompt construction</li>
+        <li>Enabling "Privacy Mode" in Cursor settings to prevent your code from being used to train Cursor's models</li>
+        <li>Using Cursor's "local models" option with Ollama for sensitive codebases where data residency is a concern</li>
+      </ul>
+
+      <h3>Windsurf</h3>
+      <p>Windsurf (formerly Codeium) provides similar agentic capabilities to Cursor with its "Flows" feature. It supports <code>.aiignore</code> files for content exclusion. Windsurf's security controls as of 2026 include workspace isolation, the ability to configure which directories are accessible, and enterprise SSO integration.</p>
+
+      <p>Windsurf's "Cascade" agent can plan and execute multi-step changes. For sensitive codebases, we recommend configuring Cascade to require explicit approval before any file write operations, and using <code>.aiignore</code> comprehensively to exclude credential files, configuration secrets, and any directory containing production data.</p>
+
+      <h3>The VS Code Extension Attack Surface</h3>
+      <p>All VS Code-based tools (Cursor, Windsurf, Cody, Copilot) share the VS Code extension model, which means they are exposed to the VS Code extension attack surface. A malicious VS Code extension can intercept keystrokes, read clipboard contents, access open files, and communicate with external servers. Developers using AI coding tools should:</p>
+      <ul>
+        <li>Audit installed extensions and remove those that are unused or from unverified publishers</li>
+        <li>Review extension permissions before installing</li>
+        <li>Be aware that extensions can access the same data as the AI agent</li>
+        <li>Use VS Code's extension sandboxing features where available</li>
+      </ul>
+
+      <!-- ─── 9. LangChain and Autogen ─────────────────── -->
+      <h2 id="langchain-autogen">9. Securing LangChain and Autogen Agents</h2>
+
+      <p>LangChain and Autogen represent the frontier of agentic AI: multi-agent systems that can run autonomously for extended periods, orchestrate other agents, call external APIs, modify databases, and take consequential actions in the real world. They are also the most dangerous AI agents from a security perspective, because they operate with the least human oversight and the broadest set of tools.</p>
+
+      <h3>LangChain Security Fundamentals</h3>
+
+      <p>LangChain provides chains, agents, and tools as composable primitives. Each tool that a LangChain agent can invoke expands its attack surface. Common tool categories and their security implications:</p>
+
+      <ul>
+        <li><strong>File system tools</strong> (<code>ReadFileTool</code>, <code>WriteFileTool</code>): Should be configured with explicit root directory restrictions. Never use these tools without specifying a <code>root_dir</code> parameter that confines reads and writes to an appropriate directory.</li>
+        <li><strong>Shell execution tools</strong> (<code>BashProcess</code>, <code>ShellTool</code>): The highest-risk tool category. Should be avoided in production, or if used, should execute in an isolated sandbox (Docker container with no network access and a restricted filesystem mount).</li>
+        <li><strong>Database tools</strong>: Should use read-only database users where the agent's task permits. Schema-aware query validation prevents LLM-generated SQL from executing DDL or DML that modifies data.</li>
+        <li><strong>Web browsing tools</strong>: Any tool that fetches external web content exposes the agent to indirect prompt injection. Fetched content must be sanitised before entering the agent's context.</li>
+        <li><strong>Python REPL tools</strong>: Execute arbitrary Python code in the agent's environment. Must be sandboxed. The LangChain <code>PythonREPLTool</code> documentation explicitly warns that it is not safe for production without sandboxing.</li>
+      </ul>
+
+      <h3>Auto-Instrumentation for LangChain</h3>
+      <p>One of the most effective security techniques for LangChain is auto-instrumentation: monkey-patching the LangChain SDK at import time to intercept all LLM calls, tool invocations, and chain executions. Using Python's <code>sitecustomize.py</code> mechanism, a security layer can be injected before any application code runs, ensuring comprehensive coverage without requiring changes to the application itself.</p>
+
+      <p>Auto-instrumentation allows you to: scan all inputs to LLM calls for secrets and PII, redact sensitive data before it reaches the LLM API, log all agent actions for audit purposes, enforce rate limits and cost controls, and detect and block anomalous agent behaviour.</p>
+
+      <h3>Autogen Multi-Agent Security</h3>
+      <p>Microsoft Autogen enables multi-agent architectures where multiple LLM-backed agents communicate with each other to accomplish complex tasks. The security implications are multiplicative: each agent in the system can be a target for prompt injection, and a successful injection into one agent can cascade to others through the inter-agent communication channel.</p>
+
+      <p>For Autogen systems, security best practices include:</p>
+      <ul>
+        <li>Treating inter-agent messages as untrusted input and applying the same validation as you would to user input</li>
+        <li>Assigning distinct capabilities and privileges to each agent based on its role, rather than giving all agents the same tool set</li>
+        <li>Implementing a "human in the loop" checkpoint for high-impact actions, regardless of which agent initiated them</li>
+        <li>Logging all inter-agent communication for audit and anomaly detection</li>
+        <li>Running each agent in an isolated execution environment to prevent one compromised agent from directly accessing another agent's context</li>
+      </ul>
+
+      <!-- ─── 10. MCP Security ──────────────────────────── -->
+      <h2 id="mcp-security">10. MCP Server Security</h2>
+
+      <p>The Model Context Protocol (MCP), introduced by Anthropic in 2024 and rapidly adopted across the AI industry, provides a standardised interface for AI agents to interact with external systems. MCP servers expose three types of primitives to connected clients (AI agents):</p>
+
+      <ul>
+        <li><strong>Tools:</strong> Functions the agent can invoke (e.g., query a database, send an email, fetch a web page)</li>
+        <li><strong>Resources:</strong> Data sources the agent can read (e.g., file contents, database records, API responses)</li>
+        <li><strong>Prompts:</strong> Pre-defined instruction templates that can include dynamic data</li>
+      </ul>
+
+      <p>MCP has rapidly become a major attack surface for AI agents. As of early 2026, there are thousands of public MCP servers available, with varying levels of security review and maintenance.</p>
+
+      <h3>MCP Threat Model</h3>
+
+      <p><strong>Malicious MCP servers:</strong> A malicious actor can publish an MCP server that appears to provide a useful capability (web search, code execution, file management) but actually exfiltrates data, injects instructions, or performs unauthorised actions. Because MCP servers are typically trusted by the agents that connect to them, a compromised MCP server has the full trust level of the agent.</p>
+
+      <p><strong>Prompt injection via MCP resources:</strong> Resources returned by an MCP server can contain injected instructions. An MCP file-reading server that returns file contents modified to include prompt injection payloads can redirect the agent's behaviour without the user's knowledge.</p>
+
+      <p><strong>Excessive MCP permissions:</strong> MCP servers that have broad access to underlying systems (full filesystem, unrestricted database access, admin API credentials) can be leveraged by a compromised agent to access far more than the agent's task requires.</p>
+
+      <p><strong>MCP server confusion attacks:</strong> An agent that connects to multiple MCP servers may be confused by conflicting or contradictory tool names. A malicious MCP server that provides tools with the same names as a trusted server, but with different (malicious) implementations, can intercept tool calls intended for the legitimate server.</p>
+
+      <h3>MCP Security Best Practices</h3>
+
+      <ol>
+        <li><strong>Evaluate every MCP server before use.</strong> Review the server's source code, check its GitHub repository for recent activity and security issues, and understand exactly what permissions the server requires.</li>
+        <li><strong>Apply least privilege to MCP server credentials.</strong> The credentials you give an MCP server should be the minimum necessary for its function. A documentation-reading MCP server does not need write access to your filesystem.</li>
+        <li><strong>Sanitise MCP resource outputs.</strong> Before MCP resource contents enter the agent's context, scan them for prompt injection patterns and sensitive data.</li>
+        <li><strong>Maintain an MCP server allowlist.</strong> Only connect to explicitly approved MCP servers. Reject connections to unknown or unapproved servers.</li>
+        <li><strong>Monitor MCP tool call patterns.</strong> Anomalous patterns — unexpected tool calls, unusually large data transfers, tool calls that do not match the current task — can indicate a compromised agent or a prompt injection attack in progress.</li>
+        <li><strong>Use the "lethal trifecta" detection.</strong> When an agent simultaneously has access to private data, is processing untrusted input, and has access to external network communication, the risk of exfiltration is highest. This combination — identified by security researcher Simon Willison — should trigger additional scrutiny or automatic blocking of network-bound tool calls.</li>
+      </ol>
+
+      <!-- ─── 11. How DLP Works ─────────────────────────── -->
+      <h2 id="how-dlp-works">11. How DLP Works for AI Agents</h2>
+
+      <p>Data Loss Prevention (DLP) for AI agents is meaningfully different from traditional DLP for email and web traffic. Traditional DLP scans structured data flows — email attachments, web uploads, print jobs — for known patterns. AI agent DLP must operate in real time on unstructured context flows, understand semantic content, and make decisions at the speed of inference.</p>
+
+      <h3>The Four-Layer Detection Model</h3>
+
+      <p>An effective AI agent DLP system uses a layered detection approach that balances speed, accuracy, and depth:</p>
+
+      <p><strong>Layer 1 — Regex Pattern Matching (sub-millisecond):</strong> The first layer applies compiled regular expressions against the content to detect known secret formats. This includes patterns for every major API key format (AWS, GCP, Azure, Stripe, GitHub, Slack, Twilio, and hundreds more), PII patterns (SSNs, credit card numbers, passport numbers, NHS numbers), and sensitive file markers (BEGIN RSA PRIVATE KEY, etc.). This layer is fast enough to run synchronously on every piece of content without perceptible latency.</p>
+
+      <p><strong>Layer 2 — Pydantic Classification Rules (milliseconds):</strong> The second layer applies structured classification rules using Pydantic schemas. These rules encode domain knowledge about what combinations of information constitute sensitive data — for example, a name combined with a date of birth and a medical code is PII-sensitive even if none of the individual fields would trigger a regex. This layer handles structured data, JSON, and YAML content efficiently.</p>
+
+      <p><strong>Layer 3 — Named Entity Recognition (tens of milliseconds):</strong> A lightweight NER model (fine-tuned for developer content) identifies named entities: person names, organisation names, locations, dates, and domain-specific entities like product names and internal project codenames. This layer catches PII that does not match structured patterns but can be identified from linguistic context.</p>
+
+      <p><strong>Layer 4 — LLM Classification (hundreds of milliseconds, optional):</strong> For content that the first three layers cannot classify with confidence, an optional fourth layer queries a locally running LLM (via Ollama) for semantic classification. This layer handles novel secret formats, contextual PII, and complex multi-field sensitive combinations. Because it has latency, it is applied only when the earlier layers return an uncertain result, and it can be disabled entirely for environments where latency is critical.</p>
+
+      <h3>Early-Return Optimization</h3>
+      <p>The vast majority of developer content is not sensitive. Applying all four layers to every piece of content would introduce unacceptable latency. An effective DLP engine uses early-return optimisation: if Layer 1 finds no matches, the content is cleared as non-sensitive without invoking subsequent layers. Layer 2 is only invoked for content that has structured data characteristics. Layer 4 is only invoked for content that the first three layers could not classify with high confidence.</p>
+
+      <p>In practice, this means that &gt;90% of content is classified in under 5ms, and &lt;1% of content reaches Layer 4. The median classification latency for a typical developer workflow is under 2ms — imperceptible to the user and non-disruptive to the AI agent's operation.</p>
+
+      <h3>Redaction vs. Blocking</h3>
+      <p>When DLP detects sensitive content, it can respond in one of two ways: redaction (replacing the sensitive content with a placeholder like <code>[REDACTED:API_KEY]</code>) or blocking (refusing to pass the content to the AI entirely). The right choice depends on the context:</p>
+      <ul>
+        <li><strong>Redaction</strong> is appropriate when the agent needs to understand that a file exists and has a certain structure, but does not need the actual sensitive values. Redacting a .env file allows the agent to see the variable names and understand the configuration structure without accessing the values.</li>
+        <li><strong>Blocking</strong> is appropriate for highly sensitive files (private keys, credential files) where even the structure should not be exposed, or for commands that are inherently dangerous regardless of their content (e.g., commands that dump environment variables).</li>
+      </ul>
+
+      <!-- ─── 12. Compliance ────────────────────────────── -->
+      <h2 id="compliance">12. Compliance: HIPAA, SOC 2, PCI-DSS, and GDPR</h2>
+
+      <p>AI agents do not exist outside of regulatory frameworks. If an AI agent processes data subject to HIPAA, the agent's handling of that data is subject to HIPAA. If an agent processes payment card data, PCI-DSS applies. The compliance implications of AI agent usage are significant and, as of 2026, still being actively negotiated between organisations, regulators, and legal counsel.</p>
+
+      <h3>HIPAA and AI Agents</h3>
+
+      <p>HIPAA's Privacy Rule and Security Rule apply to Protected Health Information (PHI) — any health information that identifies or could identify an individual. An AI coding agent that is used to develop or maintain software that processes PHI, and that agent can access PHI during its operation, creates HIPAA compliance obligations.</p>
+
+      <p>The critical question for HIPAA compliance is: does the AI agent's operation constitute a "use" or "disclosure" of PHI? If the agent reads a database schema that includes PHI, summarises patient records, or generates code that handles medical data, the answer is likely yes. This triggers requirements for:</p>
+      <ul>
+        <li>A Business Associate Agreement (BAA) with the AI provider, if PHI enters their systems</li>
+        <li>Audit logs of all agent access to PHI</li>
+        <li>Data minimisation: the agent should access only the minimum PHI necessary for its task</li>
+        <li>Breach classification and reporting procedures for any unauthorised PHI disclosure by the agent</li>
+      </ul>
+
+      <p>SecureMind's DLP engine includes classification for 13 healthcare breach types, enabling automatic identification of PHI exposure events and generation of audit-ready incident reports.</p>
+
+      <h3>PCI-DSS and AI Agents</h3>
+
+      <p>The Payment Card Industry Data Security Standard (PCI-DSS) protects cardholder data: primary account numbers (PANs), cardholder names, expiration dates, and service codes. AI agents used in payment systems or that access cardholder data environments (CDEs) must be assessed against PCI-DSS requirements.</p>
+
+      <p>Key PCI-DSS requirements for AI agents include Requirement 3 (protect stored cardholder data — including ensuring AI agents do not store PANs in logs or context histories), Requirement 6 (secure development — using AI to generate code for payment systems requires validation that generated code does not introduce vulnerabilities), and Requirement 10 (audit logs — all agent access to cardholder data must be logged).</p>
+
+      <h3>GDPR and AI Agents</h3>
+
+      <p>The General Data Protection Regulation applies to the processing of personal data of EU residents. AI agents that process personal data are data processors, and organisations using them are data controllers. GDPR compliance for AI agents requires:</p>
+
+      <ul>
+        <li><strong>Data minimisation (Article 5):</strong> Agents should process only the personal data necessary for their task. This aligns directly with the principle of least privilege.</li>
+        <li><strong>Purpose limitation (Article 5):</strong> Data collected for one purpose cannot be repurposed without consent. An agent that uses customer data to train a model or improve its own performance may violate this principle.</li>
+        <li><strong>Data subject rights (Articles 15-22):</strong> Individuals have the right to know how their data is being processed, including by AI agents. Organisations must be able to identify and account for all AI agent processing of personal data.</li>
+        <li><strong>Data Protection Impact Assessment (Article 35):</strong> Processing that is "likely to result in a high risk" to individuals requires a DPIA. Automated processing that makes decisions about individuals — a category that can include some agentic AI operations — triggers DPIA requirements.</li>
+        <li><strong>International transfers (Chapter V):</strong> Personal data transferred to AI providers outside the EEA must have appropriate safeguards. This is a significant issue for cloud-hosted LLMs.</li>
+      </ul>
+
+      <h3>SOC 2 and AI Agents</h3>
+
+      <p>SOC 2 is an auditing framework based on the AICPA's Trust Service Criteria: Security, Availability, Processing Integrity, Confidentiality, and Privacy. For organisations undergoing SOC 2 audits, AI agent usage must be accounted for in the Security and Confidentiality criteria.</p>
+
+      <p>Auditors are increasingly asking about AI agent usage as part of SOC 2 assessments. Organisations should be prepared to demonstrate: access controls that limit what AI agents can access, audit logs of AI agent actions, procedures for detecting and responding to AI agent security incidents, and vendor management processes for AI providers (including BAAs and DPA where applicable).</p>
+
+      <!-- ─── 13. Best Practices ─────────────────────────── -->
+      <h2 id="best-practices">13. Security Best Practices for Developers</h2>
+
+      <p>The following practices represent the current state-of-the-art for AI agent security in development environments. They are organised from highest to lowest impact.</p>
+
+      <h3>1. Never Store Secrets Where AI Agents Can Access Them</h3>
+      <p>The most effective mitigation for credential leakage is preventing the credentials from ever reaching the agent. Use a secrets manager (HashiCorp Vault, AWS Secrets Manager, 1Password Secrets Automation) and inject secrets at runtime via environment variables that are set only for the specific process that needs them. Do not store credentials in <code>.env</code> files checked into your repository. Do not store credentials in config files in your home directory. Treat every file on your development machine as potentially accessible to every AI agent you use.</p>
+
+      <h3>2. Configure Ignore Files Comprehensively</h3>
+      <p>Create and maintain <code>.copilotignore</code>, <code>.cursorignore</code>, and <code>.aiignore</code> files in every project. These should at minimum exclude: all <code>.env*</code> files, all private key files (<code>*.pem</code>, <code>*.key</code>, <code>*.p12</code>), all cloud credential directories (<code>.aws/</code>, <code>.azure/</code>, <code>.gcloud/</code>), all database files, and any directory containing production configuration or data.</p>
+
+      <h3>3. Deploy Runtime DLP</h3>
+      <p>Ignore files prevent proactive inclusion of sensitive content but do not prevent agents from reading sensitive files when asked to. Runtime DLP — scanning content as it enters the agent's context — provides the layer of protection that ignore files cannot. For VS Code-based tools, a DLP extension is the most practical mechanism. For Claude Code, configure security hooks in <code>.claude/settings.json</code>. For LangChain and Autogen, use auto-instrumentation.</p>
+
+      <h3>4. Apply Least Privilege to Every Agent Interaction</h3>
+      <p>Before starting an AI agent session, ask: what does this agent need to access to accomplish this specific task? Grant only that access. If you are asking an agent to refactor a single module, it does not need access to your entire codebase. If it is doing documentation work, it does not need access to production configuration. Create project-specific agent configurations that scope the agent's access to the relevant directories and tools.</p>
+
+      <h3>5. Validate All AI-Generated Code Before Deployment</h3>
+      <p>AI-generated code must be treated as untrusted code — code from an unknown third party that may have been influenced by injected instructions, training data biases, or model hallucinations. Apply the same review standards to AI-generated code as you would to a pull request from an external contributor: read it, understand it, and test it before merging. Pay particular attention to: cryptographic operations (where hallucinated implementations are common), authentication and authorisation logic, input validation, and any code that accesses external systems.</p>
+
+      <h3>6. Maintain Audit Logs of All Agent Actions</h3>
+      <p>For production use of AI agents, maintain comprehensive audit logs: which files were read, which commands were executed, which API calls were made, and which outputs were generated. These logs are essential for incident investigation, compliance demonstration, and anomaly detection. Ensure logs are stored in an append-only system that agents cannot modify.</p>
+
+      <h3>7. Use Local Models for Sensitive Workloads</h3>
+      <p>When working with highly sensitive data — patient records, financial data, classified information, proprietary algorithms — use locally running LLMs (Ollama, llamafile, LM Studio) rather than cloud-hosted models. Local models provide data residency guarantees that no cloud provider can match: the data never leaves your machine.</p>
+
+      <h3>8. Educate Your Development Team</h3>
+      <p>Technical controls are necessary but not sufficient. Developers need to understand the security risks of AI agents, recognise the signs of prompt injection attacks, and know how to report suspected security incidents involving AI. Regular training, clear policies, and a culture that treats AI agent security as a first-class concern are as important as the technical stack.</p>
+
+      <!-- ─── 14. Open-Source Tools ──────────────────────── -->
+      <h2 id="open-source-tools">14. Open-Source AI Security Tools</h2>
+
+      <p>The open-source AI security tooling ecosystem has grown rapidly since 2024. The following tools represent the most mature and widely used options as of 2026:</p>
+
+      <h3>SecureMind Platform</h3>
+      <p>SecureMind is a suite of open-source tools specifically built for AI agent security. The platform consists of four products: the core DLP engine (with VS Code extension and Claude Code hooks), Breach-Intel (AI agent threat intelligence and breach classification), Sentinel (monitoring and observability for AI agents), and RapidSecureClaw (incident response and taint tracking). All repositories are available at <a href="https://github.com/secure-mind-live" style="color: var(--accent);">github.com/secure-mind-live</a>.</p>
+
+      <h3>Garak</h3>
+      <p>Garak is an open-source LLM vulnerability scanner from NVIDIA. It provides a comprehensive set of probes for testing LLMs against known attack vectors including prompt injection, jailbreaking, data extraction, and hallucination. Garak is particularly useful for evaluating the security posture of fine-tuned models and custom agent configurations before deployment.</p>
+
+      <h3>LangChain GuardRails</h3>
+      <p>Guardrails AI provides an open-source framework for adding validation and correction to LLM outputs. It is particularly useful for ensuring that LLM-generated content conforms to specified schemas, does not contain sensitive data, and meets domain-specific requirements. Integrates natively with LangChain.</p>
+
+      <h3>detect-secrets</h3>
+      <p>Yelp's <code>detect-secrets</code> is a mature open-source tool for detecting secrets in code repositories. While not AI-specific, it is an essential baseline tool that can be integrated into pre-commit hooks and CI/CD pipelines to prevent secrets from entering repositories that AI agents might later access.</p>
+
+      <h3>Semgrep</h3>
+      <p>Semgrep is an open-source static analysis tool that can scan code for security vulnerabilities. It is increasingly used to scan AI-generated code, and the Semgrep community has published rules specifically targeting common AI code generation anti-patterns and vulnerabilities.</p>
+
+      <h3>Trufflehog</h3>
+      <p>TruffleHog is an open-source secret scanner that searches git history, filesystems, and code for over 800 types of secrets. Its deep git integration makes it particularly useful for finding secrets that were historically committed to repositories that AI agents might later access.</p>
+
+      <!-- ─── 15. Future ─────────────────────────────────── -->
+      <h2 id="future">15. The Future of Agentic Security</h2>
+
+      <p>AI agent security is a rapidly evolving field. The threat landscape is expanding faster than the defensive tooling can keep up with, but the direction of travel is clear: the industry is moving toward a world where AI agents are first-class citizens in the security stack, with dedicated security frameworks, regulatory guidance, and enforcement mechanisms.</p>
+
+      <h3>Agent Identity and Authentication</h3>
+      <p>One of the most significant gaps in current AI agent security is the lack of robust agent identity systems. When an AI agent makes an API call or accesses a database, that action is typically authenticated with the credentials of the human user who invoked the agent, not with agent-specific credentials. This makes it impossible to enforce agent-specific access controls, to maintain agent-specific audit trails, or to revoke access from a specific agent without revoking access from the underlying user account.</p>
+
+      <p>The industry is moving toward agent identity standards — cryptographically signed agent identities that allow systems to distinguish between human requests and agent requests, and to apply agent-specific policies. Early implementations are appearing in enterprise identity management systems, and standards work is underway in IETF and other bodies.</p>
+
+      <h3>Regulatory Development</h3>
+      <p>Regulators are catching up with AI agent technology. The EU AI Act, which entered into force in 2024, includes provisions for "high-risk" AI systems that are likely to apply to AI agents in regulated industries. The US Executive Order on AI safety has generated significant guidance on AI security practices. Sector-specific guidance from financial regulators, healthcare regulators, and data protection authorities on AI agent usage is being actively developed in 2026.</p>
+
+      <h3>Model-Level Security</h3>
+      <p>Research into model-level defences against prompt injection is advancing. Techniques including constitutional AI (training models to refuse certain instruction types), structured output enforcement (preventing models from including unexpected data in structured outputs), and instruction hierarchy (distinguishing between system-level and user-level instructions at the model level) are showing promise. No model-level defence is yet robust enough to be relied upon as a primary security control, but the outlook for model-native security improvements is positive.</p>
+
+      <h3>Agentic Security as a Discipline</h3>
+      <p>The most important development in AI agent security is the emergence of agentic security as a distinct professional discipline. Security engineers are developing specialisations in AI agent threat modelling, DLP integration, and compliance frameworks. Academic researchers are publishing on agentic security topics. Bug bounty programs are expanding to cover AI agent attack surfaces. The tooling, expertise, and community needed to make AI agents secure are being built, and the trajectory is encouraging.</p>
+
+      <hr class="guide-divider">
+
+      <!-- ─── Glossary ───────────────────────────────────── -->
+      <h2 id="glossary">Glossary</h2>
+      <dl>
+        <div class="glossary-term">
+          <dt>Agentic AI</dt>
+          <dd>An AI system that can take actions in the world — reading files, executing commands, calling APIs — rather than merely generating text. Characterised by tool use, autonomy, and the ability to chain multiple actions to accomplish complex tasks.</dd>
+        </div>
+        <div class="glossary-term">
+          <dt>Context Window</dt>
+          <dd>The total amount of text (measured in tokens) that an LLM can process at one time. Data that enters the context window can appear in any output the model generates. For security purposes, the context window is the boundary of what the AI "knows" in any given interaction.</dd>
+        </div>
+        <div class="glossary-term">
+          <dt>Data Loss Prevention (DLP)</dt>
+          <dd>A set of tools and processes designed to detect and prevent the unauthorised transmission of sensitive data. In the AI agent context, DLP intercepts sensitive data before it enters an agent's context or after it leaves, preventing it from reaching unintended recipients.</dd>
+        </div>
+        <div class="glossary-term">
+          <dt>Direct Prompt Injection</dt>
+          <dd>A prompt injection attack in which the attacker directly interacts with the AI agent — through the user interface, the API, or the system prompt — to inject malicious instructions.</dd>
+        </div>
+        <div class="glossary-term">
+          <dt>Indirect Prompt Injection</dt>
+          <dd>A prompt injection attack in which malicious instructions are embedded in data that the AI agent will later process — a web page, a file, a database record — rather than being injected directly. More dangerous than direct injection because it can occur without the legitimate user's knowledge or interaction.</dd>
+        </div>
+        <div class="glossary-term">
+          <dt>Lethal Trifecta</dt>
+          <dd>The security condition identified by researcher Simon Willison in which an AI agent simultaneously has access to private data, is processing untrusted input, and has access to external network communication. When all three conditions are present, the risk of data exfiltration through an injection attack is highest.</dd>
+        </div>
+        <div class="glossary-term">
+          <dt>Least Privilege</dt>
+          <dd>The security principle that a process, user, or system should have only the minimum permissions necessary to perform its function. Applied to AI agents: an agent should be able to access only the files, databases, and APIs it needs for the specific task it is performing.</dd>
+        </div>
+        <div class="glossary-term">
+          <dt>MCP (Model Context Protocol)</dt>
+          <dd>An open standard introduced by Anthropic for connecting AI agents to external data sources and tools. MCP servers expose tools, resources, and prompts to MCP clients (AI agents). Widely adopted across the AI industry as of 2026.</dd>
+        </div>
+        <div class="glossary-term">
+          <dt>OWASP LLM Top 10</dt>
+          <dd>The Open Web Application Security Project's list of the ten most critical security risks for LLM-based applications. Published annually and widely referenced as the authoritative framework for LLM application security.</dd>
+        </div>
+        <div class="glossary-term">
+          <dt>PHI (Protected Health Information)</dt>
+          <dd>Health information that identifies or could identify an individual, subject to protection under HIPAA. Includes medical records, diagnoses, treatment histories, and any combination of health and identity information.</dd>
+        </div>
+        <div class="glossary-term">
+          <dt>PII (Personally Identifiable Information)</dt>
+          <dd>Any data that can be used to identify an individual, including names, addresses, dates of birth, social security numbers, email addresses, and phone numbers. Subject to protection under GDPR, CCPA, and many other frameworks.</dd>
+        </div>
+        <div class="glossary-term">
+          <dt>Prompt Injection</dt>
+          <dd>An attack technique in which an adversary embeds instructions in data processed by an LLM, causing the LLM to execute those instructions as if they came from the legitimate operator. The AI equivalent of SQL injection.</dd>
+        </div>
+        <div class="glossary-term">
+          <dt>Redaction</dt>
+          <dd>The process of replacing sensitive data with a placeholder before it enters an AI agent's context. For example, replacing an API key with <code>[REDACTED:API_KEY]</code>. Allows the agent to understand that a field exists without accessing its sensitive value.</dd>
+        </div>
+        <div class="glossary-term">
+          <dt>Secret</dt>
+          <dd>Any value that grants access to a system or resource and must be kept confidential. Includes API keys, database passwords, SSH private keys, OAuth tokens, service account credentials, JWT signing secrets, and encryption keys.</dd>
+        </div>
+        <div class="glossary-term">
+          <dt>Tool Call</dt>
+          <dd>A structured request from an LLM to an external function or system, enabling the LLM to take actions beyond generating text. Tool calls are the mechanism through which AI agents read files, execute commands, call APIs, and interact with the world.</dd>
+        </div>
+        <div class="glossary-term">
+          <dt>Taint Tracking</dt>
+          <dd>A dynamic analysis technique that marks ("taints") data from untrusted sources and tracks how it propagates through a system. In AI agent security, taint tracking can identify when sensitive data has entered the agent's context and monitor it through subsequent tool calls and outputs.</dd>
+        </div>
+      </dl>
+
+      <hr class="guide-divider">
+      <p style="color: var(--text-tertiary); font-size: 0.875rem;">This guide is maintained by the SecureMind engineering team and updated as the AI agent security landscape evolves. Last updated: May 2026. To contribute corrections or additions, open an issue at <a href="https://github.com/secure-mind-live" style="color: var(--accent);">github.com/secure-mind-live</a>.</p>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand"><span class="icon">🧠</span> SecureMind</div>
+          <p class="footer-desc">The AI agent security platform — four specialised products to protect, detect, monitor, and respond to AI agent threats across every LLM and coding assistant.</p>
+        </div>
+        <div>
+          <h4>Products</h4>
+          <a href="features.html" class="footer-link">Features</a>
+          <a href="pricing.html" class="footer-link">Pricing</a>
+          <a href="docs.html" class="footer-link">Docs</a>
+          <a href="https://github.com/secure-mind-live" target="_blank" class="footer-link">GitHub</a>
+        </div>
+        <div>
+          <h4>Resources</h4>
+          <a href="blog.html" class="footer-link">Blog</a>
+          <a href="ai-security-guide.html" class="footer-link">Security Guide</a>
+          <a href="about.html" class="footer-link">About</a>
+          <a href="contact.html" class="footer-link">Contact</a>
+        </div>
+        <div>
+          <h4>Legal</h4>
+          <a href="#" class="footer-link">Privacy Policy</a>
+          <a href="#" class="footer-link">Terms of Service</a>
+          <a href="#" class="footer-link">Security</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span class="footer-copy">&copy; 2026 SecureMind. All rights reserved.</span>
+        <div class="footer-socials">
+          <a href="https://github.com/secure-mind-live" target="_blank">GitHub</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="js/main.js"></script>
+</body>
+</html>
