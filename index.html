@@ -1236,10 +1236,11 @@
         <span class="footer-copy">&copy; 2026 SecureMind. All rights reserved.</span>
         <div style="display:flex;align-items:center;gap:1.25rem;">
           <a href="https://github.com/secure-mind-live" target="_blank" class="footer-link" style="font-size:0.82rem;">GitHub</a>
-          <img src="https://visitor-badge.laobi.icu/badge?page_id=secure-mind-live.securemind.live&left_color=%231e293b&right_color=%236366f1&left_text=visitors"
-               alt="Visitor counter"
-               style="height:20px;border-radius:4px;opacity:0.9;"
-               loading="lazy">
+          <span id="visitor-counter" style="display:inline-flex;align-items:center;gap:0.4rem;font-size:0.78rem;color:#475569;background:#111827;border:1px solid #1e293b;border-radius:999px;padding:0.25rem 0.75rem;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <span id="visitor-count" style="color:#94a3b8;">…</span>
+            <span style="color:#475569;">visitors</span>
+          </span>
         </div>
       </div>
     </div>
@@ -1282,6 +1283,22 @@
           }
         });
       }
+    })();
+  </script>
+  <script>
+    /* ── Visitor counter (Cloudflare Worker) ── */
+    (function() {
+      const WORKER_URL = 'https://YOUR_WORKER_SUBDOMAIN.workers.dev';
+      fetch(WORKER_URL)
+        .then(r => r.json())
+        .then(data => {
+          const el = document.getElementById('visitor-count');
+          if (el) el.textContent = data.count.toLocaleString();
+        })
+        .catch(() => {
+          const el = document.getElementById('visitor-count');
+          if (el) el.parentElement.style.display = 'none';
+        });
     })();
   </script>
 </body>
