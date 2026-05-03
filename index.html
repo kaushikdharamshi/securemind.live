@@ -3,23 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SecureMind — The AI Agent Security Platform</title>
-  <meta name="description" content="SecureMind is the AI agent security platform. 10 open-source repositories on GitHub — rapidsecureclaw, openclaw, openclaw-llmproxy, breach-intel, sentinel, and more — to protect, detect, monitor, and respond to AI agent threats.">
-  <meta name="keywords" content="AI agent security, DLP, breach intelligence, sentinel monitoring, Rapidsecureclaw, AI coding agent protection, LLM security platform">
+  <title>SecureMind — Open-Source DLP & Security for GitHub Copilot, Claude Code & Cursor</title>
+  <meta name="description" content="SecureMind stops AI coding agents from leaking secrets, PII, and sensitive files. Open-source DLP middleware for GitHub Copilot, Claude Code, Cursor, Windsurf, LangChain, and any LLM. Runs locally, no cloud required.">
+  <meta name="keywords" content="GitHub Copilot security, Claude Code DLP, Cursor AI security, Windsurf security, AI agent data leakage prevention, open source DLP developer tools, LLM data exfiltration prevention, AI coding assistant security, agentic security platform, prevent AI from reading secrets, secret detection AI agents, prompt injection protection, AI supply chain security, developer data loss prevention, VS Code AI security extension">
   <meta name="author" content="SecureMind">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://securemind.live/">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://securemind.live/">
   <meta property="og:site_name" content="SecureMind">
-  <meta property="og:title" content="SecureMind — The AI Agent Security Platform">
-  <meta property="og:description" content="10 open-source repositories to protect, detect, monitor, and respond to AI agent threats. Works with Copilot, Claude Code, Cursor, LangChain, and any LLM.">
+  <meta property="og:title" content="SecureMind — Open-Source DLP & Security for GitHub Copilot, Claude Code & Cursor">
+  <meta property="og:description" content="Stop AI coding agents from leaking secrets and sensitive files. Open-source DLP middleware for Copilot, Claude Code, Cursor, Windsurf, and any LLM. Runs locally.">
   <meta property="og:image" content="https://securemind.live/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
   <meta property="og:locale" content="en_US">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@securemindlive">
-  <meta name="twitter:title" content="SecureMind — The AI Agent Security Platform">
-  <meta name="twitter:description" content="10 open-source repos. One platform. Complete AI agent security for every team.">
+  <meta name="twitter:title" content="SecureMind — Open-Source DLP for AI Coding Agents">
+  <meta name="twitter:description" content="Prevent GitHub Copilot, Claude Code, and Cursor from leaking secrets, PII, and sensitive files. Open-source, runs locally, no cloud required.">
   <meta name="twitter:image" content="https://securemind.live/og-image.png">
   <script type="application/ld+json">
   {
@@ -30,17 +32,74 @@
         "name": "SecureMind",
         "url": "https://securemind.live",
         "logo": "https://securemind.live/og-image.png",
+        "description": "Open-source AI agent security platform — DLP middleware to prevent data leakage from GitHub Copilot, Claude Code, Cursor, and other AI coding assistants.",
         "sameAs": ["https://github.com/secure-mind-live"]
       },
       {
         "@type": "SoftwareApplication",
         "name": "SecureMind Platform",
-        "description": "The complete AI agent security platform — DLP, breach intelligence, monitoring, and rapid response.",
+        "description": "Open-source DLP and security middleware for AI coding agents. Prevents secret leakage, PII exposure, and data exfiltration from GitHub Copilot, Claude Code, Cursor, Windsurf, LangChain, and any LLM.",
         "applicationCategory": "SecurityApplication",
         "operatingSystem": "macOS, Linux, Windows",
         "url": "https://securemind.live",
         "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "featureList": ["DLP scanning", "Secret detection", "Prompt injection protection", "AI agent monitoring", "Breach intelligence", "Pre-commit hooks", "VS Code extension"],
         "sameAs": ["https://github.com/secure-mind-live"]
+      },
+      {
+        "@type": "WebSite",
+        "name": "SecureMind",
+        "url": "https://securemind.live",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://securemind.live/docs.html?q={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "How do I prevent GitHub Copilot from reading sensitive files?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "SecureMind's DLP engine intercepts all file reads before they reach Copilot. Install the VS Code extension and it automatically enforces .copilotignore rules plus PII scanning on every prompt."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does SecureMind work with Claude Code?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. SecureMind ships dedicated Claude Code hooks that intercept file reads, shell commands, and API responses. Install with: curl -sSL https://securemind.live/install.sh | sh"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does SecureMind work with Cursor, Windsurf, and Cody?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. The VS Code extension supports Copilot, Cursor, Windsurf, and Cody via .copilotignore, .cursorignore, and .aiignore files, plus runtime prompt scanning."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does it require sending data to the cloud?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. All DLP scanning runs locally on your machine. The optional LLM verification layer uses Ollama (also local). The only outbound calls are to your chosen AI provider, and those pass through SecureMind's security gateway."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is SecureMind open source?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. All 10 repositories are fully open source on github.com/secure-mind-live under MIT/Apache licenses. The Community tier is free with no artificial limitations."
+            }
+          }
+        ]
       }
     ]
   }
