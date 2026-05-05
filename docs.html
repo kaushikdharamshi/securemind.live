@@ -194,22 +194,23 @@
   <!-- Test Suite -->
   <section class="bg-warm">
     <div class="container">
-      <div class="section-header"><h2 class="section-title">500+ <span class="accent">Tests</span></h2></div>
+      <div class="section-header"><h2 class="section-title">724+ <span class="accent">Tests</span></h2></div>
       <div class="terminal"><div class="terminal-bar"><span class="terminal-dot r"></span><span class="terminal-dot y"></span><span class="terminal-dot g"></span></div>
       <div class="terminal-body">
-        <span class="output"># v4.0.0 modules (500+ tests)</span><br>
+        <span class="output"># v4.3.0 modules (724+ tests across 24 suites)</span><br>
         <span class="prompt">$</span> python3 scripts/test_privacy_mode.py <span class="success"># 28 PASS</span><br>
         <span class="prompt">$</span> python3 scripts/test_knowledge_graph.py <span class="success"># 33 PASS</span><br>
         <span class="prompt">$</span> python3 scripts/test_vuln_scanner.py <span class="success"># 45 PASS</span><br>
-        <span class="prompt">$</span> python3 scripts/test_code_fingerprint.py <span class="success"># 28 PASS</span><br>
+        <span class="prompt">$</span> python3 scripts/test_code_fingerprint.py <span class="success"># 35 PASS</span><br>
         <span class="prompt">$</span> python3 scripts/test_shadow_ai.py <span class="success"># 60 PASS</span><br>
-        <span class="prompt">$</span> python3 scripts/test_security_memory.py <span class="success"># 49 PASS</span><br><br>
-        <span class="output"># Smart routing (53 tests)</span><br>
-        <span class="prompt">$</span> python3 scripts/test_smart_router.py <span class="success"># 53 PASS</span><br><br>
+        <span class="prompt">$</span> python3 scripts/test_ingress_guard.py <span class="success"># 54 PASS (6-layer external agent defense)</span><br><br>
+        <span class="output"># Smart routing + admin (104 tests)</span><br>
+        <span class="prompt">$</span> python3 scripts/test_smart_router.py <span class="success"># 53 PASS</span><br>
+        <span class="prompt">$</span> python3 scripts/test_admin_console.py <span class="success"># 51 PASS</span><br><br>
         <span class="output"># Core + red team (216 tests)</span><br>
         <span class="prompt">$</span> python3 scripts/smoke_test.py <span class="success"># 31 PASS</span><br>
-        <span class="prompt">$</span> python3 scripts/test_red_team.py <span class="success"># 46 PASS (adversarial)</span><br>
-        <span class="prompt">$</span> <span class="output">... and 8 more test suites</span>
+        <span class="prompt">$</span> python3 scripts/test_red_team.py <span class="success"># 52 PASS (274 attack techniques)</span><br>
+        <span class="prompt">$</span> <span class="output">... and 10 more suites + 55-agent Docker red-team harness</span>
       </div></div>
     </div>
   </section>
