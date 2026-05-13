@@ -69,15 +69,15 @@
         "name": "Does SecureMind require internet access or cloud connectivity?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "No. All scanning runs locally on your machine. The optional Ollama LLM verification layer is also local. The only network calls are to your chosen AI provider, and those go through SecureMind's security gateway."
+          "text": "No. All scanning runs locally on your machine. The only network calls are to your chosen AI provider, and those go through SecureMind's security gateway."
         }
       },
       {
         "@type": "Question",
-        "name": "Can I use SecureMind with Cursor, Windsurf, and Cody?",
+        "name": "Can I use SecureMind with Cursor?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes. The VS Code extension supports GitHub Copilot, Cursor, Windsurf, and Cody via .copilotignore, .cursorignore, and .aiignore files, plus real-time prompt scanning."
+          "text": "Yes. The VS Code extension supports GitHub Copilot and Cursor via .copilotignore and .cursorignore files, plus real-time prompt scanning."
         }
       }
     ]
@@ -279,7 +279,7 @@
             <tr><td>Chrome extension</td><td><span class="badge-green">Yes</span></td><td><span class="badge-green">Yes</span></td><td><span class="badge-green">Yes</span></td></tr>
             <tr><td>File access gate (2-layer DLP)</td><td><span class="badge-green">Yes</span></td><td><span class="badge-green">Yes</span></td><td><span class="badge-green">Yes</span></td></tr>
             <tr><td>Exec command guard</td><td>20+ patterns</td><td>20+ patterns + LLM</td><td>20+ patterns + LLM + custom</td></tr>
-            <tr><td>Prompt intent analysis</td><td>3 layers</td><td>4 layers (+ Ollama)</td><td>4 layers + custom rules</td></tr>
+<tr><td>Prompt intent analysis</td><td>3 layers</td><td>4 layers</td><td>4 layers + custom rules</td></tr>
             <tr><td>PII redaction</td><td>6 patterns</td><td><span class="badge-green">6 patterns</span></td><td>6 + custom patterns</td></tr>
             <tr><td>Security Gateway</td><td>—</td><td><span class="badge-green">Yes</span></td><td><span class="badge-green">Yes</span></td></tr>
             <tr><td>System prompt masking</td><td>—</td><td><span class="badge-green">Yes</span></td><td><span class="badge-green">Yes</span></td></tr>
@@ -310,11 +310,11 @@
         </div>
         <div class="card" style="margin-bottom: 1rem;">
           <h3>Does it require internet access?</h3>
-          <p>No. All scanning runs locally. The optional Ollama LLM layer is also local. The only network calls are to your chosen LLM provider — and those go through the security gateway.</p>
+<p>No. All scanning runs locally. The only network calls are to your chosen LLM provider — and those go through the security gateway.</p>
         </div>
         <div class="card" style="margin-bottom: 1rem;">
-          <h3>Can I use it with Cursor / Windsurf / Cody?</h3>
-          <p>Yes. The VS Code extension supports Copilot, Cursor, Windsurf, and Cody via .copilotignore, .cursorignore, and .aiignore.</p>
+          <h3>Can I use it with Cursor?</h3>
+          <p>Yes. The VS Code extension supports Copilot and Cursor via .copilotignore and .cursorignore.</p>
         </div>
       </div>
     </div>
