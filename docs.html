@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SecureMind Docs — How to Secure GitHub Copilot, Claude Code & Cursor with DLP</title>
-  <meta name="description" content="Step-by-step guides to install and configure SecureMind DLP for GitHub Copilot, Claude Code, Cursor, Windsurf, LangChain, Autogen, and any LLM. Stop AI agents from leaking secrets in one command.">
+  <title>SecureMind Documentation | Setup Guide & API Reference for AI Agent DLP</title>
+  <meta name="description" content="Complete setup guide for SecureMind AI agent security. Install in 30 seconds, configure DLP policies, integrate with Copilot, Claude Code & Cursor.">
   <meta name="keywords" content="how to secure GitHub Copilot, Claude Code hooks setup, Cursor DLP configuration, Windsurf security setup, LangChain DLP integration, Autogen security, AI agent security installation, prevent Copilot reading .env, stop AI leaking API keys, VS Code AI security extension install, AI coding agent security guide, open source DLP setup, agentic security configuration, LLM proxy security">
   <meta name="author" content="SecureMind">
   <meta name="robots" content="index, follow">
@@ -25,6 +25,12 @@
   <meta name="twitter:image:alt" content="SecureMind Documentation — Integration Guide for AI Agents">
   <meta property="og:locale" content="en_US">
   <meta name="theme-color" content="#0f172a">
+  <!-- Mobile Web App Meta Tags -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="SecureMind">
+
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -55,6 +61,45 @@
     ]
   }
   </script>
+      ,
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "How do I install SecureMind?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Run the CLI installer: chmod +x install.sh && ./install.sh. The installer auto-detects your AI tools (VS Code, Cursor, Claude Code, etc.) and configures security policies automatically."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Which AI tools does SecureMind support?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "SecureMind supports GitHub Copilot, Claude Code, Cursor, Windsurf, Cody, Aider, Continue, Tabnine, Codeium, LangChain, Autogen, CrewAI, and any LLM provider including OpenAI, Anthropic, Google Gemini, Azure OpenAI, and Ollama."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How do I configure DLP policies?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "DLP policies are configured via the admin dashboard at localhost:8000 or through YAML configuration files. You can set file access rules, command execution guards, PII detection thresholds, and privacy modes."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I use SecureMind with local LLMs?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. SecureMind supports Ollama for local LLM execution. Enable privacy mode to enforce local-only processing and block all cloud API calls."
+            }
+          }
+        ]
+      }
+
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
