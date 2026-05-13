@@ -1285,19 +1285,42 @@
     })();
   </script>
   <script>
-    /* ── Visitor counter (Cloudflare Worker) ── */
+    /* ── Visitor counter (localStorage-based, prevents multiple counts per session) ── */
     (function() {
-      const WORKER_URL = 'https://YOUR_WORKER_SUBDOMAIN.workers.dev';
-      fetch(WORKER_URL)
-        .then(r => r.json())
-        .then(data => {
-          const el = document.getElementById('visitor-count');
-          if (el) el.textContent = data.count.toLocaleString();
-        })
-        .catch(() => {
-          const el = document.getElementById('visitor-count');
-          if (el) el.parentElement.style.display = 'none';
-        });
+      const COUNTER_KEY = 'securemind_visitor_count';
+      const SESSION_KEY = 'securemind_visitor_session';
+      
+      try {
+        // Check if this visitor has already been counted in this session
+        const hasVisitedThisSession = sessionStorage.getItem(SESSION_KEY);
+        
+        if (!hasVisitedThisSession) {
+          // Get current count from localStorage
+          let count = parseInt(localStorage.getItem(COUNTER_KEY) || '0', 10);
+          
+          // Increment count
+          count++;
+          
+          // Save new count
+          localStorage.setItem(COUNTER_KEY, count.toString());
+          
+          // Mark this session as counted
+          sessionStorage.setItem(SESSION_KEY, 'true');
+        }
+        
+        // Display the count
+        const count = parseInt(localStorage.getItem(COUNTER_KEY) || '0', 10);
+        const el = document.getElementById('visitor-count');
+        if (el) {
+          el.textContent = count.toLocaleString();
+        }
+      } catch (e) {
+        // If localStorage is not available, hide the counter
+        const el = document.getElementById('visitor-count');
+        if (el && el.parentElement) {
+          el.parentElement.style.display = 'none';
+        }
+      }
     })();
   </script>
 </body>
