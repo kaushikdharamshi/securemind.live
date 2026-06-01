@@ -39,6 +39,8 @@ Training pipeline: `secagent train --eval` or `python3 scripts/train_enhanced_cl
 | **GenAI** | LLM-based semantic verification (pluggable: Ollama/Anthropic/OpenAI/OpenRouter) via 398-line provider framework | Ollama llama3.1, Claude Haiku, GPT-4o-mini |
 | **Agentic AI** | Lethal Trifecta detector, tool call guard, MCP tool scanning, cross-session taint tracking, **10-category autonomous red-team agents (55 agents)**, 6-layer ingress guard with TLS fingerprinting + behavior analysis, **session tracker (multi-step trust building detection)** | Custom runtime monitors, agent framework |
 | **Security** | 50+ exec guard rules, 14 PII types + 4 new (SendGrid, Twilio SID, Slack webhook, MongoDB SRV), 10 credential types, OWASP Top 10 coverage, code fingerprint guard, **ingress guard (1,790 lines, 9 modules)**, shadow AI detector, memory guard, honeypot monitor, **DLP controls UI**, **endpoint auth hardening**, **reflection attack detection** | DLP pipeline + finding validators |
+| **RBAC** | **7-role access control**: super_admin > it_admin > analyst > lead > auditor > agent > developer. Auth resolution: X-Role header → EA_*_TOKENS env → console API key → EA_DASHBOARD_TOKEN → developer. Team scoping (leads see only X-Team data). Covers all endpoints | gateway/middleware/rbac.py |
+| **Smart Redaction** | **4-mode configurable data masking** per data type: `block` (API keys, private keys), `redact` (reversible tokenization — AI never sees real SSN, response de-tokenized back, 1h TTL), `mask` (partial — `****@domain.com`), `allow`. Per-request override via X-Redaction-Mode header. Wired into input + output pipelines | gateway/smart_redaction.py |
 | **MCP Server** | **9-tool MCP security server** with stdio + SSE transports — secure_read, secure_exec, analyze_prompt, scan_output, check_policy, get_session_policy, audit_log, **token_optimize**, **compliance_report** | JSON-RPC 2.0, MCP 2024-11-05 protocol |
 | **Token Optimization** | Strip PII/credentials from prompts before LLM consumption — returns redacted content + token savings metrics (cost reduction + security in one) | Pattern-based redaction, token estimation |
 | **Compliance** | **4-framework auto-generated compliance reports**: NIST 800-53 (18/18), SOC 2 (8/8), HIPAA (6/6), PCI-DSS (6/6) — **38/38 controls passing** from 18,250 audit entries. **4-framework compliance mapping**: OWASP (8/10), NIST (14/18), MITRE ATLAS (11/14), CSA ARIA (12/15) — **45/57 = 78.9%** | compliance_report.py, mapping JSONs, audit trail analysis |
@@ -46,6 +48,7 @@ Training pipeline: `secagent train --eval` or `python3 scripts/train_enhanced_cl
 | **Monitoring** | Behavioral monitor (809 lines), process monitor, file monitor, privilege monitor, honeypot monitor | Runtime monitors in securityagent-core |
 | **Distribution** | `pip install securityagent-core[ml]` -> `secagent` CLI with init/mcp/demo/train/status | PyPI-ready package, 7 AI tool auto-detection |
 | **Multi-Framework Validation** | **68/68 (100%)** across Plain Python (21), LangChain (7), LangGraph (3), PydanticAI (6), Eval suite (31) — improved from 41% → 93% → 99% → 100% | ~/agsec-test-agents/ |
+| **Browser Consent UX** | Chrome extension consent modal — critical PII shows interactive per-finding dropdown (Redact/Mask/Block/Allow) instead of hard-block. Users choose protections, then submit | chrome-extension/content.js |
 
 ---
 
@@ -176,6 +179,9 @@ secagent mcp --transport sse --port 8765
 | **DLP-to-breach bridge** | DLP findings auto-feed breach intelligence engine | No | No | No | No |
 | **Unified dashboard** | Single-port dashboard (gateway + admin + SOC + hook audit) | No | No | No | No |
 | **IDE extension** | VS Code v4.28.0 (context boundary + LM interceptor + model usage reporting + auto-proxy) | No | No | No | No |
+| **RBAC** | 7-role hierarchy (super_admin→developer), team scoping, per-endpoint ACL | No | No | Limited | No |
+| **Smart Redaction** | 4-mode per data type (block/redact/mask/allow), reversible tokenization, per-request override | No | No | No | No |
+| **Browser consent UX** | Interactive per-finding consent modal (Redact/Mask/Block/Allow) | No | No | No | No |
 | **Pre-commit hooks** | DLP + vuln scanning | No | No | No | No |
 | **Pricing** | Free + ₹1,250/dev/mo + ₹2,100/dev/mo | Free + custom enterprise | Acquired (Palo Alto) | Custom | Enterprise |
 
@@ -269,6 +275,15 @@ The gateway sustains **22.9 requests/second** under mixed attack payloads with *
 
 Scoped ASR: 0.3% (1/305), Jailbreak Success Score: 0/100, FPR: 0.0%, Precision: 1.000. No competitor maps to all 4 frameworks simultaneously.
 
+### 25. RBAC — 7-role enterprise access control
+Full role-based access control on every gateway endpoint. 7 roles: `super_admin` (100) > `it_admin` (80) > `analyst` (60) > `lead` (40) > `auditor` (30) > `agent` (20) > `developer` (10). Auth resolution chain: (1) `X-Role` header, (2) `EA_ADMIN_TOKENS`/`EA_ANALYST_TOKENS`/`EA_LEAD_TOKENS`/`EA_AUDITOR_TOKENS` env vars, (3) console API key lookup, (4) `EA_DASHBOARD_TOKEN` → super_admin (backwards compat), (5) no auth → developer. Team scoping via `X-Team` header — leads see only their team's data; admins/analysts see all. Toggle via `EA_RBAC_ENABLED` (default true). No competitor has role-based access control with team scoping for AI agent security.
+
+### 26. Smart Redaction — configurable data masking with reversible tokenization
+Instead of binary block/allow, 4 modes per data type: `block` (reject — API keys, private keys, JWTs), `redact` (reversible tokenization — SSN replaced with `[SSN:tok_abc123]`, AI never sees real value, response de-tokenized back with real data), `mask` (partial — `****@domain.com`, `***-**-1234`, `**** **** **** 5678`), `allow` (pass through). Per-request override via `X-Redaction-Mode` header. Token store with 1h TTL, persisted to disk. Wired into both input pipeline (step 4) and output pipeline (step 4, de-tokenizes AI responses). The W2 use case: SSN redacted before LLM sees it, salary passes through, AI response restored with real SSN values. Breach engine integration: `emit_redaction_event()` fires on every redaction action. No competitor offers reversible tokenization that lets the AI work on sanitized data and automatically restores real values in the response.
+
+### 27. Chrome consent modal — user-controlled PII handling
+Critical PII in browser LLM UIs no longer hard-blocked. Instead, shows an interactive consent modal with per-finding dropdowns: **Redact** (recommended for critical — replaces with placeholder), **Mask** (partial — shows last 4 digits), **Block** (removes entirely), **Allow** (sends as-is with user acknowledgment). Defaults: Redact for critical types (SSN, API keys), Mask for medium (email, phone). "Send with protections" applies chosen actions, rewrites input text, and submits. "Cancel" closes without sending. Built with DOM API only (no innerHTML — XSS-safe). No competitor gives users granular per-finding control over how their sensitive data is handled before sending to an LLM.
+
 ---
 
 ## How We're Different From LangSmith, LangChain, Cursor, Claude Code, Cisco, Microsoft
@@ -354,11 +369,12 @@ SecureMind is the only player in the **local + actions** quadrant.
 | Compliance frameworks mapped | 4 (OWASP + NIST + MITRE ATLAS + CSA ARIA) — **45/57 = 78.9%** |
 | Compliance reports | 4 (NIST 800-53, SOC 2, HIPAA, PCI-DSS) — **38/38 passing** |
 | Audit entries analyzed | 18,250 |
-| Test suites (AgnosticSecurity) | 28 files |
+| Test suites (AgnosticSecurity) | 29 files |
 | Test suites (securityagent-core) | 50 files |
-| **Total tests** | **956** across all suites |
+| **Total tests** | **1,051** across all suites |
 | Core tests | 263 |
 | Gateway + enterprise tests | 101 (46 gateway DLP + 25 enterprise privacy + 30 FP/TP) |
+| RBAC + smart redaction tests | 95 |
 | Red-team attacks (static YAML) | 274 across 5 eval files, 52 categories |
 | Red-team attacks (autonomous) | 58 across 10 categories (55 agents, 84 events, 100% detection) |
 | **Total attack coverage** | **332 attacks** |
@@ -369,13 +385,14 @@ SecureMind is the only player in the **local + actions** quadrant.
 | Multi-framework validation | **68/68 (100%)** — Python, LangChain, LangGraph, PydanticAI |
 | Adversarial load test | **22.9 RPS**, 0 crashes, 0 5xx |
 | VS Code extension | v4.28.0 |
-| Chrome extension | v4.27.0, 12 LLM sites |
+| Chrome extension | v4.27.0, 12 LLM sites, consent modal UI |
 | Package version | 4.27.0 (PyPI published) |
 | PII types | 14 core + 4 new (SendGrid, Twilio SID, Slack webhook, MongoDB SRV) |
 | Live demo speed | 0.2s (`--no-llm`), 26s (full with Ollama) |
 | Install time | ~60 seconds (`pip install` + `secagent init`) |
-| Design docs | 17 files |
-| **Differentiators** | **24** |
+| Design docs | 18 files |
+| Components | 25 |
+| **Differentiators** | **27** |
 
 ---
 
@@ -392,7 +409,7 @@ AgnosticSecurity/
 │   ├── train_enhanced_classifier.py   # Enhanced ML training (1,755 samples, 3 data sources)
 │   ├── train_ml_classifier.py         # Original ML training pipeline
 │   ├── harmbench_export.py            # HarmBench eval export (--run for exec attacks)
-│   ├── test_*.py                      # 28 test suites (956 tests)
+│   ├── test_*.py                      # 29 test suites (1,051 tests)
 │   ├── nist_score.py                  # NIST compliance scorecard
 │   ├── owasp_score.py                 # OWASP LLM compliance scorecard
 │   ├── continuous_red_team.py         # Continuous red-team runner
@@ -417,14 +434,16 @@ AgnosticSecurity/
 │   ├── input_pipeline.py             # Gateway input pipeline (session tracker wired step 2)
 │   ├── session_tracker.py            # Multi-step trust building detection
 │   ├── smart_router.py               # Intelligent LLM routing
-│   └── enterprise_privacy.py         # DLP-to-breach bridge
+│   ├── smart_redaction.py            # Smart Redaction engine (4 modes, reversible tokenization)
+│   ├── enterprise_privacy.py         # DLP-to-breach bridge + redaction event emitter
+│   └── middleware/rbac.py            # RBAC middleware (7 roles, team scoping)
 ├── demo/
 │   ├── live_attack_demo.py            # 30-sec YC demo (6 attacks, 0.2s --no-llm mode)
 │   ├── attack_scenarios.yaml          # 25 attack scenarios
 │   ├── malicious_cursorrules.md       # Cursor rules attack demo
 │   └── run_demo.py                    # YAML-driven demo runner
 ├── hooks/                             # Pre-commit DLP + vuln scanning
-├── chrome-extension/                  # Browser DLP guard (v4.27.0, 12 LLM sites)
+├── chrome-extension/                  # Browser DLP guard (v4.27.0, 12 LLM sites, consent modal)
 ├── vscode-extension/                  # VS Code v4.28.0 context boundary
 ├── console/                           # Admin console (web UI)
 ├── llm/                               # LLM proxy + SDK
@@ -435,6 +454,7 @@ AgnosticSecurity/
 │   ├── CSA_ARIA_MAPPING.md            # CSA ARIA 12/15 mapping
 │   ├── AI_VS_HUMAN_DETECTION.md       # AI vs human edit detection design
 │   ├── REAL_WORLD_SCENARIOS.md        # Real-world attack scenarios
+│   ├── ENTERPRISE_RBAC.md             # RBAC design doc (7 roles, team scoping)
 │   ├── THREAT_MODEL_SCOPE.md          # Model-training attacks scoped out
 │   └── *.md                          # GTM, YC app, admin console, threat models, etc.
 ├── docker-compose.redteam.yml         # Red-team Docker harness (55 agents, 84 events, 100% detection)
@@ -559,4 +579,4 @@ securityagent-core/src/
 - [Top AI Security Platforms 2026](https://accuknox.com/blog/top-10-ai-security-platforms-2026)
 
 ---
-*Last updated: 2026-05-20*
+*Last updated: 2026-05-30*
