@@ -51,6 +51,12 @@ Training pipeline: `secagent train --eval` or `python3 scripts/train_enhanced_cl
 | **Browser Consent UX** | Chrome extension consent modal — critical PII shows interactive per-finding dropdown (Redact/Mask/Block/Allow) instead of hard-block. Users choose protections, then submit. File upload consent: per-PII-type controls + safety prompt injection guard | chrome-extension/content.js |
 | **Permit System** | **Capability-based runtime delegation** — HMAC-signed, attenuation-only (child can narrow, never amplify), time-boxed TTL, cascade revoke, request limits, depth-limited chains. Permits scope endpoint access + model restrictions + blocked data types. Inspired by FirstOps capability model | gateway/permits.py, routes/permits.py |
 | **CSO Security Audit** | **18 findings fixed** (3 HIGH + 9 MEDIUM + 6 LOW): X-Role spoofing gated, AES-256-GCM encrypted token store, HMAC body verification, nonce replay protection, RBAC fail-closed, ReDoS fix, 50KB input limit, CORS restricted, SRI hashes, API key masking | Comprehensive 4-agent parallel audit |
+| **Gateway MCP Server** | **7-tool MCP server** (gateway-level): `dlp_scan`, `dlp_redact`, `permit_mint`, `permit_revoke`, `permit_chain`, `compliance_report`, `audit_query`. Stdio mode (JSON-RPC for Claude Code/Cursor) + HTTP mode (FastAPI at `/mcp/tools` and `/mcp/call`) | `gateway/mcp_server.py` |
+| **Policy-as-Code** | YAML-based DLP policy configuration. Teams define rules in `.agnosticsecurity/policy.yaml` (versioned in repo). Per-data-type actions, custom patterns, team overrides, scheduled policies. Gateway loads and applies alongside defaults | `gateway/policy_loader.py` |
+| **Compliance Report Generator** | CLI tool generating compliance reports across 4 frameworks (OWASP, NIST, MITRE ATLAS, CSA ARIA). Formats: JSON, Markdown, PDF. Combined score, full eval metrics (ASR, FPR, F1, red team detection). `--company "Acme Corp"` for branded PDFs | `scripts/compliance_report.py` |
+| **Slack/Teams Alert Bot** | Real-time DLP event alerts to Slack or Microsoft Teams. Triggers on: PII blocked/redacted, prompt injection, permit revoked, rate limit exceeded, red team attacks. Severity filtering, deduplication, configurable channels | `gateway/slack_bot.py` |
+| **Agent Behavioral Profiler** | ML-based anomaly detection for AI agent behavior. Builds baseline per agent (API key hash): endpoint frequency, model usage, request size, PII rate, block rate. Z-score anomaly detection when agent deviates. Persisted profiles, auto-flush | `gateway/agent_profiler.py` |
+| **JetBrains Integration** | DLP protection for IntelliJ, PyCharm, WebStorm, GoLand. Generates `.idea/` config: excludes sensitive files from AI assistant indexing, read-only editor marks, file type associations, inspection profiles for secret detection. CLI: `--workspace <path>` | `integrations/jetbrains.py` |
 
 ---
 
@@ -186,6 +192,11 @@ secagent mcp --transport sse --port 8765
 | **Browser consent UX** | Interactive per-finding consent modal (Redact/Mask/Block/Allow) + file upload consent | No | No | No | No |
 | **Permit system** | Capability-based delegation (HMAC-signed, attenuation-only, cascade revoke, time-boxed) | No | No | No | No |
 | **Security audit** | 18 findings fixed (AES-256-GCM tokens, nonce replay, RBAC fail-closed, ReDoS fix, 50KB limit) | No public data | No | No | No |
+| **Gateway MCP Server** | 7-tool MCP (dlp_scan, dlp_redact, permit_mint/revoke/chain, compliance, audit) | No | No | No | No |
+| **Policy-as-Code** | YAML DLP policies, team overrides, custom patterns, scheduled | No | No | Limited | No |
+| **Slack/Teams alerts** | Real-time DLP alerts, severity filtering, dedup | No | No | No | No |
+| **Agent profiling** | Z-score anomaly detection, baseline per agent, persisted | No | No | No | No |
+| **JetBrains IDE** | IntelliJ/PyCharm/WebStorm — AI indexing exclusion, inspections | No | No | No | No |
 | **Pre-commit hooks** | DLP + vuln scanning | No | No | No | No |
 | **Pricing** | Free + ₹1,250/dev/mo + ₹2,100/dev/mo | Free + custom enterprise | Acquired (Palo Alto) | Custom | Enterprise |
 
@@ -293,6 +304,24 @@ HMAC-signed, attenuation-only capability tokens (child can narrow scope, never a
 
 ### 29. CSO security audit — 18 findings fixed, production-hardened
 Comprehensive 4-agent parallel security audit (secrets archaeology, dependency supply chain, OWASP+STRIDE, ReDoS+code quality). **3 HIGH fixes**: X-Role header spoofing gated behind `EA_RBAC_DEV_HEADERS` (default off), token store encrypted with AES-256-GCM at rest, swallowed exceptions now logged in 5 security-critical paths. **9 MEDIUM fixes**: session tracker activated (session_id from API key + client IP), HMAC now verifies request body (was skipping), nonce replay protection (OrderedDict, 10K cap, 5min TTL), RBAC fail-closed on undefined endpoints, API key masked in logs, 6 Python deps pinned to exact versions, demo token fallback removed (fail-closed), redaction token entropy 48→128 bits, ReDoS fix (triple unbounded `.*` → bounded `.{0,80}`). **6 LOW fixes**: breach engine CORS restricted, privacy mode error no longer leaks model name, CDN scripts have SRI integrity hashes, package-lock resynced, 50KB input length limit before regex, persistence failures now log warnings. No competitor publishes security audit results at this granularity.
+
+### 30. Gateway MCP Server — 7 tools for any MCP-compatible agent
+`gateway/mcp_server.py` exposes 7 gateway-level tools: `dlp_scan` (scan text for PII/credentials/injection), `dlp_redact` (redact and return clean text), `permit_mint` (create capability tokens), `permit_revoke` (cascade revoke), `permit_chain` (inspect delegation chain), `compliance_report` (generate reports), `audit_query` (search audit trail). Stdio mode (JSON-RPC for Claude Code/Cursor — add to `~/.claude/mcp_servers.json`) + HTTP mode (`--http` flag, FastAPI at `/mcp/tools` and `/mcp/call`). Any MCP-compatible agent auto-discovers security capabilities. This is separate from the securityagent-core MCP server (9 tools) — the gateway MCP server provides enterprise controls (permits, compliance) that the endpoint agent doesn't have.
+
+### 31. Policy-as-Code — YAML-based DLP configuration
+Teams define DLP rules in `.agnosticsecurity/policy.yaml` (versioned in their repo). Per-data-type actions (block/redact/mask/allow), custom regex patterns with severity levels, team overrides (stricter for finance, relaxed for marketing), scheduled policies (stricter during audit windows). Gateway loads policy at startup and applies alongside defaults. No competitor offers declarative, version-controlled DLP policy that lives in the team's repo.
+
+### 32. Compliance Report Generator — JSON/Markdown/PDF across 4 frameworks
+`scripts/compliance_report.py` generates compliance reports for OWASP, NIST, MITRE ATLAS, CSA ARIA (or all). Formats: JSON (machine-readable), Markdown (readable), PDF (CISO-ready with `--company "Acme Corp"` branding). Includes combined compliance score, per-framework breakdown, full eval metrics (ASR, FPR, F1, red team detection rate). No competitor auto-generates multi-framework compliance reports from live security data.
+
+### 33. Slack/Teams Alert Bot — real-time DLP event notifications
+`gateway/slack_bot.py` sends real-time alerts when: PII detected and blocked/redacted, prompt injection attempted, permit revoked/expired, rate limit exceeded, red team attack detected. Severity filtering (only alert on critical/high), deduplication (same event type + agent within 5 min = suppressed), configurable channels per severity. Works with both Slack webhooks and Microsoft Teams incoming webhooks. No competitor provides real-time security alerting for AI agent DLP events.
+
+### 34. Agent Behavioral Profiler — Z-score anomaly detection
+`gateway/agent_profiler.py` builds a behavioral baseline per agent (identified by API key hash): endpoint frequency distribution, model usage patterns, average request size, PII detection rate, block rate. When an agent deviates (suddenly reading .env files, new exfil patterns, unusual model requests), Z-score anomaly detection flags it. Profiles persisted to disk, auto-flush every 30s. No competitor performs behavioral anomaly detection at the AI agent level.
+
+### 35. JetBrains IDE Integration — IntelliJ, PyCharm, WebStorm, GoLand
+`integrations/jetbrains.py` generates `.idea/` configuration: excludes sensitive files from AI assistant indexing (JetBrains AI Assistant and GitHub Copilot plugin both respect these settings), marks sensitive files as read-only, configures file type associations for credentials, adds inspection profiles for secret detection. CLI: `python3 integrations/jetbrains.py --workspace <path>`. Extends coverage beyond VS Code/Cursor to the JetBrains ecosystem (IntelliJ, PyCharm, WebStorm, GoLand, Rider). No competitor covers JetBrains IDEs for AI agent DLP.
 
 ---
 
@@ -404,12 +433,12 @@ SecureMind is the only player in the **local + actions** quadrant.
 | Live demo speed | 0.2s (`--no-llm`), 26s (full with Ollama) |
 | Install time | ~60 seconds (`pip install` + `secagent init`) |
 | Design docs | 19 files (added GETTING_STARTED.md) |
-| Components | 25 |
+| Components | **31** |
 | Security audit findings fixed | 18 (3 HIGH + 9 MEDIUM + 6 LOW) |
 | Token store encryption | AES-256-GCM at rest |
 | Data directory | `~/.agnosticsecurity/` (configurable via `EA_DATA_DIR`) |
 | Interactive diagrams | 2 (architecture-flow.html, redteam-flow.html) |
-| **Differentiators** | **29** |
+| **Differentiators** | **35** |
 
 ---
 
