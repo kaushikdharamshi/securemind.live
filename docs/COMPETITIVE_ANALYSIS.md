@@ -48,7 +48,9 @@ Training pipeline: `secagent train --eval` or `python3 scripts/train_enhanced_cl
 | **Monitoring** | Behavioral monitor (809 lines), process monitor, file monitor, privilege monitor, honeypot monitor | Runtime monitors in securityagent-core |
 | **Distribution** | `pip install securityagent-core[ml]` -> `secagent` CLI with init/mcp/demo/train/status | PyPI-ready package, 7 AI tool auto-detection |
 | **Multi-Framework Validation** | **68/68 (100%)** across Plain Python (21), LangChain (7), LangGraph (3), PydanticAI (6), Eval suite (31) — improved from 41% → 93% → 99% → 100% | ~/agsec-test-agents/ |
-| **Browser Consent UX** | Chrome extension consent modal — critical PII shows interactive per-finding dropdown (Redact/Mask/Block/Allow) instead of hard-block. Users choose protections, then submit | chrome-extension/content.js |
+| **Browser Consent UX** | Chrome extension consent modal — critical PII shows interactive per-finding dropdown (Redact/Mask/Block/Allow) instead of hard-block. Users choose protections, then submit. File upload consent: per-PII-type controls + safety prompt injection guard | chrome-extension/content.js |
+| **Permit System** | **Capability-based runtime delegation** — HMAC-signed, attenuation-only (child can narrow, never amplify), time-boxed TTL, cascade revoke, request limits, depth-limited chains. Permits scope endpoint access + model restrictions + blocked data types. Inspired by FirstOps capability model | gateway/permits.py, routes/permits.py |
+| **CSO Security Audit** | **18 findings fixed** (3 HIGH + 9 MEDIUM + 6 LOW): X-Role spoofing gated, AES-256-GCM encrypted token store, HMAC body verification, nonce replay protection, RBAC fail-closed, ReDoS fix, 50KB input limit, CORS restricted, SRI hashes, API key masking | Comprehensive 4-agent parallel audit |
 
 ---
 
@@ -181,7 +183,9 @@ secagent mcp --transport sse --port 8765
 | **IDE extension** | VS Code v4.28.0 (context boundary + LM interceptor + model usage reporting + auto-proxy) | No | No | No | No |
 | **RBAC** | 7-role hierarchy (super_admin→developer), team scoping, per-endpoint ACL | No | No | Limited | No |
 | **Smart Redaction** | 4-mode per data type (block/redact/mask/allow), reversible tokenization, per-request override | No | No | No | No |
-| **Browser consent UX** | Interactive per-finding consent modal (Redact/Mask/Block/Allow) | No | No | No | No |
+| **Browser consent UX** | Interactive per-finding consent modal (Redact/Mask/Block/Allow) + file upload consent | No | No | No | No |
+| **Permit system** | Capability-based delegation (HMAC-signed, attenuation-only, cascade revoke, time-boxed) | No | No | No | No |
+| **Security audit** | 18 findings fixed (AES-256-GCM tokens, nonce replay, RBAC fail-closed, ReDoS fix, 50KB limit) | No public data | No | No | No |
 | **Pre-commit hooks** | DLP + vuln scanning | No | No | No | No |
 | **Pricing** | Free + ₹1,250/dev/mo + ₹2,100/dev/mo | Free + custom enterprise | Acquired (Palo Alto) | Custom | Enterprise |
 
@@ -284,6 +288,12 @@ Instead of binary block/allow, 4 modes per data type: `block` (reject — API ke
 ### 27. Chrome consent modal — user-controlled PII handling
 Critical PII in browser LLM UIs no longer hard-blocked. Instead, shows an interactive consent modal with per-finding dropdowns: **Redact** (recommended for critical — replaces with placeholder), **Mask** (partial — shows last 4 digits), **Block** (removes entirely), **Allow** (sends as-is with user acknowledgment). Defaults: Redact for critical types (SSN, API keys), Mask for medium (email, phone). "Send with protections" applies chosen actions, rewrites input text, and submits. "Cancel" closes without sending. Built with DOM API only (no innerHTML — XSS-safe). No competitor gives users granular per-finding control over how their sensitive data is handled before sending to an LLM.
 
+### 28. Permit system — capability-based runtime delegation
+HMAC-signed, attenuation-only capability tokens (child can narrow scope, never amplify). Each permit scopes: allowed endpoints, allowed models, blocked data types, request limits, TTL. Cascade revoke kills entire token chain. Depth-limited to prevent unbounded delegation. `pmt_*` tokens accepted as Bearer auth, validated via permit store, scope enforced per-request. Permits wire into the input pipeline — if a prompt contains a PII type listed in `blocked_data_types`, the request is rejected before reaching the LLM. Inspired by FirstOps capability model (Anshal Dwivedi). No competitor has capability-based runtime delegation for AI agent security.
+
+### 29. CSO security audit — 18 findings fixed, production-hardened
+Comprehensive 4-agent parallel security audit (secrets archaeology, dependency supply chain, OWASP+STRIDE, ReDoS+code quality). **3 HIGH fixes**: X-Role header spoofing gated behind `EA_RBAC_DEV_HEADERS` (default off), token store encrypted with AES-256-GCM at rest, swallowed exceptions now logged in 5 security-critical paths. **9 MEDIUM fixes**: session tracker activated (session_id from API key + client IP), HMAC now verifies request body (was skipping), nonce replay protection (OrderedDict, 10K cap, 5min TTL), RBAC fail-closed on undefined endpoints, API key masked in logs, 6 Python deps pinned to exact versions, demo token fallback removed (fail-closed), redaction token entropy 48→128 bits, ReDoS fix (triple unbounded `.*` → bounded `.{0,80}`). **6 LOW fixes**: breach engine CORS restricted, privacy mode error no longer leaks model name, CDN scripts have SRI integrity hashes, package-lock resynced, 50KB input length limit before regex, persistence failures now log warnings. No competitor publishes security audit results at this granularity.
+
 ---
 
 ## How We're Different From LangSmith, LangChain, Cursor, Claude Code, Cisco, Microsoft
@@ -352,12 +362,12 @@ SecureMind is the only player in the **local + actions** quadrant.
 
 ---
 
-## By the Numbers (v4.28.0 — May 2026)
+## By the Numbers (v4.31.0 — June 2026)
 
 | Metric | Value |
 |---|---|
 | **Total Python source** | **21,546 lines** (securityagent-core) |
-| Core DLP engine | 2,933 lines (`secagent_check.py`) |
+| Core DLP engine | ~1,800 lines (`secagent_check.py`) + `scripts/secagent/` package (exec_rules, exec_helpers, prompt_helpers) |
 | Config/patterns | 1,777 lines (`settings.py`) |
 | Scanner modules | 23 files, 7,553 lines |
 | Monitor modules | 5 files, 1,594 lines |
@@ -384,15 +394,22 @@ SecureMind is the only player in the **local + actions** quadrant.
 | ML PII context classifier v2 | 169 samples, **0.959 CV F1** (active learning improved from 0.96) |
 | Multi-framework validation | **68/68 (100%)** — Python, LangChain, LangGraph, PydanticAI |
 | Adversarial load test | **22.9 RPS**, 0 crashes, 0 5xx |
-| VS Code extension | v4.28.0 |
-| Chrome extension | v4.27.0, 12 LLM sites, consent modal UI |
-| Package version | 4.27.0 (PyPI published) |
+| Permit system tests | 39 (minting, attenuation, TTL, cascade revoke, request limits, chain depth) |
+| LLM proxy tests | 33 (10 modules) |
+| Provider routes tests | 27 (models + routes + pipeline) |
+| VS Code extension | v4.30.0 (refactored: extension.ts split → editGuard.ts + contentGuardian.ts + reportPanel.ts) |
+| Chrome extension | v4.30.1, 12 LLM sites, consent modal UI, file upload consent |
+| Package version | **4.31.0** (PyPI published) |
 | PII types | 14 core + 4 new (SendGrid, Twilio SID, Slack webhook, MongoDB SRV) |
 | Live demo speed | 0.2s (`--no-llm`), 26s (full with Ollama) |
 | Install time | ~60 seconds (`pip install` + `secagent init`) |
-| Design docs | 18 files |
+| Design docs | 19 files (added GETTING_STARTED.md) |
 | Components | 25 |
-| **Differentiators** | **27** |
+| Security audit findings fixed | 18 (3 HIGH + 9 MEDIUM + 6 LOW) |
+| Token store encryption | AES-256-GCM at rest |
+| Data directory | `~/.agnosticsecurity/` (configurable via `EA_DATA_DIR`) |
+| Interactive diagrams | 2 (architecture-flow.html, redteam-flow.html) |
+| **Differentiators** | **29** |
 
 ---
 
@@ -405,9 +422,9 @@ AgnosticSecurity/
 ├── CLAUDE.md                          # START HERE — full architecture, conventions, how to run tests
 ├── ARCHITECTURE.md                    # Detailed system design
 ├── scripts/
-│   ├── secagent_check.py              # Core DLP engine (2,933 lines) — THE main file
-│   ├── train_enhanced_classifier.py   # Enhanced ML training (1,755 samples, 3 data sources)
-│   ├── train_ml_classifier.py         # Original ML training pipeline
+│   ├── secagent_check.py              # Core DLP engine (~1,800 lines, refactored) — THE main file
+│   ├── secagent/                      # Extracted modules (exec_rules, exec_helpers, prompt_helpers)
+│   ├── train_enhanced_classifier.py   # Enhanced ML training (1,880 samples, 3 data sources)
 │   ├── harmbench_export.py            # HarmBench eval export (--run for exec attacks)
 │   ├── test_*.py                      # 29 test suites (1,051 tests)
 │   ├── nist_score.py                  # NIST compliance scorecard
@@ -434,17 +451,23 @@ AgnosticSecurity/
 │   ├── input_pipeline.py             # Gateway input pipeline (session tracker wired step 2)
 │   ├── session_tracker.py            # Multi-step trust building detection
 │   ├── smart_router.py               # Intelligent LLM routing
-│   ├── smart_redaction.py            # Smart Redaction engine (4 modes, reversible tokenization)
+│   ├── smart_redaction.py            # Smart Redaction engine (4 modes, reversible tokenization, AES-256-GCM)
+│   ├── permits.py                    # Permit system (capability-based, HMAC-signed, attenuation-only)
+│   ├── provider_pipeline.py          # Shared provider pipeline (235 lines, extracted from provider_routes)
 │   ├── enterprise_privacy.py         # DLP-to-breach bridge + redaction event emitter
-│   └── middleware/rbac.py            # RBAC middleware (7 roles, team scoping)
+│   └── middleware/rbac.py            # RBAC middleware (7 roles, team scoping, fail-closed)
 ├── demo/
 │   ├── live_attack_demo.py            # 30-sec YC demo (6 attacks, 0.2s --no-llm mode)
 │   ├── attack_scenarios.yaml          # 25 attack scenarios
 │   ├── malicious_cursorrules.md       # Cursor rules attack demo
 │   └── run_demo.py                    # YAML-driven demo runner
 ├── hooks/                             # Pre-commit DLP + vuln scanning
-├── chrome-extension/                  # Browser DLP guard (v4.27.0, 12 LLM sites, consent modal)
-├── vscode-extension/                  # VS Code v4.28.0 context boundary
+├── chrome-extension/                  # Browser DLP guard (v4.30.1, 12 LLM sites, consent modal, file upload consent)
+├── vscode-extension/                  # VS Code v4.30.0 (refactored: editGuard, contentGuardian, reportPanel)
+├── docs/
+│   ├── GETTING_STARTED.md            # 5-min onboarding guide
+│   ├── architecture-flow.html        # Interactive architecture diagram (live API calls)
+│   ├── redteam-flow.html             # Interactive red-team flow diagram
 ├── console/                           # Admin console (web UI)
 ├── llm/                               # LLM proxy + SDK
 ├── docs/                              # 17 design docs
@@ -473,7 +496,7 @@ AgnosticSecurity/
 5. `ingress_guard/middleware.py` -> `tls_fingerprint.py` -> `cross_session.py` — inbound security
 6. `demo/live_attack_demo.py` — the YC interview demo
 
-### securityagent-core v4.27.0 (21,546 lines + 50 test files)
+### securityagent-core v4.31.0 (21,546 lines + 50 test files)
 
 ```
 Install: pip install securityagent-core[ml]
@@ -579,4 +602,4 @@ securityagent-core/src/
 - [Top AI Security Platforms 2026](https://accuknox.com/blog/top-10-ai-security-platforms-2026)
 
 ---
-*Last updated: 2026-05-30*
+*Last updated: 2026-06-12*
