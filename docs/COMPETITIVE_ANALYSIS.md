@@ -379,9 +379,9 @@ SecureMind is the only player in the **local + actions** quadrant.
 | Compliance frameworks mapped | 4 (OWASP + NIST + MITRE ATLAS + CSA ARIA) — **45/57 = 78.9%** |
 | Compliance reports | 4 (NIST 800-53, SOC 2, HIPAA, PCI-DSS) — **38/38 passing** |
 | Audit entries analyzed | 18,250 |
-| Test suites (AgnosticSecurity) | 29 files |
+| Test suites (AgnosticSecurity) | 32 files |
 | Test suites (securityagent-core) | 50 files |
-| **Total tests** | **1,051** across all suites |
+| **Total tests** | **1,150** across 32 suites |
 | Core tests | 263 |
 | Gateway + enterprise tests | 101 (46 gateway DLP + 25 enterprise privacy + 30 FP/TP) |
 | RBAC + smart redaction tests | 95 |
