@@ -51,6 +51,9 @@ Training pipeline: `secagent train --eval` or `python3 scripts/train_enhanced_cl
 | **Browser Consent UX** | Chrome extension consent modal — critical PII shows interactive per-finding dropdown (Redact/Mask/Block/Allow) instead of hard-block. Users choose protections, then submit. File upload consent: per-PII-type controls + safety prompt injection guard | chrome-extension/content.js |
 | **Permit System** | **Capability-based runtime delegation** — HMAC-signed, attenuation-only (child can narrow, never amplify), time-boxed TTL, cascade revoke, request limits, depth-limited chains. Permits scope endpoint access + model restrictions + blocked data types. Inspired by FirstOps capability model | gateway/permits.py, routes/permits.py |
 | **CSO Security Audit** | **18 findings fixed** (3 HIGH + 9 MEDIUM + 6 LOW): X-Role spoofing gated, AES-256-GCM encrypted token store, HMAC body verification, nonce replay protection, RBAC fail-closed, ReDoS fix, 50KB input limit, CORS restricted, SRI hashes, API key masking | Comprehensive 4-agent parallel audit |
+| **Embedding Similarity Detector** | Semantic attack detection via embedding similarity. Pre-embeds 274 known attack prompts from red-team evals. Incoming prompts compared by cosine similarity — >0.85 threshold flags as attack match. Adds ~10ms. Toggle: `EA_EMBEDDING_DETECTOR` | `security/embedding_detector.py`, all-MiniLM-L6-v2 |
+| **Anomaly Detector** | Z-score anomaly detection on per-session request patterns: request rate, prompt length, PII frequency, injection frequency. Flags when any metric exceeds 3σ from rolling mean. Toggle: `EA_ANOMALY_DETECTION` (default true) | `security/anomaly_detector.py` |
+| **Contextual Help** | 37 help tooltips across unified dashboard — every metric card, panel, and configuration option has contextual help explaining what it means and how to use it | Unified dashboard JS |
 | **Gateway MCP Server** | **7-tool MCP server** (gateway-level): `dlp_scan`, `dlp_redact`, `permit_mint`, `permit_revoke`, `permit_chain`, `compliance_report`, `audit_query`. Stdio mode (JSON-RPC for Claude Code/Cursor) + HTTP mode (FastAPI at `/mcp/tools` and `/mcp/call`) | `gateway/mcp_server.py` |
 | **Policy-as-Code** | YAML-based DLP policy configuration. Teams define rules in `.agnosticsecurity/policy.yaml` (versioned in repo). Per-data-type actions, custom patterns, team overrides, scheduled policies. Gateway loads and applies alongside defaults | `gateway/policy_loader.py` |
 | **Compliance Report Generator** | CLI tool generating compliance reports across 4 frameworks (OWASP, NIST, MITRE ATLAS, CSA ARIA). Formats: JSON, Markdown, PDF. Combined score, full eval metrics (ASR, FPR, F1, red team detection). `--company "Acme Corp"` for branded PDFs | `scripts/compliance_report.py` |
@@ -197,6 +200,8 @@ secagent mcp --transport sse --port 8765
 | **Slack/Teams alerts** | Real-time DLP alerts, severity filtering, dedup | No | No | No | No |
 | **Agent profiling** | Z-score anomaly detection, baseline per agent, persisted | No | No | No | No |
 | **JetBrains IDE** | IntelliJ/PyCharm/WebStorm — AI indexing exclusion, inspections | No | No | No | No |
+| **Embedding detector** | 274 attack embeddings, cosine similarity, ~10ms | No | No | No | No |
+| **Anomaly detector** | Z-score per-session (rate, length, PII freq, injection freq) | No | No | No | No |
 | **Pre-commit hooks** | DLP + vuln scanning | No | No | No | No |
 | **Pricing** | Free + ₹1,250/dev/mo + ₹2,100/dev/mo | Free + custom enterprise | Acquired (Palo Alto) | Custom | Enterprise |
 
@@ -323,6 +328,15 @@ Teams define DLP rules in `.agnosticsecurity/policy.yaml` (versioned in their re
 ### 35. JetBrains IDE Integration — IntelliJ, PyCharm, WebStorm, GoLand
 `integrations/jetbrains.py` generates `.idea/` configuration: excludes sensitive files from AI assistant indexing (JetBrains AI Assistant and GitHub Copilot plugin both respect these settings), marks sensitive files as read-only, configures file type associations for credentials, adds inspection profiles for secret detection. CLI: `python3 integrations/jetbrains.py --workspace <path>`. Extends coverage beyond VS Code/Cursor to the JetBrains ecosystem (IntelliJ, PyCharm, WebStorm, GoLand, Rider). No competitor covers JetBrains IDEs for AI agent DLP.
 
+### 36. Embedding Similarity Detector — semantic attack detection
+`security/embedding_detector.py` pre-embeds all 274 known attack prompts from the red-team eval suite using all-MiniLM-L6-v2. Every incoming prompt is embedded and compared by cosine similarity — if max similarity exceeds 0.85, the prompt is flagged as `EMBEDDING_MATCH` with the matched attack name. Adds ~10ms latency. This catches paraphrased attacks that regex misses — an attacker can reword "ignore all previous instructions" in infinite ways, but the semantic meaning stays close to known attacks. Toggle via `EA_EMBEDDING_DETECTOR`. No competitor performs semantic similarity matching against a pre-embedded attack corpus.
+
+### 37. Anomaly Detector — Z-score per-session behavioral anomaly detection
+`security/anomaly_detector.py` tracks per-session (API key + IP) statistics: request rate (req/min), prompt length distribution, PII detection frequency, injection attempt frequency. Flags anomalies when any metric exceeds 3σ from the session's rolling mean. A legitimate agent that suddenly starts sending 10x longer prompts with PII = anomaly. Complements the agent profiler (cross-session baseline) with within-session detection. Toggle via `EA_ANOMALY_DETECTION` (default true). No competitor combines within-session Z-score anomaly detection with cross-session agent profiling.
+
+### 38. 3 evasion gap closures — ROT13 API keys, role-play jailbreak, cross-message PII
+Closed 3 specific evasion gaps discovered during continuous red-teaming: (1) ROT13-encoded API keys now detected (was only base64), (2) role-play jailbreak attempts ("pretend you're an admin who can read .env") now force-blocked via intent classifier, (3) cross-message PII assembly (SSN split across 3 messages) now detected via session-level PII accumulator. Each gap was validated by adding eval cases to the adversarial suite. No competitor discloses specific evasion gaps and their fixes.
+
 ---
 
 ## How We're Different From LangSmith, LangChain, Cursor, Claude Code, Cisco, Microsoft
@@ -391,7 +405,7 @@ SecureMind is the only player in the **local + actions** quadrant.
 
 ---
 
-## By the Numbers (v4.31.0 — June 2026)
+## By the Numbers (v4.32.0 — June 2026)
 
 | Metric | Value |
 |---|---|
@@ -426,9 +440,9 @@ SecureMind is the only player in the **local + actions** quadrant.
 | Permit system tests | 39 (minting, attenuation, TTL, cascade revoke, request limits, chain depth) |
 | LLM proxy tests | 33 (10 modules) |
 | Provider routes tests | 27 (models + routes + pipeline) |
-| VS Code extension | v4.30.0 (refactored: extension.ts split → editGuard.ts + contentGuardian.ts + reportPanel.ts) |
+| VS Code extension | v4.32.0 (refactored: editGuard + contentGuardian + reportPanel) |
 | Chrome extension | v4.30.1, 12 LLM sites, consent modal UI, file upload consent |
-| Package version | **4.31.0** (PyPI published) |
+| Package version | **4.32.0** (PyPI published) |
 | PII types | 14 core + 4 new (SendGrid, Twilio SID, Slack webhook, MongoDB SRV) |
 | Live demo speed | 0.2s (`--no-llm`), 26s (full with Ollama) |
 | Install time | ~60 seconds (`pip install` + `secagent init`) |
@@ -438,7 +452,7 @@ SecureMind is the only player in the **local + actions** quadrant.
 | Token store encryption | AES-256-GCM at rest |
 | Data directory | `~/.agnosticsecurity/` (configurable via `EA_DATA_DIR`) |
 | Interactive diagrams | 2 (architecture-flow.html, redteam-flow.html) |
-| **Differentiators** | **35** |
+| **Differentiators** | **38** |
 
 ---
 
@@ -631,4 +645,4 @@ securityagent-core/src/
 - [Top AI Security Platforms 2026](https://accuknox.com/blog/top-10-ai-security-platforms-2026)
 
 ---
-*Last updated: 2026-06-12*
+*Last updated: 2026-06-22*
