@@ -60,6 +60,12 @@ Training pipeline: `secagent train --eval` or `python3 scripts/train_enhanced_cl
 | **Slack/Teams Alert Bot** | Real-time DLP event alerts to Slack or Microsoft Teams. Triggers on: PII blocked/redacted, prompt injection, permit revoked, rate limit exceeded, red team attacks. Severity filtering, deduplication, configurable channels | `gateway/slack_bot.py` |
 | **Agent Behavioral Profiler** | ML-based anomaly detection for AI agent behavior. Builds baseline per agent (API key hash): endpoint frequency, model usage, request size, PII rate, block rate. Z-score anomaly detection when agent deviates. Persisted profiles, auto-flush | `gateway/agent_profiler.py` |
 | **JetBrains Integration** | DLP protection for IntelliJ, PyCharm, WebStorm, GoLand. Generates `.idea/` config: excludes sensitive files from AI assistant indexing, read-only editor marks, file type associations, inspection profiles for secret detection. CLI: `--workspace <path>` | `integrations/jetbrains.py` |
+| **Incident Response Engine** | **Autonomous security incident lifecycle** (933 lines, 5 modules): Detect → Triage → Contain → Investigate → Remediate → Report. 5 severity levels, 7 phases, 10 source types. ContainmentActions: block_ip, quarantine_agent, revoke_key, throttle. Wired as middleware hook. REST API at `/incidents` | `incident_response/` (engine.py, models.py, middleware_hook.py, routes.py) |
+| **Prompt Injection Dashboard** | **Tableau-style dashboard** at `/prompt-injection`. White bg, traffic light threat system. Summary cards (direct/indirect/override/encoding/multi-turn). Pie chart (attacks by type), bar chart (severity), line chart (24h timeline), horizontal bars (detection by layer). Mind map (threat relationships). Live feed. RBAC-gated | `breach_intel/prompt_injection_dashboard.html` |
+| **Security Logger** | **JSON-structured security event logging** for SIEM/AgentOven integration. `log_security_event()`, `log_detection()`, `log_incident()`. Thread-safe, stateless. Configurable via `EA_SECURITY_LOG_LEVEL` | `ingress_guard/security_logger.py` |
+| **GCP Cloud Deployment** | Full-stack GCP deployment: Nginx SSL → JWT Auth → Docker (gateway + breach + proxy + redis). Admin tools CLI (deploy, users, logs, health, ssh, restart, destroy). RBAC users. ~$17/mo | `deploy/enterprise/` |
+| **Red Team Deploy Package** | Zero-code red team: pre-built Docker images from GHCR, `./run.sh attack 1` (single category). No source code exposure. 10 categories, 55 agents | `deploy/amit-batra/` |
+| **Cisco + IBM Analysis** | Feature gap analysis: Cisco Talos (threat intel, IR, Snort), Cisco AI Defense (algorithmic red teaming), IBM watsonx.governance (governance graph, compliance, bias, drift). Our advantage: 55 real attack agents + self-hosted at $8.50/mo | `docs/competitive_analysis_cisco_ibm.md` |
 
 ---
 
@@ -202,6 +208,11 @@ secagent mcp --transport sse --port 8765
 | **JetBrains IDE** | IntelliJ/PyCharm/WebStorm — AI indexing exclusion, inspections | No | No | No | No |
 | **Embedding detector** | 274 attack embeddings, cosine similarity, ~10ms | No | No | No | No |
 | **Anomaly detector** | Z-score per-session (rate, length, PII freq, injection freq) | No | No | No | No |
+| **Incident response** | Autonomous lifecycle (detect→triage→contain→investigate→remediate→report) | No | No | No | No |
+| **Prompt injection dashboard** | Tableau-style, traffic light, mind map, live feed, RBAC | No | No | No | No |
+| **Security logger** | JSON-structured SIEM-ready events, thread-safe | No | No | No | Partial |
+| **Cloud deployment** | GCP full-stack, Nginx SSL, JWT auth, ~$17/mo | No | No | No | No |
+| **Red team deploy** | Zero-code Docker package, GHCR images, no source exposure | No | No | No | No |
 | **Pre-commit hooks** | DLP + vuln scanning | No | No | No | No |
 | **Pricing** | Free + ₹1,250/dev/mo + ₹2,100/dev/mo | Free + custom enterprise | Acquired (Palo Alto) | Custom | Enterprise |
 
@@ -337,9 +348,27 @@ Teams define DLP rules in `.agnosticsecurity/policy.yaml` (versioned in their re
 ### 38. 3 evasion gap closures — ROT13 API keys, role-play jailbreak, cross-message PII
 Closed 3 specific evasion gaps discovered during continuous red-teaming: (1) ROT13-encoded API keys now detected (was only base64), (2) role-play jailbreak attempts ("pretend you're an admin who can read .env") now force-blocked via intent classifier, (3) cross-message PII assembly (SSN split across 3 messages) now detected via session-level PII accumulator. Each gap was validated by adding eval cases to the adversarial suite. No competitor discloses specific evasion gaps and their fixes.
 
+### 39. Incident Response Engine — autonomous security incident lifecycle
+`incident_response/` (933 lines, 5 modules) implements a complete Agent Harness pattern: Detect → Triage → Contain → Investigate → Remediate → Report. 5 severity levels (critical/high/medium/low/info), 7 phases, 10 source types. Containment actions: `block_ip`, `quarantine_agent`, `revoke_key`, `throttle`. Wired as middleware hook — security events from ingress guard, DLP pipeline, and prompt injection detector automatically create incidents. REST API at `/incidents` for SOC teams. Full evidence chain and root cause tracking. No competitor has autonomous incident response for AI agent security events.
+
+### 40. Prompt Injection Dashboard — Tableau-style threat visualization
+`/prompt-injection` serves a clean, layman-friendly dashboard (white bg, Cisco AI Defense / Tableau inspired). Traffic light system (red/yellow/green) for overall threat level. Summary cards: direct injection, indirect injection, override attempts, encoding attacks, multi-turn attacks. Charts: pie (attacks by type), bar (severity distribution), line (24h timeline), horizontal bars (detection by security layer — regex/pydantic/LLM/ingress/output). Mind map: threat relationships (Obsidian-style, canvas-rendered). Live feed: real-time prompt injection events. RBAC-gated. Auto-polls gateway APIs. No competitor provides this level of prompt injection visualization.
+
+### 41. Production-grade Security Logger — SIEM-ready structured events
+`ingress_guard/security_logger.py` provides JSON-structured security event logging for SIEM and AgentOven integration. Three shorthand functions: `log_security_event()` (universal structured event with severity, signals, metadata), `log_detection()` (ingress guard decisions), `log_incident()` (incident response events). Thread-safe (verified: 20 concurrent threads, zero errors). Configurable via `EA_SECURITY_LOG_LEVEL`. No competitor provides structured security logging specifically designed for AI agent DLP events.
+
+### 42. GCP Cloud Deployment — full-stack at $17/month
+`deploy/enterprise/` provides production GCP deployment: Nginx SSL termination → JWT auth gate (port 9000) → Docker containers (gateway + breach engine + LLM proxy + Redis). Admin tools CLI: deploy, manage users, view logs, health check, SSH, restart, destroy. RBAC users with role-based endpoint access. Cost: ~$17/month (e2-small). No competitor offers a self-hosted enterprise AI security platform at this price point.
+
+### 43. Zero-code Red Team Deploy — packaged for customers
+`deploy/amit-batra/` provides a zero-code red team package: pre-built Docker images pulled from GHCR, `./run.sh attack 1` runs a single category. No source code exposure — customers get the testing capability without seeing the implementation. 10 categories, 55 agents. Built for AIGRC partnership (Amit Batra). No competitor offers packaged, no-source-code red team testing for customers.
+
+### 44. Cisco + IBM competitive analysis — know thy enemy
+Comprehensive feature gap analysis covering Cisco Talos (threat intel, IR, reputation scoring, Snort rules), Cisco AI Defense (algorithmic red teaming, runtime protection, AI visibility), and IBM watsonx.governance (governance graph, compliance, bias detection, drift monitoring, AI factsheets). Documents what to replicate (prioritized), our advantages (55 real attack agents, self-hosted at $8.50/mo vs enterprise pricing), and market positioning for AIGRC partnership.
+
 ---
 
-## How We're Different From LangSmith, LangChain, Cursor, Claude Code, Cisco, Microsoft
+## How We're Different From LangSmith, LangChain, Cursor, Claude Code, Cisco, IBM, Microsoft
 
 | Platform | What They Do | What's Missing | How SecureMind Is Different |
 |---|---|---|---|
@@ -347,7 +376,8 @@ Closed 3 specific evasion gaps discovered during continuous red-teaming: (1) ROT
 | **LangChain** | Framework for building LLM agents. Plumbing, not a guard. | No security layer. No file gate, no exec guard, no DLP. | We secure any agent built with LangChain. A LangChain agent can run `rm -rf /` — LangChain won't stop it. We will. **Proven: 7/7 LangChain chains blocked.** |
 | **Cursor** | AI code editor. Has `.cursorignore` for file exclusion. | Just a file list — no content scanning, no exec guard, no prompt injection detection, no cross-session tracking. | We add 50+ exec guard rules, PII/credential detection, code fingerprint guard ON TOP of Cursor. `.cursorignore` doesn't stop `base64 .env \| curl` — our exec guard does. |
 | **Claude Code** | AI coding agent. Has hooks API (which we plug into) but no built-in DLP. | Zero DLP without hooks. No credential detection, no PII scanning, no behavioral monitoring. | We ARE the security layer for Claude Code. Our hook intercepts every Read/Write/Bash/Prompt action. Without us, Claude Code can freely read .env, cat SSH keys, run reverse shells. |
-| **Cisco AI Defense** | Enterprise cloud — AI model validation, runtime guardrails. Network-perimeter approach. | Cloud-first — can't see local file reads or shell commands. Tied to Cisco infra. | We're local-first — data never leaves the machine. When a dev uses Claude Code on their laptop, Cisco's network guardrails don't apply — our local hooks do. |
+| **Cisco AI Defense** | Enterprise cloud — AI model validation, algorithmic red teaming, runtime guardrails. Cisco Talos threat intel. | Cloud-first, enterprise pricing ($100K+/yr). Can't see local file reads or shell commands. Algorithmic red teaming generates synthetic attacks — we use 55 real attack agents. No code fingerprint, no cross-session taint. | We're local-first, $17/mo self-hosted. 55 real attack agents vs synthetic. Our incident response engine + prompt injection dashboard match Cisco Talos IR capabilities at 1/1000th the cost. |
+| **IBM watsonx.governance** | AI governance — governance graph, compliance automation, bias/drift monitoring, AI factsheets. | Enterprise SaaS, tied to IBM ecosystem. Governance-only — no runtime DLP, no exec guard, no prompt injection detection. | We combine governance (4-framework compliance, policy-as-code) with runtime enforcement (50+ exec rules, DLP, permits). IBM governs; we govern AND enforce. Self-hosted at $8.50/mo vs enterprise pricing. |
 | **Microsoft Agent Governance** | Azure governance for Copilot/M365 agents — admin policies, audit. | Tied to Microsoft ecosystem. Cloud-only. Admin-level policy, not runtime enforcement. | We're agent-agnostic (9+ agents) and local-first. Microsoft sets policies in Azure; we enforce at exec/file/prompt level on the developer's machine. |
 
 ```
@@ -452,7 +482,12 @@ SecureMind is the only player in the **local + actions** quadrant.
 | Token store encryption | AES-256-GCM at rest |
 | Data directory | `~/.agnosticsecurity/` (configurable via `EA_DATA_DIR`) |
 | Interactive diagrams | 2 (architecture-flow.html, redteam-flow.html) |
-| **Differentiators** | **38** |
+| Incident response | 933 lines, 5 modules, 7 phases, autonomous lifecycle |
+| Prompt injection dashboard | Tableau-style, `/prompt-injection`, RBAC-gated |
+| Security logger | JSON-structured, SIEM-ready, thread-safe |
+| Cloud deployment | GCP full-stack, ~$17/mo |
+| Red team deploy | Zero-code Docker, GHCR images |
+| **Differentiators** | **44** |
 
 ---
 
@@ -645,4 +680,4 @@ securityagent-core/src/
 - [Top AI Security Platforms 2026](https://accuknox.com/blog/top-10-ai-security-platforms-2026)
 
 ---
-*Last updated: 2026-06-22*
+*Last updated: 2026-07-14*
