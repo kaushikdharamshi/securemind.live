@@ -435,7 +435,7 @@ SecureMind is the only player in the **local + actions** quadrant.
 
 ---
 
-## By the Numbers (v4.32.0 — June 2026)
+## By the Numbers (v4.33.0 — June 2026)
 
 | Metric | Value |
 |---|---|
@@ -470,9 +470,9 @@ SecureMind is the only player in the **local + actions** quadrant.
 | Permit system tests | 39 (minting, attenuation, TTL, cascade revoke, request limits, chain depth) |
 | LLM proxy tests | 33 (10 modules) |
 | Provider routes tests | 27 (models + routes + pipeline) |
-| VS Code extension | v4.32.0 (refactored: editGuard + contentGuardian + reportPanel) |
+| VS Code extension | v4.33.0 (refactored: editGuard + contentGuardian + reportPanel) |
 | Chrome extension | v4.30.1, 12 LLM sites, consent modal UI, file upload consent |
-| Package version | **4.32.0** (PyPI published) |
+| Package version | **4.33.0** (PyPI published) |
 | PII types | 14 core + 4 new (SendGrid, Twilio SID, Slack webhook, MongoDB SRV) |
 | Live demo speed | 0.2s (`--no-llm`), 26s (full with Ollama) |
 | Install time | ~60 seconds (`pip install` + `secagent init`) |
