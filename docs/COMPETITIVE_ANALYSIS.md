@@ -306,7 +306,7 @@ Tested against 4 real agent frameworks: Plain Python (21 scenarios), LangChain (
 The gateway sustains **22.9 requests/second** under mixed attack payloads with **0 crashes and 0 5xx errors**. Production-grade throughput under adversarial conditions. No competitor publishes adversarial load test results.
 
 ### 24. 4-framework compliance mapping — OWASP + NIST + MITRE ATLAS + CSA ARIA
-**45/57 controls (78.9%)** across 4 industry compliance frameworks:
+**47/57 controls (82.5%)** across 4 industry compliance frameworks:
 - **OWASP Top 10 for LLMs**: 10/10 defended — `owasp_mapping.json`
 - **NIST AI RMF + 800-53**: 14/18 — `nist_mapping.json`
 - **MITRE ATLAS**: 11/14 techniques — `docs/MITRE_ATLAS_MAPPING.md`
@@ -477,7 +477,7 @@ SecureMind is the only player in the **local + actions** quadrant.
 | Audit entries analyzed | 18,250 |
 | Test suites (AgnosticSecurity) | 31 files |
 | Test suites (securityagent-core) | 50 files |
-| **Total tests** | **1,116** across 31 suites |
+| **Total tests** | **1,117** across 31 suites |
 | Core tests | 263 |
 | Gateway + enterprise tests | 101 (46 gateway DLP + 25 enterprise privacy + 30 FP/TP) |
 | RBAC + smart redaction tests | 95 |
@@ -589,7 +589,7 @@ AgnosticSecurity/
 │   ├── THREAT_MODEL_SCOPE.md          # Model-training attacks scoped out
 │   └── *.md                          # GTM, YC app, admin console, threat models, etc.
 ├── docker-compose.redteam.yml         # Red-team Docker harness (55 agents, 84 events, 100% detection)
-├── owasp_mapping.json                 # OWASP Top 10 for LLMs (8/10)
+├── owasp_mapping.json                 # OWASP Top 10 for LLMs (10/10)
 ├── nist_mapping.json                  # NIST AI RMF (14/18)
 ├── csa_aria_mapping.json              # CSA ARIA (12/15)
 ├── tests/                             # Integration tests

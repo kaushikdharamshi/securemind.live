@@ -189,7 +189,7 @@ type: reference
 144. `dashboard/static/dashboard.js` — Admin dashboard JS (auto-refresh, privacy mode, shadow AI, graph stats)
 
 ### Phase 19: Scoring & Compliance Scripts
-145. `scripts/owasp_score.py` — OWASP LLM compliance scorecard (8/10)
+145. `scripts/owasp_score.py` — OWASP LLM compliance scorecard (10/10)
 146. `scripts/nist_score.py` — NIST 800-53 compliance scorecard (14/18)
 147. `scripts/harmbench_export.py` — HarmBench eval export (--run for exec attacks)
 148. `scripts/audit.py` — 50-check security audit runner
