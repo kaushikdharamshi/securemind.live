@@ -1,6 +1,6 @@
 ---
 name: Codebase Reading Guide
-description: Complete file-by-file exploration order for AgnosticSecurity and securityagent-core repos (updated May 2026)
+description: Complete file-by-file exploration order for AgnosticSecurity and securityagent-core repos (updated July 2026)
 type: reference
 ---
 
