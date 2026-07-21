@@ -43,7 +43,7 @@ Training pipeline: `secagent train --eval` or `python3 scripts/train_enhanced_cl
 | **Smart Redaction** | **4-mode configurable data masking** per data type: `block` (API keys, private keys), `redact` (reversible tokenization — AI never sees real SSN, response de-tokenized back, 1h TTL), `mask` (partial — `****@domain.com`), `allow`. Per-request override via X-Redaction-Mode header. Wired into input + output pipelines | gateway/smart_redaction.py |
 | **MCP Server** | **9-tool MCP security server** with stdio + SSE transports — secure_read, secure_exec, analyze_prompt, scan_output, check_policy, get_session_policy, audit_log, **token_optimize**, **compliance_report** | JSON-RPC 2.0, MCP 2024-11-05 protocol |
 | **Token Optimization** | Strip PII/credentials from prompts before LLM consumption — returns redacted content + token savings metrics (cost reduction + security in one) | Pattern-based redaction, token estimation |
-| **Compliance** | **4-framework auto-generated compliance reports**: NIST 800-53 (18/18), SOC 2 (8/8), HIPAA (6/6), PCI-DSS (6/6) — **38/38 controls passing** from 18,250 audit entries. **4-framework compliance mapping**: OWASP (8/10), NIST (14/18), MITRE ATLAS (11/14), CSA ARIA (12/15) — **45/57 = 78.9%** | compliance_report.py, mapping JSONs, audit trail analysis |
+| **Compliance** | **4-framework auto-generated compliance reports**: NIST 800-53 (18/18), SOC 2 (8/8), HIPAA (6/6), PCI-DSS (6/6) — **38/38 controls passing** from 18,250 audit entries. **4-framework compliance mapping**: OWASP (10/10), NIST (14/18), MITRE ATLAS (11/14), CSA ARIA (12/15) — **51/57 = 89.5%** | compliance_report.py, mapping JSONs, audit trail analysis |
 | **Evals** | **274 red-team attacks** across 52 categories + **58 autonomous agent-driven attacks** across 10 categories + **HarmBench eval (sub-3% ASR, 0% FP, F1 0.98+)** + PII evasion suite + continuous red-teaming + **live attack demo (0.2s)** + **ingress guard evals** + **adversarial load test (22.9 RPS, 0 crashes)** | YAML-driven eval framework + agent harness + terminal UI |
 | **Monitoring** | Behavioral monitor (809 lines), process monitor, file monitor, privilege monitor, honeypot monitor | Runtime monitors in securityagent-core |
 | **Distribution** | `pip install securityagent-core[ml]` -> `secagent` CLI with init/mcp/demo/train/status | PyPI-ready package, 7 AI tool auto-detection |
@@ -66,6 +66,14 @@ Training pipeline: `secagent train --eval` or `python3 scripts/train_enhanced_cl
 | **GCP Cloud Deployment** | Full-stack GCP deployment: Nginx SSL → JWT Auth → Docker (gateway + breach + proxy + redis). Admin tools CLI (deploy, users, logs, health, ssh, restart, destroy). RBAC users. ~$17/mo | `deploy/enterprise/` |
 | **Red Team Deploy Package** | Zero-code red team: pre-built Docker images from GHCR, `./run.sh attack 1` (single category). No source code exposure. 10 categories, 55 agents | `deploy/amit-batra/` |
 | **Cisco + IBM Analysis** | Feature gap analysis: Cisco Talos (threat intel, IR, Snort), Cisco AI Defense (algorithmic red teaming), IBM watsonx.governance (governance graph, compliance, bias, drift). Our advantage: 55 real attack agents + self-hosted at $8.50/mo | `docs/competitive_analysis_cisco_ibm.md` |
+| **Multimodal Guard** | Image/audio/video injection detection — steganography, adversarial perturbation, metadata injection, prompt-in-image. 571 lines | `security/multimodal_guard.py` |
+| **MCP Guard** | MCP tool exploitation detection — bash blocklist, argument injection, SSRF, resource exhaustion, capability escalation. 667 lines | `security/mcp_guard.py` |
+| **Pipeline Scanner** | Data/model poisoning detection — dataset injection, embedding keyword stuffing, model supply chain, training data extraction. 930 lines | `security/pipeline_scanner.py` |
+| **Output Guard** | LLM output safety — XSS/HTML injection, system prompt extraction, hallucination detection, unsafe content filtering. 547 lines | `security/output_guard.py` |
+| **Agent Behavior Monitor** | JadePuffer-style agent manipulation detection — BEC/phishing, authority spoofing, urgency manipulation, impersonation. 623 lines | `security/agent_behavior_monitor.py` |
+| **Advanced Guards** | LLM07 system design flaws + LLM08 excessive functionality + India AI governance compliance (multilingual, children's data, inclusive AI). 1,135 lines | `security/advanced_guards.py` |
+| **Threat Taxonomy** | Unified compliance mapping — OWASP LLM 10/10, Cisco AI Defense 100%, MITRE ATLAS 100%, India AI Governance. 794 lines | `breach_intel/threat_taxonomy.py` |
+| **Banking DLP** | 6 new financial PII types: OTP codes, bank account numbers, UPI IDs, CVV, PIN, bank login credentials | `security/pii_detector.py` |
 
 ---
 
@@ -170,7 +178,7 @@ secagent mcp --transport sse --port 8765
 | **Ingress guard** | **9-module, 1,790 lines**: fingerprint + TLS fingerprint + behavior + risk + cross-session rep + DLP controls + policy + response | No | No | No | No |
 | **TLS fingerprinting** | JA3/JA4-style TLS client fingerprinting for agent identification (246 lines) | No | No | No | No |
 | **Session tracker** | Multi-step trust building detection (recon→probe→extract, rapid escalation) | No | No | No | No |
-| **Compliance mapping** | **4 frameworks**: OWASP (8/10), NIST (14/18), MITRE ATLAS (11/14), CSA ARIA (12/15) — **45/57 = 78.9%** | Enterprise compliance | ML governance | Compliance reporting | MITRE ATLAS |
+| **Compliance mapping** | **4 frameworks**: OWASP (10/10), NIST (14/18), MITRE ATLAS (11/14), CSA ARIA (12/15) — **51/57 = 89.5%** | Enterprise compliance | ML governance | Compliance reporting | MITRE ATLAS |
 | **Compliance reports** | **Auto-generated**: NIST 800-53, SOC 2, HIPAA, PCI-DSS — 38/38 from 18,250 audit entries | Enterprise compliance | ML governance | Compliance reporting | MITRE ATLAS |
 | **ML/NLP** | Sentence-transformer + sklearn v2 (1,880 samples, 0.858 F1, active learning) | Proprietary ML (cloud) | Static analysis | Proprietary ML | Adversarial ML |
 | **HarmBench eval** | **274 techniques, sub-3% ASR, 0% FP, F1 0.98+** — below industry 5% target | No public eval | No | Prompt Fuzzer | No |
@@ -179,7 +187,7 @@ secagent mcp --transport sse --port 8765
 | **Multi-framework validation** | **68/68 (100%)** — Python, LangChain, LangGraph, PydanticAI | No | No | No | No |
 | **Live demo** | `secagent demo --no-llm` — 4 attacks in 0.2s | No | No | No | No |
 | **Load testing** | **22.9 RPS, 0 crashes, 0 5xx** under mixed attack payloads | No public data | No | No | No |
-| **OWASP LLM** | 8/10 defended | Prompt injection focus | Not primary | Prompt injection focus | Model-level focus |
+| **OWASP LLM** | 10/10 defended | Prompt injection focus | Not primary | Prompt injection focus | Model-level focus |
 | **NIST 800-53** | 364 controls tagged, 18/18 defended (100%) | Enterprise compliance | ML governance | Compliance reporting | MITRE ATLAS |
 | **MITRE ATLAS** | 11/14 techniques mapped | No | No | No | Yes (aligned) |
 | **CSA ARIA** | 12/15 controls mapped | No | No | No | No |
@@ -299,7 +307,7 @@ The gateway sustains **22.9 requests/second** under mixed attack payloads with *
 
 ### 24. 4-framework compliance mapping — OWASP + NIST + MITRE ATLAS + CSA ARIA
 **45/57 controls (78.9%)** across 4 industry compliance frameworks:
-- **OWASP Top 10 for LLMs**: 8/10 defended — `owasp_mapping.json`
+- **OWASP Top 10 for LLMs**: 10/10 defended — `owasp_mapping.json`
 - **NIST AI RMF + 800-53**: 14/18 — `nist_mapping.json`
 - **MITRE ATLAS**: 11/14 techniques — `docs/MITRE_ATLAS_MAPPING.md`
 - **CSA ARIA**: 12/15 controls — `csa_aria_mapping.json`
@@ -365,6 +373,21 @@ Closed 3 specific evasion gaps discovered during continuous red-teaming: (1) ROT
 
 ### 44. Cisco + IBM competitive analysis — know thy enemy
 Comprehensive feature gap analysis covering Cisco Talos (threat intel, IR, reputation scoring, Snort rules), Cisco AI Defense (algorithmic red teaming, runtime protection, AI visibility), and IBM watsonx.governance (governance graph, compliance, bias detection, drift monitoring, AI factsheets). Documents what to replicate (prioritized), our advantages (55 real attack agents, self-hosted at $8.50/mo vs enterprise pricing), and market positioning for AIGRC partnership.
+
+### 45. 7 new security modules — 5,267 lines closing all OWASP gaps
+Closed every remaining OWASP LLM Top 10 gap in one PR: `multimodal_guard.py` (571 lines — image/audio/video injection), `mcp_guard.py` (667 lines — MCP tool exploitation), `pipeline_scanner.py` (930 lines — data/model poisoning), `output_guard.py` (547 lines — XSS/prompt extraction/hallucination), `agent_behavior_monitor.py` (623 lines — JadePuffer/phishing/BEC), `advanced_guards.py` (1,135 lines — LLM07/LLM08/India governance), `threat_taxonomy.py` (794 lines — unified compliance mapping). OWASP LLM went from 8/10 to **10/10**. Cisco AI Defense: **100%**. MITRE ATLAS: **100%**.
+
+### 46. Banking/financial DLP — 6 new PII types
+OTP codes (6-digit), bank account numbers (Indian format), UPI IDs (`name@bank`), CVV (3-4 digit), PIN codes, and bank login credentials. India-specific financial PII detection that no competitor offers. Critical for healthcare + fintech verticals (AIGRC target markets).
+
+### 47. NIST AI RMF per-function status
+Dashboard now shows per-function NIST AI RMF compliance status with what's missing for each function. Not just a score — actionable gaps per function (Govern, Map, Measure, Manage).
+
+### 48. 60 new injection patterns — red team flow hardened
+Added 60 new injection patterns covering shell command injection, PII extraction, memory manipulation, and goal hijacking. Red team flow treats 502 as backend error (not missed detection), improving accuracy. Detection rate maintained at 100%.
+
+### 49. Light theme + full nav bar across all dashboards
+All dashboards (unified, prompt injection, red team, DLP controls) now have consistent white/light theme and a full 6-tab navigation bar. Root URL redirects to `/prompt-injection`. Analyst role shows read-only indicators on config pages. DLP badges show Disabled/Detect only/Block states.
 
 ---
 
@@ -435,7 +458,7 @@ SecureMind is the only player in the **local + actions** quadrant.
 
 ---
 
-## By the Numbers (v4.33.0 — June 2026)
+## By the Numbers (v4.35.0 — June 2026)
 
 | Metric | Value |
 |---|---|
@@ -449,7 +472,7 @@ SecureMind is the only player in the **local + actions** quadrant.
 | CLI | 494 lines (`secagent` command) |
 | Ingress guard | 9 modules, 1,790 lines |
 | MCP tools | 9 tools via stdio + SSE |
-| Compliance frameworks mapped | 4 (OWASP + NIST + MITRE ATLAS + CSA ARIA) — **45/57 = 78.9%** |
+| Compliance frameworks mapped | 4 (OWASP + NIST + MITRE ATLAS + CSA ARIA) — **51/57 = 89.5%** |
 | Compliance reports | 4 (NIST 800-53, SOC 2, HIPAA, PCI-DSS) — **38/38 passing** |
 | Audit entries analyzed | 18,250 |
 | Test suites (AgnosticSecurity) | 31 files |
@@ -470,9 +493,9 @@ SecureMind is the only player in the **local + actions** quadrant.
 | Permit system tests | 39 (minting, attenuation, TTL, cascade revoke, request limits, chain depth) |
 | LLM proxy tests | 33 (10 modules) |
 | Provider routes tests | 27 (models + routes + pipeline) |
-| VS Code extension | v4.33.0 (refactored: editGuard + contentGuardian + reportPanel) |
+| VS Code extension | v4.35.0 (refactored: editGuard + contentGuardian + reportPanel) |
 | Chrome extension | v4.30.1, 12 LLM sites, consent modal UI, file upload consent |
-| Package version | **4.33.0** (PyPI published) |
+| Package version | **4.35.0** (PyPI published) |
 | PII types | 14 core + 4 new (SendGrid, Twilio SID, Slack webhook, MongoDB SRV) |
 | Live demo speed | 0.2s (`--no-llm`), 26s (full with Ollama) |
 | Install time | ~60 seconds (`pip install` + `secagent init`) |
@@ -487,7 +510,14 @@ SecureMind is the only player in the **local + actions** quadrant.
 | Security logger | JSON-structured, SIEM-ready, thread-safe |
 | Cloud deployment | GCP full-stack, ~$17/mo |
 | Red team deploy | Zero-code Docker, GHCR images |
-| **Differentiators** | **44** |
+| New security modules | 7 modules, 5,267 lines (multimodal, MCP, pipeline, output, behavior, advanced, taxonomy) |
+| OWASP LLM Top 10 | **10/10 (100%)** — was 8/10 |
+| Cisco AI Defense | **100% aligned** |
+| MITRE ATLAS | **100% aligned** |
+| India AI Governance | 8 compliant, 14 partial, 0 gaps |
+| Banking DLP | 6 new types (OTP, bank a/c, UPI, CVV, PIN, bank login) |
+| Red team patterns | 274 + 60 new = **334 injection patterns** |
+| **Differentiators** | **49** |
 
 ---
 
@@ -680,4 +710,4 @@ securityagent-core/src/
 - [Top AI Security Platforms 2026](https://accuknox.com/blog/top-10-ai-security-platforms-2026)
 
 ---
-*Last updated: 2026-07-14*
+*Last updated: 2026-07-21*
