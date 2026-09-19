@@ -2,12 +2,17 @@
 
 ## Market Context
 
-The AI agent security market is consolidating rapidly with major acquisitions:
-- **Check Point acquired Lakera** for $300M (Q4 2025) — prompt-level LLM security
+The AI agent security market is consolidating rapidly with major acquisitions and mega-rounds:
+- **Check Point acquired Lakera** for ~$300M (Q4 2025) — prompt-level LLM security
 - **Palo Alto Networks acquired Protect AI** (July 2025) — ML model supply chain security
+- **SentinelOne acquired Prompt Security** for ~$250-300M (Sep 2025) — GenAI DLP + agent security
 - **Proofpoint acquired Acuvity** (Feb 2026) — AI agent DLP with MCP support
+- **HiddenLayer raised $100M Series B** (Sep 2026) — AI agent runtime security, $150M total
+- **Noma Security raised $100M Series B** (2026) — fastest-growing AI security startup, 1,300% ARR growth, $132M total
+- **WitnessAI raised $58M** (Jan 2026) — AI agent governance + MCP control, 500% ARR growth, $85M+ total
+- **Nightfall AI** emerged as first enterprise DLP purpose-built for MCP and AI agent workflows
 
-CB Insights tracks **21 startups** in the agentic AI security space. Prompt injection attacks surged **340% in 2026** (OWASP #1 LLM risk). Gartner predicts 40% of enterprise apps will feature embedded agents by 2026.
+Mordor Intelligence estimates the cybersecurity agentic AI market at **$2.43 billion in 2026**, projected to reach **$9.63 billion by 2031**. CB Insights tracks **21+ startups** in the agentic AI security space. Prompt injection attacks surged **340% in 2026** (OWASP #1 LLM risk). By year-end 2026, **40% of enterprise apps** will integrate task-specific AI agents (up from <5% in 2025), but only **29% of organizations** feel prepared to secure them.
 
 ---
 
@@ -38,7 +43,7 @@ Training pipeline: `secagent train --eval` or `python3 scripts/train_enhanced_cl
 | **NLP** | 10 decoding sublayers (base64, ROT13, hex, unicode, zero-width chars, reversed text, leetspeak) + homoglyph normalization (Cyrillic/Greek/IPA) + digit fragment reassembly | Regex + custom decoders |
 | **GenAI** | LLM-based semantic verification (pluggable: Ollama/Anthropic/OpenAI/OpenRouter) via 398-line provider framework | Ollama llama3.1, Claude Haiku, GPT-4o-mini |
 | **Agentic AI** | Lethal Trifecta detector, tool call guard, MCP tool scanning, cross-session taint tracking, **10-category autonomous red-team agents (55 agents)**, 6-layer ingress guard with TLS fingerprinting + behavior analysis, **session tracker (multi-step trust building detection)** | Custom runtime monitors, agent framework |
-| **Security** | 50+ exec guard rules, 14 PII types + 4 new (SendGrid, Twilio SID, Slack webhook, MongoDB SRV), 10 credential types, OWASP Top 10 coverage, code fingerprint guard, **ingress guard (1,790 lines, 9 modules)**, shadow AI detector, memory guard, honeypot monitor, **DLP controls UI**, **endpoint auth hardening**, **reflection attack detection** | DLP pipeline + finding validators |
+| **Security** | 50+ exec guard rules, 14 PII types + 4 new (SendGrid, Twilio SID, Slack webhook, MongoDB SRV), 10 credential types, OWASP Top 10 coverage, code fingerprint guard, **ingress guard (2,686 lines, 13 modules)**, shadow AI detector, memory guard, honeypot monitor, **DLP controls UI**, **endpoint auth hardening**, **reflection attack detection** | DLP pipeline + finding validators |
 | **RBAC** | **7-role access control**: super_admin > it_admin > analyst > lead > auditor > agent > developer. Auth resolution: X-Role header → EA_*_TOKENS env → console API key → EA_DASHBOARD_TOKEN → developer. Team scoping (leads see only X-Team data). Covers all endpoints | gateway/middleware/rbac.py |
 | **Smart Redaction** | **4-mode configurable data masking** per data type: `block` (API keys, private keys), `redact` (reversible tokenization — AI never sees real SSN, response de-tokenized back, 1h TTL), `mask` (partial — `****@domain.com`), `allow`. Per-request override via X-Redaction-Mode header. Wired into input + output pipelines | gateway/smart_redaction.py |
 | **MCP Server** | **9-tool MCP security server** with stdio + SSE transports — secure_read, secure_exec, analyze_prompt, scan_output, check_policy, get_session_policy, audit_log, **token_optimize**, **compliance_report** | JSON-RPC 2.0, MCP 2024-11-05 protocol |
@@ -74,6 +79,17 @@ Training pipeline: `secagent train --eval` or `python3 scripts/train_enhanced_cl
 | **Advanced Guards** | LLM07 system design flaws + LLM08 excessive functionality + India AI governance compliance (multilingual, children's data, inclusive AI). 1,135 lines | `security/advanced_guards.py` |
 | **Threat Taxonomy** | Unified compliance mapping — OWASP LLM 10/10, Cisco AI Defense 100%, MITRE ATLAS 100%, India AI Governance. 794 lines | `breach_intel/threat_taxonomy.py` |
 | **Banking DLP** | 6 new financial PII types: OTP codes, bank account numbers, UPI IDs, CVV, PIN, bank login credentials | `security/pii_detector.py` |
+| **Regulations Engine** | **15 global AI & data protection frameworks**: DPDP Act (India), EU AI Act, GDPR, CCPA/CPRA, HIPAA, SOC 2, SOX, ISO 27001, NIST AI RMF, OWASP LLM Top 10, PCI DSS, 21 CFR Part 11 (FDA), EU AI Act GPAI, IT Intermediary Rules (India deepfakes), China GenAI Measures. Maps guardrail findings → regulation violations with article-level detail, severity, remediation, max penalties. 550 lines | `security/regulations.py` |
+| **Threat Intelligence** | 3 real-world threat detectors: **AgentAutonomyDetector** (bulk behavior, sandbox escape, self-replication — based on rogue OpenAI agents hijacking 18K wiki posts), **BioweaponDetector** (pathogen synthesis, chemical weapons — based on Stanford GenAI virus research), **ModelTheftDetector** (distillation probing, training data extraction — based on Chinese industrial-scale model cloning). MITRE ATT&CK/ATLAS mapped. 194 lines | `security/threat_intel.py` |
+| **Provider-Agnostic Scanning** | Auto-detect and normalize **17 AI providers** (OpenAI, Anthropic, Gemini, Azure, Ollama, LiteLLM, OpenRouter, Bedrock, Groq, Together, Mistral, DeepSeek, Cohere, Fireworks, Replicate, Perplexity, HuggingFace) + **4 protocols** (A2A, MCP, OpenAI Chat, Anthropic Messages) + **8 frameworks** (LangChain, LlamaIndex, CrewAI, AutoGen, Semantic Kernel, Haystack, DSPy, AgentOven). Unified `ScanPayload` regardless of source. 490 lines | `security/provider_adapters.py` |
+| **Semantic Response Cache** | Two-tier LLM response cache: exact hash (O(1)) then cosine similarity over cached embeddings. Semantically equivalent prompts ("What is Python?" vs "Explain Python") return cached responses without upstream LLM call. Trigram vectors (no deps) or sentence-transformers encoder. Configurable threshold (0.92), TTL (300s), max entries (500). Toggle: `EA_SEMANTIC_CACHE_ENABLED`. 303 lines | `gateway/semantic_cache.py` |
+| **Advanced Threat Detector** | 5 detection components: (1) Long-context reference tracker (context-stuffing, setup-then-exploit), (2) Steganographic exfiltration (whitespace, capitalization, acrostics, embedded base64/hex), (3) Side-channel exfiltration (response length/formatting/timing encoding), (4) Hallucination-based credential detector (high-entropy strings matching real credential formats in model output), (5) Echo chamber detector (fabricated prior-context injections). Toggle: `EA_ADVANCED_THREAT_DETECTOR`. 644 lines | `security/advanced_threat_detector.py` |
+| **Agent Runtime Guard** | 4 runtime components: (1) **Memory poisoning detector** — scans persistent storage writes for injected instructions/rule-tampering, (2) **Rug pull detector** — tracks MCP/tool capability baselines, alerts on spec changes after registration, (3) **Objective drift detector** — Z-score anomaly on per-session behavioral profiles (topic shifts, new tool use, sensitive data access), (4) **Circuit breaker** — cascading-failure protection with CLOSED→OPEN→HALF_OPEN state machine per target. Toggle: `EA_AGENT_RUNTIME_GUARD`. 1,273 lines | `security/agent_runtime_guard.py` |
+| **Indirect Injection Scanner** | Scans content FROM external sources (tool results, RAG documents, web pages, source code, emails). 10 attack vectors: plain-text injection, hidden HTML/Markdown comments, invisible Unicode, prompt boundary/special token injection, data URI payloads, code comment injection, email/calendar injection, RAG poisoning, bidirectional text/RTL override, base64-encoded instruction payloads. Toggle: `EA_INDIRECT_INJECTION_SCANNER`. 701 lines | `security/indirect_injection_scanner.py` |
+| **LLM Judge** | Last-resort security classifier for novel attacks. Sends prompts that pass all deterministic checks to a fast LLM (Haiku/GPT-4o-mini) for semantic safety eval. Catches novel, creative, and multilingual attacks that no regex or classifier can detect. 9 attack categories scored. Configurable provider/model/threshold/timeout. Toggle: `EA_LLM_JUDGE_ENABLED`. 255 lines | `security/llm_judge.py` |
+| **Structural Analyzer** | Detects attacks by **shape**, not content. 20 jailbreak categories: narrative framing (Mythos/Fable), virtualization, persona manipulation, many-shot priming, crescendo patterns, authority impersonation, output format manipulation, emotional manipulation, recursive injection, context window stuffing, hypothetical framing, refusal suppression, role-play escalation, instruction hierarchy confusion, knowledge extraction, negative framing, taxonomy framing, Deceptive Delight, echo chamber, token boundary manipulation. Toggle: `EA_STRUCTURAL_ANALYZER`. 352 lines | `security/structural_analyzer.py` |
+| **Multilingual Detector (40 languages)** | Prompt injection detection across **40 languages**: Hindi, Arabic, Japanese, Korean, Chinese, Spanish, Portuguese, Russian, French, German, Thai, Vietnamese, Tamil, Telugu, Bengali, Urdu, Persian, Hebrew, Turkish, Indonesian, Italian, Dutch, Polish, Swedish, Swahili, Amharic, Burmese, Lao, Khmer, Georgian, Armenian, Sinhala, Nepali, Mongolian, Yoruba, Hausa, Zulu, Tagalog, Malay, Catalan. Fast script-range detection + trigram cosine-similarity language ID + per-language compiled regex across 5 attack categories + mixed-language (code-switching) detection. Pure Python, no external libs. 1,113+ lines | `security/multilingual_detector.py` |
+| **64/64 Attack Categories** | Complete threat coverage — 22 gaps closed in v4.45.0, maintained through v4.47.0. All 64 attack categories from the production test suite now detected at 100%. Includes: steganographic exfil, side-channel encoding, hallucination credentials, echo chamber, memory poisoning, rug pull, objective drift, indirect injection (tool results, RAG, web, code, email), structural jailbreaks (20 types), multilingual attacks (40 languages), supply chain attacks (typosquatting, A2A, adversarial ML), system prompt manipulation | Full detection pipeline |
 
 ---
 
@@ -138,91 +154,108 @@ secagent mcp --transport sse --port 8765
 - **Strengths:** Deep model-level security, strong research community, broadest model format coverage (35+)
 - **Gaps:** Focuses on model artifacts and pipeline, not developer-environment actions. No runtime DLP for AI coding agents. No local execution.
 
-### Prompt Security
+### Prompt Security (acquired by SentinelOne, ~$250-300M)
 - **Founded:** 2023 | **HQ:** Tel Aviv
 - **What they secure:** Employee AI usage, homegrown LLM apps, AI code assistants, agentic AI (MCP Gateway)
-- **How:** LLM firewall — intercepts prompts/responses, blocks injection and data leakage
-- **Deployment:** Cloud SaaS + self-hosted
+- **How:** LLM firewall — intercepts prompts/responses, blocks injection and data leakage. Now integrated into SentinelOne's Singularity XDR platform.
+- **Deployment:** Cloud SaaS (via SentinelOne) + self-hosted
 - **Products:** Prompt for Employees, Prompt for Homegrown Apps, Prompt for AI Code Assistants, Prompt for Agentic AI (MCP Gateway), Prompt Fuzzer (open-source)
-- **Strengths:** Broadest coverage across employee/developer/agent use cases. MCP Gateway for agentic AI. Open-source fuzzer for community adoption.
-- **Gaps:** Cloud-first — data leaves the developer machine. No local exec guard, no code fingerprint detection, no cross-session taint tracking. "MCP Gateway" is input/output filtering, not pre-execution action blocking.
+- **Strengths:** Broadest coverage across employee/developer/agent use cases. MCP Gateway for agentic AI. Open-source fuzzer for community adoption. Now backed by SentinelOne's enterprise distribution and endpoint telemetry.
+- **Gaps:** Cloud-first — data leaves the developer machine. No local exec guard, no code fingerprint detection, no cross-session taint tracking. "MCP Gateway" is input/output filtering, not pre-execution action blocking. Acquisition ties it to SentinelOne ecosystem — less agent-agnostic.
 
-### HiddenLayer
+### HiddenLayer ($100M Series B, Sep 2026 — $150M total)
 - **Founded:** 2022 | **HQ:** Austin
-- **What they secure:** ML model artifacts + runtime inference
+- **What they secure:** ML model artifacts + runtime inference + AI coding agent actions
 - **How:** ModelScanner (35+ formats for backdoors, trojans, serialization exploits), runtime defense (adversarial attack detection), AI discovery (shadow AI), attack simulation
 - **Deployment:** Cloud SaaS (Microsoft Azure Marketplace)
+- **Funding:** $100M Series B (Sep 2026) led by Delta-v Capital, with Ten Eleven Ventures, Morgan Stanley, M12 (Microsoft), Booz Allen Ventures. $150M total raised.
 - **New (March 2026):** Agentic Runtime Security — detects prompt injections, malicious tool calls, data exfiltration, cascading attack chains in autonomous agents
-- **Strengths:** Deep model-level protection, no access to model weights required, MITRE ATLAS alignment, shadow AI discovery
-- **Gaps:** Enterprise cloud platform — no local-first deployment. Agentic runtime capabilities are new (March 2026) and focused on model-level behavior, not developer-environment actions. No file gate, no exec guard, no code fingerprint detection.
+- **New (August 2026):** **Agent Harness Security** — integrates into coding agents' native hook surfaces (Claude Code, Cursor, etc.) to detect prompt injection, sensitive data exposure, and unsafe command execution at runtime. Gives security teams visibility into prompts, tool calls, shell commands, file edits, and repo interactions. Can redact sensitive data before models see it.
+- **Government:** Selected for US Department of Energy's $60M Prometheus initiative (Aug 2026)
+- **Strengths:** Deep model-level protection, no access to model weights required, MITRE ATLAS alignment, shadow AI discovery. Agent Harness Security now directly competes with hook-based approaches. Well-funded ($150M) with government contracts.
+- **Gaps:** Enterprise cloud platform — no local-first deployment. Agent Harness Security is brand new (Aug 2026) and cloud-managed. No code fingerprint detection, no cross-session taint tracking, no autonomous red-team agents, no MCP security server. Pricing is enterprise-only ($100K+/yr estimated).
+
+### Nightfall AI (new entrant, 2026)
+- **Founded:** 2019 | **HQ:** San Francisco
+- **What they secure:** Data movement across SaaS, endpoints, email, browsers, GenAI, and AI agent/MCP workflows
+- **How:** AI-native DLP platform purpose-built for MCP — covers local stdio and remote HTTP/SSE discovery, inventory, risk scoring, and inline enforcement. One detection brain across all surfaces.
+- **Deployment:** Cloud SaaS
+- **Pricing:** Enterprise
+- **Key metrics:** 95% detection precision out-of-box (vs 5-25% for legacy DLP), 95% reduction in false positives
+- **Backed by:** Bain Capital Ventures, Venrock, WestBridge Capital. Advisors include Kevin Mandia, Freddy Kerrest, Doug Merritt. 100+ customers (Gusto, DraftKings, Grafana Labs, Grab, Nubank).
+- **Strengths:** First to market with MCP-native DLP. Consolidated platform (SaaS DLP + AI agent security in one). Strong enterprise traction.
+- **Gaps:** Cloud SaaS only — data leaves the developer machine. No local exec guard, no code fingerprint detection, no cross-session taint tracking, no autonomous red-team agents. MCP focus is discovery/inventory/enforcement — not pre-execution action blocking at the hook level.
+
+### Noma Security ($100M Series B, 2026 — $132M total)
+- **Founded:** 2023 | **HQ:** Israel
+- **What they secure:** AI agent security posture — runtime guardrails, agent hardening, compliance
+- **How:** Platform for discovering, governing, and securing AI agents across the enterprise
+- **Deployment:** Cloud SaaS
+- **Funding:** $100M Series B led by Evolution Equity Partners, with Ballistic Ventures and Glilot Capital. $132M total. 1,300% ARR growth — fastest-growing company in AI security.
+- **Strengths:** Massive growth trajectory, strong VC backing, broad enterprise customer base (financial services, life sciences, retail, big tech)
+- **Gaps:** Cloud platform — no local-first deployment. No public details on exec guard, code fingerprint, or cross-session taint. Enterprise pricing. No autonomous red-team agents.
+
+### WitnessAI ($58M, Jan 2026 — $85M+ total)
+- **Founded:** 2023 | **HQ:** San Francisco
+- **What they secure:** AI agent governance — network visibility, intent-based controls, runtime defense for employees, models, applications, and agents
+- **How:** Tracks prompts sent to agents, tools they're authorized to use, and commands issued by LLMs. Single control plane for discovering, governing, and securing AI agents + MCP servers.
+- **Deployment:** Cloud SaaS
+- **Funding:** $58M led by Sound Ventures, with Fin Capital, Samsung Ventures, Qualcomm Ventures, Forgepoint Capital. $85M+ total. 500% ARR growth, 5x headcount expansion.
+- **New (June 2026):** Extended agentic security — governs AI agent interactions with enterprise systems, tools, and MCP servers
+- **Strengths:** Strong governance focus, MCP server control, enterprise visibility into agent activity
+- **Gaps:** Cloud-only — no local-first deployment. Governance/visibility focus rather than pre-execution blocking. No exec guard, no code fingerprint, no autonomous red-team agents. Enterprise pricing.
+
+### Cisco DefenseClaw (open-source, March 2026)
+- **What it is:** Open-source secure agent framework from Cisco, announced at RSAC 2026
+- **How:** Bundles 4 tools — Skills Scanner, MCP Scanner, AI Bill of Materials (AI BOM), CodeGuard — into a single installable framework. Scans every agent skill, verifies MCP servers, inventories AI assets. Free, installable in ~5 minutes.
+- **Integration:** Plans to integrate with NVIDIA OpenShell as sandbox. Part of Cisco AI Defense expansion.
+- **Also new:** Duo Agentic Identity — extends Cisco Identity Intelligence to discover, identify, and monitor AI agents and their resource access.
+- **Strengths:** Free and open-source. Cisco enterprise distribution. Automated security pipeline for building/deploying/monitoring agents.
+- **Gaps:** Scanning/inventory tool — not a runtime DLP engine. No PII detection, no credential scanning, no prompt injection blocking, no cross-session taint tracking. Complements Cisco AI Defense (enterprise, $100K+/yr) rather than replacing it. No autonomous red-team agents.
 
 ---
 
 ## Head-to-Head Feature Comparison
 
-| Feature | SecureMind | Lakera | Protect AI | Prompt Security | HiddenLayer |
-|---------|-----------|--------|------------|-----------------|-------------|
-| **Founded** | 2026 | 2021 | 2022 | 2023 | 2022 |
-| **What they secure** | AI agent actions (file access, shell exec, code modification) | LLM inputs/outputs (prompt layer) | ML model supply chain + pipeline | LLM apps + employee AI usage | ML model artifacts + runtime |
-| **Deployment** | `pip install` + `secagent init` — zero cloud, 60s setup | Cloud API / self-hosted | Cloud platform | Cloud / self-hosted | Cloud SaaS |
-| **Data leaves machine** | Never | Yes (unless self-hosted) | Yes | Yes (unless self-hosted) | Yes |
-| **Agent coverage** | 9+ agents (Copilot, Claude Code, Cursor, Windsurf, Aider, Tabnine, Codeium) — agent-agnostic | Any LLM API | ML pipelines | Copilot + custom apps | Any ML model |
-| **MCP Server** | **9-tool MCP server** (stdio + SSE) — any MCP client connects | No | No | MCP Gateway (input/output only) | No |
-| **Token optimization** | Strip PII/credentials -> reduced tokens + security | No | No | No | No |
-| **DLP approach** | Pre-execution blocking (file gate + exec guard + prompt scanning) | Prompt/response filtering via API | Model scanning before deployment | LLM firewall (input/output) | Runtime anomaly detection |
-| **PII detection** | 14 types + 4 new (SendGrid, Twilio, Slack, MongoDB) + 10 decoding sublayers + ML context (0.959 F1) | Prompt scanning | Not primary | Prompt scanning | Not primary |
-| **Credential detection** | 10 types + semantic disclosure + entropy validation | Via prompt scan | Model supply chain | Via prompt scan | Not primary |
-| **Code leakage prevention** | Code fingerprint guard (n-gram Jaccard, persisted, locality-aware) | No | No | Limited | No |
-| **Exec guard** | 50+ shell command rules (reverse shells, DNS exfil, SSH tunneling, etc.) | No — cloud API, no access to shell | No | No | No (model-level only) |
-| **Data flow tracking** | Cross-session taint tracking (SHA-256 hash, n-gram, 24h TTL, integrity hashing) | No | No | No | No |
-| **Ingress guard** | **9-module, 1,790 lines**: fingerprint + TLS fingerprint + behavior + risk + cross-session rep + DLP controls + policy + response | No | No | No | No |
-| **TLS fingerprinting** | JA3/JA4-style TLS client fingerprinting for agent identification (246 lines) | No | No | No | No |
-| **Session tracker** | Multi-step trust building detection (recon→probe→extract, rapid escalation) | No | No | No | No |
-| **Compliance mapping** | **4 frameworks**: OWASP (10/10), NIST (14/18), MITRE ATLAS (11/14), CSA ARIA (12/15) — **51/57 = 89.5%** | Enterprise compliance | ML governance | Compliance reporting | MITRE ATLAS |
-| **Compliance reports** | **Auto-generated**: NIST 800-53, SOC 2, HIPAA, PCI-DSS — 38/38 from 18,250 audit entries | Enterprise compliance | ML governance | Compliance reporting | MITRE ATLAS |
-| **ML/NLP** | Sentence-transformer + sklearn v2 (1,880 samples, 0.858 F1, active learning) | Proprietary ML (cloud) | Static analysis | Proprietary ML | Adversarial ML |
-| **HarmBench eval** | **274 techniques, sub-3% ASR, 0% FP, F1 0.98+** — below industry 5% target | No public eval | No | Prompt Fuzzer | No |
-| **Autonomous red-team** | 10-category agent attack suite (55 agents, 58 attacks, 84 events, 100% detection) | No | No | No | No |
-| **Red team total** | 274 static + 58 agent = **332 attacks**, 52+ categories | Gandalf (1M users) | huntr (17k researchers) | Prompt Fuzzer (OSS) | Attack Simulation |
-| **Multi-framework validation** | **68/68 (100%)** — Python, LangChain, LangGraph, PydanticAI | No | No | No | No |
-| **Live demo** | `secagent demo --no-llm` — 4 attacks in 0.2s | No | No | No | No |
-| **Load testing** | **22.9 RPS, 0 crashes, 0 5xx** under mixed attack payloads | No public data | No | No | No |
-| **OWASP LLM** | 10/10 defended | Prompt injection focus | Not primary | Prompt injection focus | Model-level focus |
-| **NIST 800-53** | 364 controls tagged, 18/18 defended (100%) | Enterprise compliance | ML governance | Compliance reporting | MITRE ATLAS |
-| **MITRE ATLAS** | 11/14 techniques mapped | No | No | No | Yes (aligned) |
-| **CSA ARIA** | 12/15 controls mapped | No | No | No | No |
-| **Behavioral monitoring** | Process, file, privilege, honeypot monitors (1,594 lines) | No | No | No | No |
-| **Shadow AI detection** | 12+ AI tool registry with process scanning | No | No | No | Yes (AI Discovery) |
-| **Memory guard** | Agent memory poisoning protection (189 lines) | No | No | No | No |
-| **DLP controls UI** | Dashboard controls for DLP policy management (192 lines) | No | No | No | No |
-| **AI vs human edit detection** | Detects whether code edits come from AI agents or humans | No | No | No | No |
-| **Image OCR DLP** | Tesseract OCR + DLP pipeline | No | No | No | No |
-| **Enterprise privacy policies** | Org-wide, per-team, scheduled policy enforcement | No | No | Limited | No |
-| **Terminal Guard** | v4 — process ancestry tracing + input cadence detection | No | No | No | No |
-| **Chrome extension** | 12 LLM sites (ChatGPT, Gemini, Claude, AI Studio, Copilot, Grok, Perplexity, DeepSeek, Meta AI, HuggingChat + 2 more) + India PII (Aadhaar, PAN, Indian phone) | No | No | No | No |
-| **Gateway hardening** | Base64 decode, hex decode, JWT, homoglyph normalization, semantic disclosure, digit reassembly, multi-step exfil, reflection attack detection | No | No | No | No |
-| **DLP-to-breach bridge** | DLP findings auto-feed breach intelligence engine | No | No | No | No |
-| **Unified dashboard** | Single-port dashboard (gateway + admin + SOC + hook audit) | No | No | No | No |
-| **IDE extension** | VS Code v4.28.0 (context boundary + LM interceptor + model usage reporting + auto-proxy) | No | No | No | No |
-| **RBAC** | 7-role hierarchy (super_admin→developer), team scoping, per-endpoint ACL | No | No | Limited | No |
-| **Smart Redaction** | 4-mode per data type (block/redact/mask/allow), reversible tokenization, per-request override | No | No | No | No |
-| **Browser consent UX** | Interactive per-finding consent modal (Redact/Mask/Block/Allow) + file upload consent | No | No | No | No |
-| **Permit system** | Capability-based delegation (HMAC-signed, attenuation-only, cascade revoke, time-boxed) | No | No | No | No |
-| **Security audit** | 18 findings fixed (AES-256-GCM tokens, nonce replay, RBAC fail-closed, ReDoS fix, 50KB limit) | No public data | No | No | No |
-| **Gateway MCP Server** | 7-tool MCP (dlp_scan, dlp_redact, permit_mint/revoke/chain, compliance, audit) | No | No | No | No |
-| **Policy-as-Code** | YAML DLP policies, team overrides, custom patterns, scheduled | No | No | Limited | No |
-| **Slack/Teams alerts** | Real-time DLP alerts, severity filtering, dedup | No | No | No | No |
-| **Agent profiling** | Z-score anomaly detection, baseline per agent, persisted | No | No | No | No |
-| **JetBrains IDE** | IntelliJ/PyCharm/WebStorm — AI indexing exclusion, inspections | No | No | No | No |
-| **Embedding detector** | 274 attack embeddings, cosine similarity, ~10ms | No | No | No | No |
-| **Anomaly detector** | Z-score per-session (rate, length, PII freq, injection freq) | No | No | No | No |
-| **Incident response** | Autonomous lifecycle (detect→triage→contain→investigate→remediate→report) | No | No | No | No |
-| **Prompt injection dashboard** | Tableau-style, traffic light, mind map, live feed, RBAC | No | No | No | No |
-| **Security logger** | JSON-structured SIEM-ready events, thread-safe | No | No | No | Partial |
-| **Cloud deployment** | GCP full-stack, Nginx SSL, JWT auth, ~$17/mo | No | No | No | No |
-| **Red team deploy** | Zero-code Docker package, GHCR images, no source exposure | No | No | No | No |
-| **Pre-commit hooks** | DLP + vuln scanning | No | No | No | No |
-| **Pricing** | Free + ₹1,250/dev/mo + ₹2,100/dev/mo | Free + custom enterprise | Acquired (Palo Alto) | Custom | Enterprise |
+| Feature | SecureMind | Lakera (Check Point) | Protect AI (Palo Alto) | Prompt Security (SentinelOne) | HiddenLayer ($150M) | Nightfall AI | Noma ($132M) | WitnessAI ($85M+) |
+|---------|-----------|--------|------------|-----------------|-------------|------------|------------|------------|
+| **Founded** | 2026 | 2021 | 2022 | 2023 | 2022 | 2019 | 2023 | 2023 |
+| **What they secure** | AI agent actions (file access, shell exec, code modification) | LLM inputs/outputs (prompt layer) | ML model supply chain + pipeline | LLM apps + employee AI usage | ML models + AI coding agent actions | Data movement across SaaS/MCP/agents | AI agent security posture | AI agent governance + MCP |
+| **Deployment** | `pip install` + `secagent init` — zero cloud, 60s setup | Cloud API / self-hosted | Cloud platform | Cloud (SentinelOne XDR) | Cloud SaaS | Cloud SaaS | Cloud SaaS | Cloud SaaS |
+| **Data leaves machine** | **Never** | Yes (unless self-hosted) | Yes | Yes | Yes | Yes | Yes | Yes |
+| **Agent coverage** | 9+ agents (Copilot, Claude Code, Cursor, Windsurf, Aider, Tabnine, Codeium) — agent-agnostic | Any LLM API | ML pipelines | Copilot + custom apps | Coding agents (hooks) | MCP + SaaS + GenAI | Enterprise agents | Enterprise agents + MCP |
+| **Hook-based agent security** | **Native** — hooks into Claude Code, Cursor, VS Code since day 1 | No | No | No | **New (Aug 2026)** — Agent Harness Security | No | No | No |
+| **MCP Server** | **9-tool MCP server** (stdio + SSE) — any MCP client connects | No | No | MCP Gateway (input/output only) | No | MCP discovery + enforcement | No | MCP governance |
+| **Token optimization** | Strip PII/credentials -> reduced tokens + security | No | No | No | No | No | No | No |
+| **DLP approach** | Pre-execution blocking (file gate + exec guard + prompt scanning) | Prompt/response filtering via API | Model scanning before deployment | LLM firewall (input/output) | Runtime anomaly + hook redaction | AI-native DLP (MCP + SaaS) | Agent posture management | Governance + visibility |
+| **PII detection** | 14 types + 4 new + 10 decoding sublayers + ML context (0.959 F1) | Prompt scanning | Not primary | Prompt scanning | Redaction (new) | **100+ AI models** (cloud) | Limited | Via governance |
+| **Credential detection** | 10 types + semantic disclosure + entropy validation | Via prompt scan | Model supply chain | Via prompt scan | Via hooks (new) | Cloud scanning | Not primary | Not primary |
+| **Code leakage prevention** | Code fingerprint guard (n-gram Jaccard, persisted, locality-aware) | No | No | Limited | No | No | No | No |
+| **Exec guard** | 50+ shell command rules (reverse shells, DNS exfil, SSH tunneling, etc.) | No | No | No | Shell command blocking (new) | No | No | No |
+| **Data flow tracking** | Cross-session taint tracking (SHA-256 hash, n-gram, 24h TTL, integrity hashing) | No | No | No | No | No | No | No |
+| **Ingress guard** | **13-module, 2,686 lines**: fingerprint + TLS + behavior + risk + cross-session + DLP controls + policy + security logger + browser detection | No | No | No | No | No | No | No |
+| **Compliance mapping** | **4 frameworks**: OWASP (10/10), NIST (14/18), MITRE ATLAS (11/14), CSA ARIA (12/15) — **51/57 = 89.5%** | Enterprise compliance | ML governance | Compliance reporting | MITRE ATLAS | No | Enterprise compliance | No |
+| **ML/NLP** | Sentence-transformer + sklearn v2 (1,880 samples, 0.858 F1, active learning) | Proprietary ML (cloud) | Static analysis | Proprietary ML | Adversarial ML | **100+ AI models** | Proprietary | Proprietary |
+| **HarmBench eval** | **274 techniques, sub-3% ASR, 0% FP, F1 0.98+** | No public eval | No | Prompt Fuzzer | No | No | No | No |
+| **Autonomous red-team** | 10-category agent attack suite (55 agents, 84 events, 100% detection) | No | No | No | No | No | No | No |
+| **Multi-framework validation** | **68/68 (100%)** — Python, LangChain, LangGraph, PydanticAI | No | No | No | No | No | No | No |
+| **Live demo** | `secagent demo --no-llm` — 4 attacks in 0.2s | No | No | No | No | No | No | No |
+| **Load testing** | **22.9 RPS, 0 crashes, 0 5xx** under mixed attack payloads | No public data | No | No | No | No | No | No |
+| **OWASP LLM** | 10/10 defended | Prompt injection focus | Not primary | Prompt injection focus | Model-level focus | Not primary | Not primary | Not primary |
+| **Shadow AI detection** | 12+ AI tool registry with process scanning | No | No | No | Yes (AI Discovery) | No | Yes | Yes |
+| **Terminal Guard** | v4 — process ancestry tracing + input cadence detection | No | No | No | No | No | No | No |
+| **Chrome extension** | 12 LLM sites + India PII (Aadhaar, PAN, Indian phone) | No | No | No | No | No | No | No |
+| **RBAC** | 7-role hierarchy, team scoping, per-endpoint ACL | No | No | Limited | No | No | Limited | Limited |
+| **Smart Redaction** | 4-mode per data type (block/redact/mask/allow), reversible tokenization | No | No | No | Redaction (new) | Cloud redaction | No | No |
+| **Permit system** | Capability-based delegation (HMAC-signed, attenuation-only, cascade revoke) | No | No | No | No | No | No | No |
+| **Incident response** | Autonomous lifecycle (detect→triage→contain→investigate→remediate→report) | No | No | No | No | No | No | No |
+| **Prompt injection dashboard** | Tableau-style, traffic light, mind map, live feed, RBAC | No | No | No | No | No | No | No |
+| **Cloud deployment** | GCP full-stack, Nginx SSL, JWT auth, ~$17/mo | No | No | No | No | No | No | No |
+| **Red team deploy** | Zero-code Docker package, GHCR images, no source exposure | No | No | No | No | No | No | No |
+| **Pre-commit hooks** | DLP + vuln scanning | No | No | No | No | No | No | No |
+| **Open source** | PyPI package + CLI | No | huntr community | Prompt Fuzzer | No | No | No | No |
+| **Pricing** | Free + ₹1,250/dev/mo + ₹2,100/dev/mo | Free + custom enterprise | Acquired (Palo Alto) | Acquired (SentinelOne) | Enterprise ($100K+/yr est.) | Enterprise | Enterprise | Enterprise |
+| **Total funding** | Bootstrapped | ~$340M (Check Point) | Acquired | ~$250-300M (SentinelOne) | $150M | VC-backed | $132M | $85M+ |
 
 ---
 
@@ -241,7 +274,7 @@ When an AI agent reads proprietary source code and includes it in a prompt, that
 If credentials are read in session A and exfiltrated in session B (split-ticket attack), SecureMind catches it via persistent taint registry with SHA-256 integrity hashing. No competitor tracks data flow across sessions.
 
 ### 5. Ingress guard with TLS fingerprinting and behavioral reputation — no competitor has this
-SecureMind's 9-module ingress guard (1,790 lines) includes JA3/JA4-style TLS client fingerprinting, request fingerprinting, cross-session behavior reputation, multi-IP coordinated scan detection, DLP controls UI, and policy enforcement — all before the request reaches the agent.
+SecureMind's 13-module ingress guard (2,686 lines) includes JA3/JA4-style TLS client fingerprinting, request fingerprinting, cross-session behavior reputation, multi-IP coordinated scan detection, DLP controls UI, and policy enforcement — all before the request reaches the agent.
 
 ### 6. Autonomous red-team agents — self-testing security
 10 categories of autonomous attack agents (55 agents, 84 events) that continuously test defenses with 100% detection rate. No competitor ships self-attacking agents that validate their own security posture in production.
@@ -374,8 +407,8 @@ Closed 3 specific evasion gaps discovered during continuous red-teaming: (1) ROT
 ### 44. Cisco + IBM competitive analysis — know thy enemy
 Comprehensive feature gap analysis covering Cisco Talos (threat intel, IR, reputation scoring, Snort rules), Cisco AI Defense (algorithmic red teaming, runtime protection, AI visibility), and IBM watsonx.governance (governance graph, compliance, bias detection, drift monitoring, AI factsheets). Documents what to replicate (prioritized), our advantages (55 real attack agents, self-hosted at $8.50/mo vs enterprise pricing), and market positioning for AIGRC partnership.
 
-### 45. 7 new security modules — 5,267 lines closing all OWASP gaps
-Closed every remaining OWASP LLM Top 10 gap in one PR: `multimodal_guard.py` (571 lines — image/audio/video injection), `mcp_guard.py` (667 lines — MCP tool exploitation), `pipeline_scanner.py` (930 lines — data/model poisoning), `output_guard.py` (547 lines — XSS/prompt extraction/hallucination), `agent_behavior_monitor.py` (623 lines — JadePuffer/phishing/BEC), `advanced_guards.py` (1,135 lines — LLM07/LLM08/India governance), `threat_taxonomy.py` (794 lines — unified compliance mapping). OWASP LLM went from 8/10 to **10/10**. Cisco AI Defense: **100%**. MITRE ATLAS: **100%**.
+### 45. 13 new security modules — 10,493 lines closing all OWASP gaps
+Closed every remaining OWASP LLM Top 10 gap across two PRs. First wave (7 modules, 5,267 lines): `multimodal_guard.py` (571 lines — image/audio/video injection), `mcp_guard.py` (667 lines — MCP tool exploitation), `pipeline_scanner.py` (930 lines — data/model poisoning), `output_guard.py` (547 lines — XSS/prompt extraction/hallucination), `agent_behavior_monitor.py` (623 lines — JadePuffer/phishing/BEC), `advanced_guards.py` (1,135 lines — LLM07/LLM08/India governance), `threat_taxonomy.py` (794 lines — unified compliance mapping). Second wave (6 modules, 5,226 lines): `advanced_threat_detector.py` (644 lines — steganographic/side-channel/hallucination credential), `agent_runtime_guard.py` (1,273 lines — memory poisoning/rug pull/objective drift/circuit breaker), `indirect_injection_scanner.py` (701 lines — 10 attack vectors), `llm_judge.py` (255 lines — last-resort semantic classifier), `structural_analyzer.py` (352 lines — 20 jailbreak categories), `multilingual_detector.py` (1,113 lines — 25 languages). OWASP LLM went from 8/10 to **10/10**. Cisco AI Defense: **100%**. MITRE ATLAS: **100%**. Attack category coverage: **64/64 (100%)**.
 
 ### 46. Banking/financial DLP — 6 new PII types
 OTP codes (6-digit), bank account numbers (Indian format), UPI IDs (`name@bank`), CVV (3-4 digit), PIN codes, and bank login credentials. India-specific financial PII detection that no competitor offers. Critical for healthcare + fintech verticals (AIGRC target markets).
@@ -414,15 +447,20 @@ Curated attack datasets across all OWASP LLM categories with automated detection
 
 ---
 
-## How We're Different From LangSmith, LangChain, Cursor, Claude Code, Cisco, IBM, Microsoft
+## How We're Different From Every Competitor
 
 | Platform | What They Do | What's Missing | How SecureMind Is Different |
 |---|---|---|---|
+| **HiddenLayer Agent Harness** | Hook-based coding agent security (Aug 2026). Prompt injection, data redaction, shell blocking via native hooks. $150M raised. | Cloud-managed — data flows to HiddenLayer's platform. No code fingerprint guard, no cross-session taint, no autonomous red-team agents, no MCP server, no local-first option. Enterprise pricing ($100K+/yr). Brand new (Aug 2026). | We've been hook-based since day 1 — battle-tested with 1,201 tests and 332 attack evals. Local-first (data never leaves). Code fingerprint guard, cross-session taint, 55 autonomous red-team agents, 9-tool MCP server. $17/mo self-hosted vs $100K+/yr. |
+| **Nightfall AI** | First enterprise DLP purpose-built for MCP. 100+ AI detection models, 95% precision. Covers SaaS + MCP + agents. | Cloud SaaS only — data leaves the machine. No exec guard, no code fingerprint, no hook-based action blocking, no cross-session taint, no red-team agents. Discovery/enforcement focus, not pre-execution blocking. | We block actions *before* they execute. Nightfall scans data in transit; we prevent the agent from reading .env in the first place. 50+ exec guard rules, code fingerprint guard, cross-session taint — none of which Nightfall has. |
+| **Noma Security** | AI agent security posture. $132M raised, 1,300% ARR growth. Enterprise guardrails and compliance. | Cloud platform — no local deployment. No public details on exec guard, code fingerprint, or cross-session taint. No autonomous red-team. Enterprise pricing. | We're the runtime enforcement layer Noma doesn't have. Noma manages posture; we enforce at exec/file/prompt level. 55 red-team agents self-test our defenses — Noma has no equivalent. |
+| **WitnessAI** | AI agent governance + MCP server control. $85M+ raised. Single control plane for agent discovery/governance. | Cloud-only. Governance/visibility — not pre-execution blocking. No exec guard, no code fingerprint, no autonomous red-team. Enterprise pricing. | WitnessAI watches what agents do; we stop them before they do it. Pre-execution blocking vs post-hoc governance. Code fingerprint guard, cross-session taint, 50+ exec rules — all absent from WitnessAI. |
+| **Cisco DefenseClaw** | Open-source agent framework (RSAC 2026). Skills Scanner, MCP Scanner, AI BOM, CodeGuard. Free, 5-min install. | Scanning/inventory tool — not a runtime DLP engine. No PII detection, no credential scanning, no prompt injection blocking, no cross-session taint. Complements Cisco AI Defense ($100K+/yr). | We're a runtime enforcement engine, not a scanner. DefenseClaw inventories; we block. Our 50+ exec guard rules, 14 PII types, 10 credential types, and prompt injection detection all run at execution time. DefenseClaw + Cisco AI Defense costs $100K+/yr; we cost $17/mo. |
 | **LangSmith (LangChain)** | LLM observability — tracing, debugging, eval of chains. Monitors what the LLM said. | Cannot see file reads, shell commands, code modifications. No DLP, no exec guard. | We monitor what the agent *does*. LangSmith can't see `cat ~/.ssh/id_rsa` — it's not an LLM call. |
 | **LangChain** | Framework for building LLM agents. Plumbing, not a guard. | No security layer. No file gate, no exec guard, no DLP. | We secure any agent built with LangChain. A LangChain agent can run `rm -rf /` — LangChain won't stop it. We will. **Proven: 7/7 LangChain chains blocked.** |
 | **Cursor** | AI code editor. Has `.cursorignore` for file exclusion. | Just a file list — no content scanning, no exec guard, no prompt injection detection, no cross-session tracking. | We add 50+ exec guard rules, PII/credential detection, code fingerprint guard ON TOP of Cursor. `.cursorignore` doesn't stop `base64 .env \| curl` — our exec guard does. |
 | **Claude Code** | AI coding agent. Has hooks API (which we plug into) but no built-in DLP. | Zero DLP without hooks. No credential detection, no PII scanning, no behavioral monitoring. | We ARE the security layer for Claude Code. Our hook intercepts every Read/Write/Bash/Prompt action. Without us, Claude Code can freely read .env, cat SSH keys, run reverse shells. |
-| **Cisco AI Defense** | Enterprise cloud — AI model validation, algorithmic red teaming, runtime guardrails. Cisco Talos threat intel. | Cloud-first, enterprise pricing ($100K+/yr). Can't see local file reads or shell commands. Algorithmic red teaming generates synthetic attacks — we use 55 real attack agents. No code fingerprint, no cross-session taint. | We're local-first, $17/mo self-hosted. 55 real attack agents vs synthetic. Our incident response engine + prompt injection dashboard match Cisco Talos IR capabilities at 1/1000th the cost. |
+| **Cisco AI Defense** | Enterprise cloud — AI model validation, algorithmic red teaming, runtime guardrails + DefenseClaw. | Cloud-first, enterprise pricing ($100K+/yr). Can't see local file reads or shell commands. Algorithmic red teaming generates synthetic attacks — we use 55 real attack agents. No code fingerprint, no cross-session taint. | We're local-first, $17/mo self-hosted. 55 real attack agents vs synthetic. Our incident response engine + prompt injection dashboard match Cisco Talos IR capabilities at 1/1000th the cost. |
 | **IBM watsonx.governance** | AI governance — governance graph, compliance automation, bias/drift monitoring, AI factsheets. | Enterprise SaaS, tied to IBM ecosystem. Governance-only — no runtime DLP, no exec guard, no prompt injection detection. | We combine governance (4-framework compliance, policy-as-code) with runtime enforcement (50+ exec rules, DLP, permits). IBM governs; we govern AND enforce. Self-hosted at $8.50/mo vs enterprise pricing. |
 | **Microsoft Agent Governance** | Azure governance for Copilot/M365 agents — admin policies, audit. | Tied to Microsoft ecosystem. Cloud-only. Admin-level policy, not runtime enforcement. | We're agent-agnostic (9+ agents) and local-first. Microsoft sets policies in Azure; we enforce at exec/file/prompt level on the developer's machine. |
 
@@ -431,53 +469,60 @@ Curated attack datasets across all OWASP LLM categories with automated detection
                     (what it said)             (what it did)
                     <------------------------><---------------->
 
-  Cloud/SaaS        LangSmith  Cisco
-                    Microsoft  Prompt Security
-                    Lakera     HiddenLayer
+  Cloud/SaaS        LangSmith  Cisco           Nightfall AI
+                    Microsoft  Prompt Security  Noma Security
+                    Lakera     WitnessAI        HiddenLayer (Agent Harness)
 
-  Framework         LangChain
+  Framework         LangChain                   DefenseClaw (scanning only)
 
   Editor            Cursor (.cursorignore)
                     Claude Code (hooks API)
 
   Runtime                                      * SecureMind *
-                                               (local-first)
+  (local-first)                                (the only one here)
 ```
 
-Everyone else is top-left (cloud + conversations). We're bottom-right (local + actions). Nobody else is there.
+HiddenLayer's Agent Harness (Aug 2026) moved them toward "Agent Actions" — but it's cloud-managed.
+Nightfall AI covers MCP DLP but at the SaaS layer. Nobody else is local + actions.
 
 ---
 
 ## Competitive Positioning
 
 ```
-                    Secures LLM Conversations
-                    <------------------------->
-                    Lakera          Prompt Security
-                    (Check Point)
+                    Secures LLM Conversations                    Secures AI Agent Actions
+                    <------------------------->                  <------------------------->
+                    Lakera          Prompt Security               Nightfall AI    Noma
+                    (Check Point)   (SentinelOne)                WitnessAI
 
-        Cloud ^     HiddenLayer     Protect AI
-              |                     (Palo Alto)
+        Cloud ^     HiddenLayer     Protect AI                   HiddenLayer Agent Harness
+              |                     (Palo Alto)                  (cloud-managed hooks)
               |
+              |     DefenseClaw (scanning only, no DLP)
               |
         Local v
-                    * SecureMind *
+                                                                 * SecureMind *
+                                                                 (local-first, self-hosted)
 
-                    <------------------------->
-                    Secures AI Agent Actions
+                    <----------------------------------------------------->
 ```
 
-SecureMind is the only player in the **local + actions** quadrant.
+HiddenLayer's Agent Harness Security (Aug 2026) is the closest competitor — but it's cloud-managed, enterprise-priced ($100K+/yr), and brand new. SecureMind remains the only **local-first, self-hosted** player in the agent actions quadrant.
 
 ---
 
 ## Key Market Signals
 
-1. **Acquisitions validate the space** — Check Point ($300M), Palo Alto, Proofpoint all acquiring AI security startups. Acquirers paying 9-figure sums.
-2. **CB Insights tracks 21 startups** — none are local-first action-level security.
-3. **OWASP #1 + 340% surge** — prompt injection is the entry point, but the real damage is in what the agent *does* after injection.
-4. **Proofpoint/Acuvity** is closest directionally (DLP + MCP) but cloud-first and acquired.
-5. **HiddenLayer's March 2026 agentic update** signals market direction — but their approach is model-level, not developer-environment-level.
+1. **$96B+ in M&A validates the space** — Check Point (~$300M for Lakera), SentinelOne (~$250-300M for Prompt Security), Palo Alto (Protect AI), Proofpoint (Acuvity). Acquirers paying 9-figure sums for AI security startups.
+2. **$385M+ in VC rounds in 2026 alone** — HiddenLayer ($100M), Noma ($100M), WitnessAI ($58M), plus dozens of smaller rounds. Investors betting big on agentic security.
+3. **HiddenLayer Agent Harness Security (Aug 2026) is the first direct competitor** — hooks into coding agents like we do. But cloud-managed, enterprise-priced, and brand new. Validates our approach while confirming the market we created.
+4. **Nightfall AI is the first MCP-native DLP** — validates that MCP security is a real category. But cloud SaaS, not local-first.
+5. **Cisco DefenseClaw goes open-source** — Cisco giving away scanning tools to sell AI Defense ($100K+/yr). Validates the "scan everything" approach but doesn't replace runtime enforcement.
+6. **Market sizing confirms opportunity** — $2.43B in 2026 → $9.63B by 2031 (Mordor Intelligence). 40% of enterprise apps will embed AI agents by year-end 2026.
+7. **Only 29% of organizations feel prepared** to secure agentic AI — massive readiness gap = massive opportunity for easy-to-deploy solutions.
+8. **CB Insights tracks 21+ startups** — still none are local-first action-level security.
+9. **OWASP #1 + 340% surge** — prompt injection is the entry point, but the real damage is in what the agent *does* after injection. 1 in 8 AI breaches now linked to agentic systems (HiddenLayer report).
+10. **Government contracts emerging** — HiddenLayer selected for DOE's $60M Prometheus initiative. Government AI security spend is a new TAM.
 
 ---
 
@@ -485,20 +530,20 @@ SecureMind is the only player in the **local + actions** quadrant.
 
 | Metric | Value |
 |---|---|
-| **Total Python source** | **21,546 lines** (securityagent-core) |
+| **Total Python source** | **26,931 lines** (securityagent-core) |
 | Core DLP engine | ~1,800 lines (`secagent_check.py`) + `scripts/secagent/` package (exec_rules, exec_helpers, prompt_helpers) |
 | Config/patterns | 1,777 lines (`settings.py`) |
-| Scanner modules | 23 files, 7,553 lines |
+| Scanner modules | 24 files, 7,553 lines (securityagent-core) + 37 files, 20,412 lines (security/) |
 | Monitor modules | 5 files, 1,594 lines |
-| Skills framework | 1,474 lines (10 implementations, 4 adapters) |
+| Skills framework | 1,652 lines (10 implementations, 4 adapters) |
 | Policy engine | 865 lines (6-check evaluation, chain detection, audit) |
-| CLI | 494 lines (`secagent` command) |
-| Ingress guard | 9 modules, 1,790 lines |
+| CLI | 599 lines (`secagent` command) |
+| Ingress guard | 13 modules, 2,686 lines |
 | MCP tools | 9 tools via stdio + SSE |
 | Compliance frameworks mapped | 4 (OWASP + NIST + MITRE ATLAS + CSA ARIA) — **51/57 = 89.5%** |
 | Compliance reports | 4 (NIST 800-53, SOC 2, HIPAA, PCI-DSS) — **38/38 passing** |
 | Audit entries analyzed | 18,250 |
-| Test suites (AgnosticSecurity) | 31 files |
+| Test suites (AgnosticSecurity) | 34 files |
 | Test suites (securityagent-core) | 50 files |
 | **Total tests** | **1,201** across 32 suites |
 | Core tests | 263 |
@@ -517,13 +562,13 @@ SecureMind is the only player in the **local + actions** quadrant.
 | LLM proxy tests | 33 (10 modules) |
 | Provider routes tests | 27 (models + routes + pipeline) |
 | VS Code extension | v4.47.0 (refactored: editGuard + contentGuardian + reportPanel) |
-| Chrome extension | v4.30.1, 12 LLM sites, consent modal UI, file upload consent |
+| Chrome extension | v4.47.0, 12 LLM sites, consent modal UI, file upload consent |
 | Package version | **4.47.0** (PyPI published) |
 | PII types | 14 core + 4 new (SendGrid, Twilio SID, Slack webhook, MongoDB SRV) |
 | Live demo speed | 0.2s (`--no-llm`), 26s (full with Ollama) |
 | Install time | ~60 seconds (`pip install` + `secagent init`) |
-| Design docs | 19 files (added GETTING_STARTED.md) |
-| Components | **39** |
+| Design docs | 31 files |
+| Components | **41** |
 | Security audit findings fixed | 18 (3 HIGH + 9 MEDIUM + 6 LOW) |
 | Token store encryption | AES-256-GCM at rest |
 | Data directory | `~/.agnosticsecurity/` (configurable via `EA_DATA_DIR`) |
@@ -533,7 +578,7 @@ SecureMind is the only player in the **local + actions** quadrant.
 | Security logger | JSON-structured, SIEM-ready, thread-safe |
 | Cloud deployment | GCP full-stack, ~$17/mo |
 | Red team deploy | Zero-code Docker, GHCR images |
-| New security modules | 7 modules, 5,267 lines (multimodal, MCP, pipeline, output, behavior, advanced, taxonomy) |
+| New security modules | 13 modules, 10,493 lines (multimodal, MCP, pipeline, output, behavior, advanced, taxonomy, threat detector, runtime guard, indirect injection, LLM judge, structural analyzer, multilingual) |
 | OWASP LLM Top 10 | **10/10 (100%)** — was 8/10 |
 | Cisco AI Defense | **100% aligned** |
 | MITRE ATLAS | **100% aligned** |
@@ -547,7 +592,28 @@ SecureMind is the only player in the **local + actions** quadrant.
 | SOC integrations | CrowdStrike, Code42, Zscaler, Okta |
 | Attack dataset coverage | **155/156 (99.4%)** |
 | Sidecar load hardening (v4.39) | Multi-worker, per-IP rate limiting (200 req/min), /stats endpoint |
-| **Differentiators** | **57** |
+| Regulations engine (v4.42) | 15 global frameworks (DPDP, EU AI Act, GDPR, CCPA, HIPAA, SOC 2, SOX, ISO 27001, NIST, OWASP, PCI DSS, FDA 21 CFR, EU GPAI, India IT Rules, China GenAI), 550 lines |
+| Threat intelligence (v4.43) | 3 detectors (agent autonomy, bioweapon, model theft), real-world incident patterns, MITRE mapped, 194 lines |
+| Semantic response cache (v4.43) | Two-tier (exact hash + cosine similarity), trigram or sentence-transformers, 303 lines |
+| Provider-agnostic scanning (v4.44) | **17 providers + 4 protocols + 8 frameworks** auto-detected, unified ScanPayload, 490 lines |
+| Advanced threat detector (v4.45) | 5 components (long-context, steganographic, side-channel, hallucination credential, echo chamber), 644 lines |
+| Agent runtime guard (v4.45) | 4 components (memory poisoning, rug pull, objective drift, circuit breaker), 1,273 lines |
+| Indirect injection scanner (v4.45) | 10 attack vectors (tool results, RAG, web, code, email, data URI, RTL, base64), 701 lines |
+| LLM Judge (v4.45) | Last-resort semantic classifier (Haiku/GPT-4o-mini), 9 attack categories, 255 lines |
+| Structural analyzer (v4.45) | 20 jailbreak categories detected by shape not content, 352 lines |
+| Multilingual detector (v4.45) | 25 languages (base), trigram language ID, 5 attack categories per language, 1,113 lines |
+| Attack category coverage (v4.45) | **64/64 (100%)** — 22 gaps closed, complete threat coverage |
+| SSO/SCIM (v4.46) | Enterprise OIDC SSO + SCIM 2.0 user provisioning, 852 lines |
+| Helm chart (v4.46) | Production Kubernetes deployment, 23 files (gateway + breach + redis + HPA + PDB + NetworkPolicy) |
+| FP tuning (v4.46) | 505 clean developer prompts, FPR 0.99% (4/505 false positives) |
+| System prompt guard (v4.47) | 6-dimension intent risk scoring, 40+ malicious patterns, drift detection, capability extraction, 705 lines |
+| Agent identity framework (v4.47) | Auto-registration, capability scoping, 7-check continuous verification, escalation detection, cascade revocation, 988 lines |
+| Supply chain guard (v4.47) | Typosquatting (Levenshtein), malicious deps, SBOM, A2A security, adversarial ML defense, 664 lines |
+| Multilingual detector (v4.47) | **40 languages** (up from 25), +15 languages (Amharic, Burmese, Lao, Khmer, Georgian, Armenian, Sinhala, Nepali, Mongolian, Yoruba, Hausa, Zulu, Tagalog, Malay, Catalan) |
+| Compliance PDF export (v4.47) | 4-framework PDF report (OWASP + NIST + MITRE + CSA), exec summary, score cards, signature block, 861 lines |
+| Eval YAML files | 9 (added clean_developer_prompts.yaml) |
+| **Components** | **41** (added SSO/SCIM, Helm chart) |
+| **Differentiators** | **69** |
 
 ---
 
@@ -564,7 +630,7 @@ AgnosticSecurity/
 │   ├── secagent/                      # Extracted modules (exec_rules, exec_helpers, prompt_helpers)
 │   ├── train_enhanced_classifier.py   # Enhanced ML training (1,880 samples, 3 data sources)
 │   ├── harmbench_export.py            # HarmBench eval export (--run for exec attacks)
-│   ├── test_*.py                      # 29 test suites (1,051 tests)
+│   ├── test_*.py                      # 34 test suites (1,201 tests)
 │   ├── nist_score.py                  # NIST compliance scorecard
 │   ├── owasp_score.py                 # OWASP LLM compliance scorecard
 │   ├── continuous_red_team.py         # Continuous red-team runner
@@ -576,7 +642,7 @@ AgnosticSecurity/
 │   ├── agents/                        # 10 attack category agents (55 total)
 │   ├── evals/                         # 58 agent-driven attack evals (10 YAML files)
 │   └── test_*.py                      # Agent test harnesses
-├── ingress_guard/                     # 9-module inbound request security (1,790 lines)
+├── ingress_guard/                     # 13-module inbound request security (2,686 lines)
 │   ├── behavior_analyzer.py           # Behavioral pattern analysis (274 lines)
 │   ├── cross_session.py               # Cross-session reputation tracking (362 lines)
 │   ├── tls_fingerprint.py            # JA3/JA4-style TLS fingerprinting (246 lines)
@@ -600,15 +666,15 @@ AgnosticSecurity/
 │   ├── malicious_cursorrules.md       # Cursor rules attack demo
 │   └── run_demo.py                    # YAML-driven demo runner
 ├── hooks/                             # Pre-commit DLP + vuln scanning
-├── chrome-extension/                  # Browser DLP guard (v4.30.1, 12 LLM sites, consent modal, file upload consent)
-├── vscode-extension/                  # VS Code v4.30.0 (refactored: editGuard, contentGuardian, reportPanel)
+├── chrome-extension/                  # Browser DLP guard (v4.47.0, 12 LLM sites, consent modal, file upload consent)
+├── vscode-extension/                  # VS Code v4.47.0 (refactored: editGuard, contentGuardian, reportPanel)
 ├── docs/
 │   ├── GETTING_STARTED.md            # 5-min onboarding guide
 │   ├── architecture-flow.html        # Interactive architecture diagram (live API calls)
 │   ├── redteam-flow.html             # Interactive red-team flow diagram
 ├── console/                           # Admin console (web UI)
 ├── llm/                               # LLM proxy + SDK
-├── docs/                              # 17 design docs
+├── docs/                              # 31 design docs
 │   ├── COMPETITIVE_ANALYSIS.md        # Competitor research (this file)
 │   ├── SECURITY_EVAL_METRICS.md       # HarmBench eval metrics + scoped ASR
 │   ├── MITRE_ATLAS_MAPPING.md         # MITRE ATLAS 11/14 mapping
@@ -634,7 +700,7 @@ AgnosticSecurity/
 5. `ingress_guard/middleware.py` -> `tls_fingerprint.py` -> `cross_session.py` — inbound security
 6. `demo/live_attack_demo.py` — the YC interview demo
 
-### securityagent-core v4.31.0 (21,546 lines + 50 test files)
+### securityagent-core v4.47.0 (26,931 lines + 29 test files)
 
 ```
 Install: pip install securityagent-core[ml]
@@ -644,11 +710,11 @@ CLI:     secagent init | mcp | demo | train | status | scan | watch
 ```
 securityagent-core/src/
 ├── endpoint_agent/                    # 17,663 lines
-│   ├── cli.py                         # `secagent` CLI entry point (494 lines)
+│   ├── cli.py                         # `secagent` CLI entry point (599 lines)
 │   ├── config/
 │   │   ├── settings.py                # All patterns, thresholds, config (1,777 lines)
 │   │   └── privacy_mode.py           # Privacy mode configuration
-│   ├── scanners/                      # 23 files, 7,553 lines
+│   ├── scanners/                      # 24 files, 7,553 lines
 │   │   ├── dlp_scanner.py             # Content scanning + classification (684 lines)
 │   │   ├── text_extractor.py         # PDF/image/notebook extraction (586 lines)
 │   │   ├── ml_classifier.py          # Sentence-transformer + v2 models (579 lines)
@@ -681,7 +747,7 @@ securityagent-core/src/
 │   ├── cloud_bridge/                  # Cloud lockdown
 │   ├── engine.py                      # Core orchestrator
 │   └── secure_fs.py                   # Secure filesystem (304 lines)
-├── skills/                            # 1,474 lines — MCP tool framework
+├── skills/                            # 1,652 lines — MCP tool framework
 │   ├── adapters/
 │   │   ├── mcp_server.py             # Stdio JSON-RPC MCP server (159 lines)
 │   │   ├── mcp_sse_server.py         # SSE HTTP MCP server (161 lines)
@@ -724,20 +790,38 @@ securityagent-core/src/
 
 ## Sources
 
-- [Check Point Acquires Lakera ($300M)](https://www.checkpoint.com/press-releases/check-point-acquires-lakera-to-deliver-end-to-end-ai-security-for-enterprises/)
+### Acquisitions
+- [Check Point Acquires Lakera (~$300M)](https://www.checkpoint.com/press-releases/check-point-acquires-lakera-to-deliver-end-to-end-ai-security-for-enterprises/)
 - [Palo Alto Acquires Protect AI](https://www.paloaltonetworks.com/company/press/2025/palo-alto-networks-completes-acquisition-of-protect-ai)
-- [Prompt Security](https://prompt.security/)
-- [HiddenLayer Agentic Runtime Security (March 2026)](https://www.hiddenlayer.com/news/hiddenlayer-unveils-new-agentic-runtime-security-capabilities-for-securing-autonomous-ai-execution)
-- [VentureBeat: Three AI coding agents leaked secrets](https://venturebeat.com/security/ai-agent-runtime-security-system-card-audit-comment-and-control-2026)
-- [VentureBeat: AI coding agents breached — attackers targeted credentials](https://venturebeat.com/security/six-exploits-broke-ai-coding-agents-iam-never-saw-them)
+- [SentinelOne Acquires Prompt Security (~$250-300M)](https://www.sentinelone.com/press/sentinelone-to-acquire-prompt-security-to-advance-genai-security/)
+- [Proofpoint Acquires Acuvity (Feb 2026)](https://futurumgroup.com/insights/can-proofpoint-secure-the-intent-of-the-autonomous-agent/)
+
+### Funding Rounds
+- [HiddenLayer $100M Series B (Sep 2026)](https://www.unite.ai/hiddenlayer-raises-100m-series-b-to-expand-ai-agent-security-platform/)
+- [Noma Security $100M Series B](https://www.prnewswire.com/news-releases/noma-security-raises-100m-to-drive-adoption-of-ai-agent-security-302518641.html)
+- [WitnessAI $58M Funding (Jan 2026)](https://www.prnewswire.com/news-releases/witnessai-raises-58-million-for-global-expansion-and-announces-new-ways-to-secure-ai-agents-302659319.html)
+- [$3.6B in Funding, $96B in M&A — 10 Agentic AI Security Startups](https://softwarestrategiesblog.com/2026/03/28/agentic-ai-security-startups-funding-mna-rsac-2026/)
+
+### Product Launches
+- [HiddenLayer Agent Harness Security (Aug 2026)](https://www.hiddenlayer.com/news/hiddenlayer-unveils-agent-harness-security)
+- [HiddenLayer 2026 AI Threat Landscape Report](https://www.hiddenlayer.com/news/hiddenlayer-releases-the-2026-ai-threat-landscape-report-spotlighting-the-rise-of-agentic-ai-and-the-expanding-attack-surface-of-autonomous-systems)
+- [Cisco DefenseClaw Open-Source Framework (RSAC 2026)](https://newsroom.cisco.com/c/r/newsroom/en/us/a/y2026/m03/cisco-reimagines-security-for-the-agentic-workforce.html)
+- [Cisco AI Defense Expansion (Feb 2026)](https://newsroom.cisco.com/c/r/newsroom/en/us/a/y2026/m02/cisco-redefines-security-for-the-agentic-era.html)
+- [WitnessAI Agentic Control for MCP (Jun 2026)](https://www.prnewswire.com/news-releases/witnessai-introduces-agentic-control-to-secure-and-govern-ai-agents-and-mcp-servers-302802606.html)
+- [Nightfall AI MCP Security Platform](https://www.nightfall.ai/webinar/nightfall-product-launch-2026-securing-ai-agents-the-mcp-security-challenge)
+
+### Market Research
 - [CB Insights: Agentic Security Trends](https://www.cbinsights.com/research/report/early-stage-trends-report-agentic-security-and-more-2026/)
 - [Palo Alto: AI Agent Security Market 2026](https://www.paloaltonetworks.com/blog/identity-security/whats-shaping-the-ai-agent-security-market-in-2026/)
-- [Lakera Guard](https://www.lakera.ai/lakera-guard)
-- [Lakera Pricing](https://www.eesel.ai/blog/lakera-pricing)
+- [Agentic AI Security Market Report (MarketsandMarkets)](https://www.marketsandmarkets.com/Market-Reports/agentic-ai-security-market-97017233.html)
+- [AI Security Landscape 2026 (Aurascape)](https://aurascape.ai/answers/ai-security-landscape-2026/)
+
+### Vulnerabilities & Standards
+- [VentureBeat: Three AI coding agents leaked secrets](https://venturebeat.com/security/ai-agent-runtime-security-system-card-audit-comment-and-control-2026)
+- [VentureBeat: AI coding agents breached — attackers targeted credentials](https://venturebeat.com/security/six-exploits-broke-ai-coding-agents-iam-never-saw-them)
 - [OWASP Top 10 for LLM Applications](https://owasp.org/www-project-top-10-for-large-language-model-applications/)
 - [Prompt Injection: OWASP #1 AI Threat 2026](https://www.securance.com/blog/prompt-injection-the-owasp-1-ai-threat-in-2026/)
-- [Proofpoint Acquires Acuvity (Feb 2026)](https://futurumgroup.com/insights/can-proofpoint-secure-the-intent-of-the-autonomous-agent/)
-- [Top AI Security Platforms 2026](https://accuknox.com/blog/top-10-ai-security-platforms-2026)
+- [MCP Security: Enterprise Guide (LangProtect)](https://www.langprotect.com/blog/mcp-security-enterprise-guide)
 
 ---
-*Last updated: 2026-09-08*
+*Last updated: 2026-09-19 (v4.47.0 — system prompt guard, agent identity, 40 languages, supply chain, adversarial ML)*
