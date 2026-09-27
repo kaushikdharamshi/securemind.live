@@ -48,7 +48,7 @@ Training pipeline: `secagent train --eval` or `python3 scripts/train_enhanced_cl
 | **Smart Redaction** | **4-mode configurable data masking** per data type: `block` (API keys, private keys), `redact` (reversible tokenization — AI never sees real SSN, response de-tokenized back, 1h TTL), `mask` (partial — `****@domain.com`), `allow`. Per-request override via X-Redaction-Mode header. Wired into input + output pipelines | gateway/smart_redaction.py |
 | **MCP Server** | **9-tool MCP security server** with stdio + SSE transports — secure_read, secure_exec, analyze_prompt, scan_output, check_policy, get_session_policy, audit_log, **token_optimize**, **compliance_report** | JSON-RPC 2.0, MCP 2024-11-05 protocol |
 | **Token Optimization** | Strip PII/credentials from prompts before LLM consumption — returns redacted content + token savings metrics (cost reduction + security in one) | Pattern-based redaction, token estimation |
-| **Compliance** | **4-framework auto-generated compliance reports**: NIST 800-53 (18/18), SOC 2 (8/8), HIPAA (6/6), PCI-DSS (6/6) — **38/38 controls passing** from 18,250 audit entries. **4-framework compliance mapping**: OWASP (10/10), NIST (14/18), MITRE ATLAS (11/14), CSA ARIA (12/15) — **51/57 = 89.5%** | compliance_report.py, mapping JSONs, audit trail analysis |
+| **Compliance** | **4-framework auto-generated compliance reports**: NIST 800-53 (18/18), SOC 2 (8/8), HIPAA (6/6), PCI-DSS (6/6) — **38/38 controls passing** from 18,250 audit entries. **4-framework compliance mapping**: OWASP (10/10), NIST (26/26), MITRE ATLAS (14/14), CSA ARIA (15/15) — **65/65 = 100%** | compliance_report.py, mapping JSONs, audit trail analysis |
 | **Evals** | **274 red-team attacks** across 52 categories + **58 autonomous agent-driven attacks** across 10 categories + **HarmBench eval (sub-3% ASR, 0% FP, F1 0.98+)** + PII evasion suite + continuous red-teaming + **live attack demo (0.2s)** + **ingress guard evals** + **adversarial load test (22.9 RPS, 0 crashes)** | YAML-driven eval framework + agent harness + terminal UI |
 | **Monitoring** | Behavioral monitor (809 lines), process monitor, file monitor, privilege monitor, honeypot monitor | Runtime monitors in securityagent-core |
 | **Distribution** | `pip install securityagent-core[ml]` -> `secagent` CLI with init/mcp/demo/train/status | PyPI-ready package, 7 AI tool auto-detection |
@@ -89,7 +89,7 @@ Training pipeline: `secagent train --eval` or `python3 scripts/train_enhanced_cl
 | **LLM Judge** | Last-resort security classifier for novel attacks. Sends prompts that pass all deterministic checks to a fast LLM (Haiku/GPT-4o-mini) for semantic safety eval. Catches novel, creative, and multilingual attacks that no regex or classifier can detect. 9 attack categories scored. Configurable provider/model/threshold/timeout. Toggle: `EA_LLM_JUDGE_ENABLED`. 255 lines | `security/llm_judge.py` |
 | **Structural Analyzer** | Detects attacks by **shape**, not content. 20 jailbreak categories: narrative framing (Mythos/Fable), virtualization, persona manipulation, many-shot priming, crescendo patterns, authority impersonation, output format manipulation, emotional manipulation, recursive injection, context window stuffing, hypothetical framing, refusal suppression, role-play escalation, instruction hierarchy confusion, knowledge extraction, negative framing, taxonomy framing, Deceptive Delight, echo chamber, token boundary manipulation. Toggle: `EA_STRUCTURAL_ANALYZER`. 352 lines | `security/structural_analyzer.py` |
 | **Multilingual Detector (40 languages)** | Prompt injection detection across **40 languages**: Hindi, Arabic, Japanese, Korean, Chinese, Spanish, Portuguese, Russian, French, German, Thai, Vietnamese, Tamil, Telugu, Bengali, Urdu, Persian, Hebrew, Turkish, Indonesian, Italian, Dutch, Polish, Swedish, Swahili, Amharic, Burmese, Lao, Khmer, Georgian, Armenian, Sinhala, Nepali, Mongolian, Yoruba, Hausa, Zulu, Tagalog, Malay, Catalan. Fast script-range detection + trigram cosine-similarity language ID + per-language compiled regex across 5 attack categories + mixed-language (code-switching) detection. Pure Python, no external libs. 1,113+ lines | `security/multilingual_detector.py` |
-| **64/64 Attack Categories** | Complete threat coverage — 22 gaps closed in v4.45.0, maintained through v4.47.0. All 64 attack categories from the production test suite now detected at 100%. Includes: steganographic exfil, side-channel encoding, hallucination credentials, echo chamber, memory poisoning, rug pull, objective drift, indirect injection (tool results, RAG, web, code, email), structural jailbreaks (20 types), multilingual attacks (40 languages), supply chain attacks (typosquatting, A2A, adversarial ML), system prompt manipulation | Full detection pipeline |
+| **64/64 Attack Categories** | Complete threat coverage — 22 gaps closed in v4.45.0, maintained through v4.49.0. All 64 attack categories from the production test suite now detected at 100%. Includes: steganographic exfil, side-channel encoding, hallucination credentials, echo chamber, memory poisoning, rug pull, objective drift, indirect injection (tool results, RAG, web, code, email), structural jailbreaks (20 types), multilingual attacks (40 languages), supply chain attacks (typosquatting, A2A, adversarial ML), system prompt manipulation | Full detection pipeline |
 
 ---
 
@@ -234,7 +234,7 @@ secagent mcp --transport sse --port 8765
 | **Exec guard** | 50+ shell command rules (reverse shells, DNS exfil, SSH tunneling, etc.) | No | No | No | Shell command blocking (new) | No | No | No |
 | **Data flow tracking** | Cross-session taint tracking (SHA-256 hash, n-gram, 24h TTL, integrity hashing) | No | No | No | No | No | No | No |
 | **Ingress guard** | **13-module, 2,686 lines**: fingerprint + TLS + behavior + risk + cross-session + DLP controls + policy + security logger + browser detection | No | No | No | No | No | No | No |
-| **Compliance mapping** | **4 frameworks**: OWASP (10/10), NIST (14/18), MITRE ATLAS (11/14), CSA ARIA (12/15) — **51/57 = 89.5%** | Enterprise compliance | ML governance | Compliance reporting | MITRE ATLAS | No | Enterprise compliance | No |
+| **Compliance mapping** | **4 frameworks**: OWASP (10/10), NIST (26/26), MITRE ATLAS (14/14), CSA ARIA (15/15) — **65/65 = 100%** | Enterprise compliance | ML governance | Compliance reporting | MITRE ATLAS | No | Enterprise compliance | No |
 | **ML/NLP** | Sentence-transformer + sklearn v2 (1,880 samples, 0.858 F1, active learning) | Proprietary ML (cloud) | Static analysis | Proprietary ML | Adversarial ML | **100+ AI models** | Proprietary | Proprietary |
 | **HarmBench eval** | **274 techniques, sub-3% ASR, 0% FP, F1 0.98+** | No public eval | No | Prompt Fuzzer | No | No | No | No |
 | **Autonomous red-team** | 10-category agent attack suite (55 agents, 84 events, 100% detection) | No | No | No | No | No | No | No |
@@ -339,11 +339,11 @@ Tested against 4 real agent frameworks: Plain Python (21 scenarios), LangChain (
 The gateway sustains **22.9 requests/second** under mixed attack payloads with **0 crashes and 0 5xx errors**. Production-grade throughput under adversarial conditions. No competitor publishes adversarial load test results.
 
 ### 24. 4-framework compliance mapping — OWASP + NIST + MITRE ATLAS + CSA ARIA
-**47/57 controls (82.5%)** across 4 industry compliance frameworks:
+**65/65 controls (100%)** across 4 industry compliance frameworks:
 - **OWASP Top 10 for LLMs**: 10/10 defended — `owasp_mapping.json`
-- **NIST AI RMF + 800-53**: 14/18 — `nist_mapping.json`
-- **MITRE ATLAS**: 11/14 techniques — `docs/MITRE_ATLAS_MAPPING.md`
-- **CSA ARIA**: 12/15 controls — `csa_aria_mapping.json`
+- **NIST AI RMF + 800-53**: 26/26 — `nist_mapping.json`
+- **MITRE ATLAS**: 14/14 techniques — `docs/MITRE_ATLAS_MAPPING.md`
+- **CSA ARIA**: 15/15 controls — `csa_aria_mapping.json`
 
 Scoped ASR: 0.3% (1/305), Jailbreak Success Score: 0/100, FPR: 0.0%, Precision: 1.000. No competitor maps to all 4 frameworks simultaneously.
 
@@ -526,7 +526,7 @@ HiddenLayer's Agent Harness Security (Aug 2026) is the closest competitor — bu
 
 ---
 
-## By the Numbers (v4.47.0 — September 2026)
+## By the Numbers (v4.49.0 — September 2026)
 
 | Metric | Value |
 |---|---|
@@ -540,7 +540,7 @@ HiddenLayer's Agent Harness Security (Aug 2026) is the closest competitor — bu
 | CLI | 599 lines (`secagent` command) |
 | Ingress guard | 13 modules, 2,686 lines |
 | MCP tools | 9 tools via stdio + SSE |
-| Compliance frameworks mapped | 4 (OWASP + NIST + MITRE ATLAS + CSA ARIA) — **51/57 = 89.5%** |
+| Compliance frameworks mapped | 4 (OWASP + NIST + MITRE ATLAS + CSA ARIA) — **65/65 = 100%** |
 | Compliance reports | 4 (NIST 800-53, SOC 2, HIPAA, PCI-DSS) — **38/38 passing** |
 | Audit entries analyzed | 18,250 |
 | Test suites (AgnosticSecurity) | 34 files |
@@ -561,9 +561,9 @@ HiddenLayer's Agent Harness Security (Aug 2026) is the closest competitor — bu
 | Permit system tests | 39 (minting, attenuation, TTL, cascade revoke, request limits, chain depth) |
 | LLM proxy tests | 33 (10 modules) |
 | Provider routes tests | 27 (models + routes + pipeline) |
-| VS Code extension | v4.47.0 (refactored: editGuard + contentGuardian + reportPanel) |
-| Chrome extension | v4.47.0, 12 LLM sites, consent modal UI, file upload consent |
-| Package version | **4.47.0** (PyPI published) |
+| VS Code extension | v4.49.0 (refactored: editGuard + contentGuardian + reportPanel) |
+| Chrome extension | v4.49.0, 12 LLM sites, consent modal UI, file upload consent |
+| Package version | **4.49.0** (PyPI published) |
 | PII types | 14 core + 4 new (SendGrid, Twilio SID, Slack webhook, MongoDB SRV) |
 | Live demo speed | 0.2s (`--no-llm`), 26s (full with Ollama) |
 | Install time | ~60 seconds (`pip install` + `secagent init`) |
@@ -584,7 +584,7 @@ HiddenLayer's Agent Harness Security (Aug 2026) is the closest competitor — bu
 | MITRE ATLAS | **100% aligned** |
 | India AI Governance | 8 compliant, 14 partial, 0 gaps |
 | Banking DLP | 6 new types (OTP, bank a/c, UPI, CVV, PIN, bank login) |
-| Red team patterns | 274 + 60 new = **334 injection patterns** |
+| Red team patterns | **231 injection patterns** |
 | Guardrails pipeline | 4 providers (Guardrails AI, Nemo, Llama Guard, Claude), 562 lines |
 | Eval loop | 4 backends (RAGAS, DeepEval, TruLens, built-in), 584 lines |
 | AgentOven integration | API + SIEM + sidecar + guardrails + red team |
@@ -666,8 +666,8 @@ AgnosticSecurity/
 │   ├── malicious_cursorrules.md       # Cursor rules attack demo
 │   └── run_demo.py                    # YAML-driven demo runner
 ├── hooks/                             # Pre-commit DLP + vuln scanning
-├── chrome-extension/                  # Browser DLP guard (v4.47.0, 12 LLM sites, consent modal, file upload consent)
-├── vscode-extension/                  # VS Code v4.47.0 (refactored: editGuard, contentGuardian, reportPanel)
+├── chrome-extension/                  # Browser DLP guard (v4.49.0, 12 LLM sites, consent modal, file upload consent)
+├── vscode-extension/                  # VS Code v4.49.0 (refactored: editGuard, contentGuardian, reportPanel)
 ├── docs/
 │   ├── GETTING_STARTED.md            # 5-min onboarding guide
 │   ├── architecture-flow.html        # Interactive architecture diagram (live API calls)
@@ -700,7 +700,7 @@ AgnosticSecurity/
 5. `ingress_guard/middleware.py` -> `tls_fingerprint.py` -> `cross_session.py` — inbound security
 6. `demo/live_attack_demo.py` — the YC interview demo
 
-### securityagent-core v4.47.0 (26,931 lines + 29 test files)
+### securityagent-core v4.49.0 (26,931 lines + 29 test files)
 
 ```
 Install: pip install securityagent-core[ml]
@@ -824,4 +824,4 @@ securityagent-core/src/
 - [MCP Security: Enterprise Guide (LangProtect)](https://www.langprotect.com/blog/mcp-security-enterprise-guide)
 
 ---
-*Last updated: 2026-09-19 (v4.47.0 — system prompt guard, agent identity, 40 languages, supply chain, adversarial ML)*
+*Last updated: 2026-09-27 (v4.49.0 — 100% compliance (65/65), platform layer, pluggable audit backend, intelligent security router, 231 injection patterns)*
