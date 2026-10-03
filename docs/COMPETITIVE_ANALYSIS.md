@@ -451,7 +451,7 @@ Curated attack datasets across all OWASP LLM categories with automated detection
 
 | Platform | What They Do | What's Missing | How SecureMind Is Different |
 |---|---|---|---|
-| **HiddenLayer Agent Harness** | Hook-based coding agent security (Aug 2026). Prompt injection, data redaction, shell blocking via native hooks. $150M raised. | Cloud-managed — data flows to HiddenLayer's platform. No code fingerprint guard, no cross-session taint, no autonomous red-team agents, no MCP server, no local-first option. Enterprise pricing ($100K+/yr). Brand new (Aug 2026). | We've been hook-based since day 1 — battle-tested with 1,201 tests and 332 attack evals. Local-first (data never leaves). Code fingerprint guard, cross-session taint, 55 autonomous red-team agents, 9-tool MCP server. $17/mo self-hosted vs $100K+/yr. |
+| **HiddenLayer Agent Harness** | Hook-based coding agent security (Aug 2026). Prompt injection, data redaction, shell blocking via native hooks. $150M raised. | Cloud-managed — data flows to HiddenLayer's platform. No code fingerprint guard, no cross-session taint, no autonomous red-team agents, no MCP server, no local-first option. Enterprise pricing ($100K+/yr). Brand new (Aug 2026). | We've been hook-based since day 1 — battle-tested with 1,235 tests and 332 attack evals. Local-first (data never leaves). Code fingerprint guard, cross-session taint, 55 autonomous red-team agents, 9-tool MCP server. $17/mo self-hosted vs $100K+/yr. |
 | **Nightfall AI** | First enterprise DLP purpose-built for MCP. 100+ AI detection models, 95% precision. Covers SaaS + MCP + agents. | Cloud SaaS only — data leaves the machine. No exec guard, no code fingerprint, no hook-based action blocking, no cross-session taint, no red-team agents. Discovery/enforcement focus, not pre-execution blocking. | We block actions *before* they execute. Nightfall scans data in transit; we prevent the agent from reading .env in the first place. 50+ exec guard rules, code fingerprint guard, cross-session taint — none of which Nightfall has. |
 | **Noma Security** | AI agent security posture. $132M raised, 1,300% ARR growth. Enterprise guardrails and compliance. | Cloud platform — no local deployment. No public details on exec guard, code fingerprint, or cross-session taint. No autonomous red-team. Enterprise pricing. | We're the runtime enforcement layer Noma doesn't have. Noma manages posture; we enforce at exec/file/prompt level. 55 red-team agents self-test our defenses — Noma has no equivalent. |
 | **WitnessAI** | AI agent governance + MCP server control. $85M+ raised. Single control plane for agent discovery/governance. | Cloud-only. Governance/visibility — not pre-execution blocking. No exec guard, no code fingerprint, no autonomous red-team. Enterprise pricing. | WitnessAI watches what agents do; we stop them before they do it. Pre-execution blocking vs post-hoc governance. Code fingerprint guard, cross-session taint, 50+ exec rules — all absent from WitnessAI. |
@@ -545,7 +545,7 @@ HiddenLayer's Agent Harness Security (Aug 2026) is the closest competitor — bu
 | Audit entries analyzed | 18,250 |
 | Test suites (AgnosticSecurity) | 34 files |
 | Test suites (securityagent-core) | 50 files |
-| **Total tests** | **1,201** across 32 suites |
+| **Total tests** | **1,235** across 32 suites |
 | Core tests | 263 |
 | Gateway + enterprise tests | 101 (46 gateway DLP + 25 enterprise privacy + 30 FP/TP) |
 | RBAC + smart redaction tests | 95 |
@@ -630,7 +630,7 @@ AgnosticSecurity/
 │   ├── secagent/                      # Extracted modules (exec_rules, exec_helpers, prompt_helpers)
 │   ├── train_enhanced_classifier.py   # Enhanced ML training (1,880 samples, 3 data sources)
 │   ├── harmbench_export.py            # HarmBench eval export (--run for exec attacks)
-│   ├── test_*.py                      # 34 test suites (1,201 tests)
+│   ├── test_*.py                      # 34 test suites (1,235 tests)
 │   ├── nist_score.py                  # NIST compliance scorecard
 │   ├── owasp_score.py                 # OWASP LLM compliance scorecard
 │   ├── continuous_red_team.py         # Continuous red-team runner
