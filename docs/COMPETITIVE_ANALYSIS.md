@@ -445,6 +445,21 @@ Curated attack datasets across all OWASP LLM categories with automated detection
 ### 57. Sidecar Load Hardening — production-grade at 5,000+ concurrent attacks
 `sidecar/serve.py` and `sidecar/scanner.py` hardened for production load: multi-worker support (auto-detect CPU cores, default `min(cores, 4)`, `--workers` flag), per-IP rate limiting (200 req/min configurable via `SIDECAR_RATE_LIMIT`, 429 response when exceeded), `GET /stats` endpoint for real-time scan statistics (total_scans, blocked, allowed, rate_limited, errors), `--localhost` flag for binding to 127.0.0.1 only. Docker + K8s deployment specs in `sidecar/`. No competitor offers a production-hardened sidecar scanner with built-in rate limiting and observability.
 
+### 58. 100% Compliance Coverage — OWASP 10/10, NIST 26/26, MITRE 14/14, CSA 15/15
+Full coverage across all 4 compliance frameworks: OWASP Top 10 for LLMs (10/10), NIST AI RMF + 800-53 (26/26), MITRE ATLAS (14/14), CSA ARIA (15/15) — **65/65 (100%)**. Up from 88.5% in v4.47.0. No competitor achieves 100% coverage across all 4 frameworks simultaneously.
+
+### 59. Intelligent Security Router — tiered pipeline routing by risk level
+Tiered pipeline routing that dynamically adjusts scanning depth based on request risk level. Low-risk requests get fast-path scanning; high-risk requests get full pipeline (all detection layers, guardrails, LLM judge). Reduces latency for benign traffic while maintaining maximum security for suspicious requests. No competitor has risk-adaptive security routing.
+
+### 60. Infrastructure Attack Detection — 231 injection patterns
+231 injection patterns detecting SQLi, SSRF, path traversal, JNDI/Log4Shell, SSTI, CRLF, XXE, NoSQL injection, deserialization, Elasticsearch probes, resource exhaustion, multilingual injection, encrypted payload carriers. All with negative lookahead to avoid false-positiving on educational discussions. 13 new infrastructure attack pattern groups added in v4.53.0. No competitor detects this breadth of infrastructure attacks in AI prompts.
+
+### 61. Pluggable Audit Backend — PostgreSQL + SQLite dual-backend
+PostgreSQL for production (async pooling, connection management) with automatic SQLite fallback for local dev. Zero-config: detects `DATABASE_URL` env and switches. No competitor offers dual-backend audit storage with automatic fallback.
+
+### 62. Platform Layer — SDK, public API, event bus, plugins, tenants
+Versioned public API (5 endpoints: `/v1/scan/input`, `/v1/scan/output`, `/v1/scan/universal`, `/v1/evaluate`, `/v1/status`), event bus (webhook subscriptions + in-process listeners with filtering), plugin system (custom security modules), tenant manager (multi-tenant isolation with per-tenant policies). Python SDK in `sdk/`. No competitor offers a platform API for external developers to build on.
+
 ---
 
 ## How We're Different From Every Competitor
@@ -584,7 +599,7 @@ HiddenLayer's Agent Harness Security (Aug 2026) is the closest competitor — bu
 | MITRE ATLAS | **100% aligned** |
 | India AI Governance | 8 compliant, 14 partial, 0 gaps |
 | Banking DLP | 6 new types (OTP, bank a/c, UPI, CVV, PIN, bank login) |
-| Red team patterns | **231 injection patterns** |
+| Red team patterns | **231 injection patterns** (13 new infrastructure attack groups in v4.49) |
 | Guardrails pipeline | 4 providers (Guardrails AI, Nemo, Llama Guard, Claude), 562 lines |
 | Eval loop | 4 backends (RAGAS, DeepEval, TruLens, built-in), 584 lines |
 | AgentOven integration | API + SIEM + sidecar + guardrails + red team |
@@ -613,7 +628,12 @@ HiddenLayer's Agent Harness Security (Aug 2026) is the closest competitor — bu
 | Compliance PDF export (v4.47) | 4-framework PDF report (OWASP + NIST + MITRE + CSA), exec summary, score cards, signature block, 861 lines |
 | Eval YAML files | 9 (added clean_developer_prompts.yaml) |
 | **Components** | **41** (added SSO/SCIM, Helm chart) |
-| **Differentiators** | **69** |
+| 100% compliance (v4.49) | OWASP 10/10, NIST 26/26, MITRE 14/14, CSA 15/15 — 65/65 (100%) |
+| Intelligent security router (v4.49) | Tiered pipeline routing by request risk level |
+| Infrastructure attack detection (v4.49) | 231 injection patterns (13 new groups: SQLi, SSRF, SSTI, XXE, NoSQLi, Log4Shell, CRLF, deser, ES probes, resource exhaustion, multilingual, encrypted payloads) |
+| Pluggable audit backend (v4.49) | PostgreSQL (production) or SQLite (local dev), async pooling, auto-fallback |
+| Platform layer (v4.49) | SDK, public API (5 endpoints), event bus (webhooks), plugin system, tenant manager |
+| **Differentiators** | **74** |
 
 ---
 
@@ -677,8 +697,8 @@ AgnosticSecurity/
 ├── docs/                              # 31 design docs
 │   ├── COMPETITIVE_ANALYSIS.md        # Competitor research (this file)
 │   ├── SECURITY_EVAL_METRICS.md       # HarmBench eval metrics + scoped ASR
-│   ├── MITRE_ATLAS_MAPPING.md         # MITRE ATLAS 11/14 mapping
-│   ├── CSA_ARIA_MAPPING.md            # CSA ARIA 12/15 mapping
+│   ├── MITRE_ATLAS_MAPPING.md         # MITRE ATLAS 14/14 mapping
+│   ├── CSA_ARIA_MAPPING.md            # CSA ARIA 15/15 mapping
 │   ├── AI_VS_HUMAN_DETECTION.md       # AI vs human edit detection design
 │   ├── REAL_WORLD_SCENARIOS.md        # Real-world attack scenarios
 │   ├── ENTERPRISE_RBAC.md             # RBAC design doc (7 roles, team scoping)
@@ -686,8 +706,8 @@ AgnosticSecurity/
 │   └── *.md                          # GTM, YC app, admin console, threat models, etc.
 ├── docker-compose.redteam.yml         # Red-team Docker harness (55 agents, 84 events, 100% detection)
 ├── owasp_mapping.json                 # OWASP Top 10 for LLMs (10/10)
-├── nist_mapping.json                  # NIST AI RMF (14/18)
-├── csa_aria_mapping.json              # CSA ARIA (12/15)
+├── nist_mapping.json                  # NIST AI RMF (26/26)
+├── csa_aria_mapping.json              # CSA ARIA (15/15)
 ├── tests/                             # Integration tests
 └── .claude/settings.json              # Live security hooks (active DLP)
 ```
@@ -824,4 +844,4 @@ securityagent-core/src/
 - [MCP Security: Enterprise Guide (LangProtect)](https://www.langprotect.com/blog/mcp-security-enterprise-guide)
 
 ---
-*Last updated: 2026-09-27 (v4.53.0 — 100% compliance (65/65), platform layer, pluggable audit backend, intelligent security router, 231 injection patterns)*
+*Last updated: 2026-10-04 (v4.53.0 — 100% compliance, intelligent security router, infrastructure attack detection, pluggable audit backend, platform layer)*
