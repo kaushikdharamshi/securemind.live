@@ -89,7 +89,7 @@ Training pipeline: `secagent train --eval` or `python3 scripts/train_enhanced_cl
 | **LLM Judge** | Last-resort security classifier for novel attacks. Sends prompts that pass all deterministic checks to a fast LLM (Haiku/GPT-4o-mini) for semantic safety eval. Catches novel, creative, and multilingual attacks that no regex or classifier can detect. 9 attack categories scored. Configurable provider/model/threshold/timeout. Toggle: `EA_LLM_JUDGE_ENABLED`. 255 lines | `security/llm_judge.py` |
 | **Structural Analyzer** | Detects attacks by **shape**, not content. 20 jailbreak categories: narrative framing (Mythos/Fable), virtualization, persona manipulation, many-shot priming, crescendo patterns, authority impersonation, output format manipulation, emotional manipulation, recursive injection, context window stuffing, hypothetical framing, refusal suppression, role-play escalation, instruction hierarchy confusion, knowledge extraction, negative framing, taxonomy framing, Deceptive Delight, echo chamber, token boundary manipulation. Toggle: `EA_STRUCTURAL_ANALYZER`. 352 lines | `security/structural_analyzer.py` |
 | **Multilingual Detector (40 languages)** | Prompt injection detection across **40 languages**: Hindi, Arabic, Japanese, Korean, Chinese, Spanish, Portuguese, Russian, French, German, Thai, Vietnamese, Tamil, Telugu, Bengali, Urdu, Persian, Hebrew, Turkish, Indonesian, Italian, Dutch, Polish, Swedish, Swahili, Amharic, Burmese, Lao, Khmer, Georgian, Armenian, Sinhala, Nepali, Mongolian, Yoruba, Hausa, Zulu, Tagalog, Malay, Catalan. Fast script-range detection + trigram cosine-similarity language ID + per-language compiled regex across 5 attack categories + mixed-language (code-switching) detection. Pure Python, no external libs. 1,113+ lines | `security/multilingual_detector.py` |
-| **64/64 Attack Categories** | Complete threat coverage — 22 gaps closed in v4.45.0, maintained through v4.53.0. All 64 attack categories from the production test suite now detected at 100%. Includes: steganographic exfil, side-channel encoding, hallucination credentials, echo chamber, memory poisoning, rug pull, objective drift, indirect injection (tool results, RAG, web, code, email), structural jailbreaks (20 types), multilingual attacks (40 languages), supply chain attacks (typosquatting, A2A, adversarial ML), system prompt manipulation | Full detection pipeline |
+| **64/64 Attack Categories** | Complete threat coverage — 22 gaps closed in v4.45.0, maintained through v4.54.0. All 64 attack categories from the production test suite now detected at 100%. Includes: steganographic exfil, side-channel encoding, hallucination credentials, echo chamber, memory poisoning, rug pull, objective drift, indirect injection (tool results, RAG, web, code, email), structural jailbreaks (20 types), multilingual attacks (40 languages), supply chain attacks (typosquatting, A2A, adversarial ML), system prompt manipulation | Full detection pipeline |
 
 ---
 
@@ -452,7 +452,7 @@ Full coverage across all 4 compliance frameworks: OWASP Top 10 for LLMs (10/10),
 Tiered pipeline routing that dynamically adjusts scanning depth based on request risk level. Low-risk requests get fast-path scanning; high-risk requests get full pipeline (all detection layers, guardrails, LLM judge). Reduces latency for benign traffic while maintaining maximum security for suspicious requests. No competitor has risk-adaptive security routing.
 
 ### 60. Infrastructure Attack Detection — 231 injection patterns
-231 injection patterns detecting SQLi, SSRF, path traversal, JNDI/Log4Shell, SSTI, CRLF, XXE, NoSQL injection, deserialization, Elasticsearch probes, resource exhaustion, multilingual injection, encrypted payload carriers. All with negative lookahead to avoid false-positiving on educational discussions. 13 new infrastructure attack pattern groups added in v4.53.0. No competitor detects this breadth of infrastructure attacks in AI prompts.
+231 injection patterns detecting SQLi, SSRF, path traversal, JNDI/Log4Shell, SSTI, CRLF, XXE, NoSQL injection, deserialization, Elasticsearch probes, resource exhaustion, multilingual injection, encrypted payload carriers. All with negative lookahead to avoid false-positiving on educational discussions. 13 new infrastructure attack pattern groups added in v4.54.0. No competitor detects this breadth of infrastructure attacks in AI prompts.
 
 ### 61. Pluggable Audit Backend — PostgreSQL + SQLite dual-backend
 PostgreSQL for production (async pooling, connection management) with automatic SQLite fallback for local dev. Zero-config: detects `DATABASE_URL` env and switches. No competitor offers dual-backend audit storage with automatic fallback.
@@ -541,7 +541,7 @@ HiddenLayer's Agent Harness Security (Aug 2026) is the closest competitor — bu
 
 ---
 
-## By the Numbers (v4.53.0 — September 2026)
+## By the Numbers (v4.54.0 — September 2026)
 
 | Metric | Value |
 |---|---|
@@ -576,9 +576,9 @@ HiddenLayer's Agent Harness Security (Aug 2026) is the closest competitor — bu
 | Permit system tests | 39 (minting, attenuation, TTL, cascade revoke, request limits, chain depth) |
 | LLM proxy tests | 33 (10 modules) |
 | Provider routes tests | 27 (models + routes + pipeline) |
-| VS Code extension | v4.53.0 (refactored: editGuard + contentGuardian + reportPanel) |
-| Chrome extension | v4.53.0, 12 LLM sites, consent modal UI, file upload consent |
-| Package version | **4.53.0** (PyPI published) |
+| VS Code extension | v4.54.0 (refactored: editGuard + contentGuardian + reportPanel) |
+| Chrome extension | v4.54.0, 12 LLM sites, consent modal UI, file upload consent |
+| Package version | **4.54.0** (PyPI published) |
 | PII types | 14 core + 4 new (SendGrid, Twilio SID, Slack webhook, MongoDB SRV) |
 | Live demo speed | 0.2s (`--no-llm`), 26s (full with Ollama) |
 | Install time | ~60 seconds (`pip install` + `secagent init`) |
@@ -686,8 +686,8 @@ AgnosticSecurity/
 │   ├── malicious_cursorrules.md       # Cursor rules attack demo
 │   └── run_demo.py                    # YAML-driven demo runner
 ├── hooks/                             # Pre-commit DLP + vuln scanning
-├── chrome-extension/                  # Browser DLP guard (v4.53.0, 12 LLM sites, consent modal, file upload consent)
-├── vscode-extension/                  # VS Code v4.53.0 (refactored: editGuard, contentGuardian, reportPanel)
+├── chrome-extension/                  # Browser DLP guard (v4.54.0, 12 LLM sites, consent modal, file upload consent)
+├── vscode-extension/                  # VS Code v4.54.0 (refactored: editGuard, contentGuardian, reportPanel)
 ├── docs/
 │   ├── GETTING_STARTED.md            # 5-min onboarding guide
 │   ├── architecture-flow.html        # Interactive architecture diagram (live API calls)
@@ -720,7 +720,7 @@ AgnosticSecurity/
 5. `ingress_guard/middleware.py` -> `tls_fingerprint.py` -> `cross_session.py` — inbound security
 6. `demo/live_attack_demo.py` — the YC interview demo
 
-### securityagent-core v4.53.0 (26,931 lines + 29 test files)
+### securityagent-core v4.54.0 (26,931 lines + 29 test files)
 
 ```
 Install: pip install securityagent-core[ml]
@@ -844,4 +844,4 @@ securityagent-core/src/
 - [MCP Security: Enterprise Guide (LangProtect)](https://www.langprotect.com/blog/mcp-security-enterprise-guide)
 
 ---
-*Last updated: 2026-10-04 (v4.53.0 — 100% compliance, intelligent security router, infrastructure attack detection, pluggable audit backend, platform layer)*
+*Last updated: 2026-10-04 (v4.54.0 — 100% compliance, intelligent security router, infrastructure attack detection, pluggable audit backend, platform layer)*
